@@ -1,0 +1,10 @@
+[Unit]
+Description=IGITT server socket
+
+[Socket]
+ListenStream=[::1]:8080
+Accept=false
+Service=igitt.service
+
+[Install]
+WantedBy=igitt.service

@@ -3,8 +3,10 @@ PREFIX		= /usr/local
 SBINDIR		= ${PREFIX}/sbin
 LIBDIR		= ${PREFIX}/lib
 PYMODDIR	= ${LIBDIR}/python/igitt
+IGITTHOME	= /var/lib/igitt
 WEBDIR		= ${PREFIX}/igitt/web
 ETCDIR		= /etc
+SYSTEMDDIR	= ${ETCDIR}/systemd/system
 
 # Tests
 DAEMONTEMP	:= $(shell mktemp -d)
@@ -34,10 +36,16 @@ install:
 		mkdir -p ${WEBDIR}; \
 		install -m 644 -t ${WEBDIR} web/*; \
 	fi
+	if ! groups igitt > /dev/null 2>&1; then \
+		adduser --system --disabled-password --disabled-login --group --home ${IGITTHOME} --gecos "Independent GIT Timestamper" igitt; \
+	fi
 # /etc/igittd.conf contains passwords, so restrict access
 	if [ ! -f ${ETCDIR}/igittd.conf ]; then \
-		install -m 600 sample-igittd.conf ${ETCDIR}/igittd.conf; \
+		install -o igitt -m 600 sample-igittd.conf ${ETCDIR}/igittd.conf; \
 	fi
+	install -m 644 -t ${SYSTEMDDIR} systemd/*
+	systemctl daemon-reload
+	systemctl enable igitt.service igitt.socket --now
 
 
 test tests:	unit-tests system-tests
