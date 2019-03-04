@@ -183,8 +183,3 @@ The client should perform the following tests on objects returned from this serv
   - The PGP signature is at most 2000 ASCII chars long (base64 + space + equal sign + carriage return + newline)
   - The PGP signature verifies OK
 
-
-1. hallo
-1. hallo
-1. hallo
-
