@@ -8,6 +8,10 @@ WEBDIR		= ${PREFIX}/igitt/web
 ETCDIR		= /etc
 SYSTEMDDIR	= ${ETCDIR}/systemd/system
 
+# Color
+EM		= \033[1;31m
+NORM		= \033[0m
+
 # Tests
 DAEMONTEMP	:= $(shell mktemp -d)
 KEYID		= CA4AFAB26C58B209599C8025353DFEC512FA47C7
@@ -42,8 +46,14 @@ install:
 # /etc/igittd.conf contains passwords, so restrict access
 	if [ ! -f ${ETCDIR}/igittd.conf ]; then \
 		install -o igitt -m 600 sample-igittd.conf ${ETCDIR}/igittd.conf; \
+	else \
+		echo "${EM}Not updating ${ETCDIR}/igittd.conf${NORM}"; \
 	fi
-	install -m 644 -t ${SYSTEMDDIR} systemd/*
+	if [ ! -f ${SYSTEMDDIR}/igitt.socket ]; then \
+		install -m 644 -t ${SYSTEMDDIR} systemd/*; \
+	else \
+		echo "${EM}Not updating ${SYSTEMDDIR}/igitt.*${NORM}"; \
+	fi
 	systemctl daemon-reload
 	systemctl enable igitt.service igitt.socket --now
 
