@@ -4,12 +4,14 @@ SBINDIR		= ${PREFIX}/sbin
 LIBDIR		= ${PREFIX}/lib
 PYMODDIR	= ${LIBDIR}/python/igitt
 IGITTHOME	= /var/lib/igitt
-WEBDIR		= ${PREFIX}/igitt/web
+WEBDIR		= ${IGITTHOME}/web
+REPODIR		= ${IGITTHOME}/repo
 ETCDIR		= /etc
 SYSTEMDDIR	= ${ETCDIR}/systemd/system
 
 # Color
-EM		= \033[1;31m
+WARN		= \033[1;31m
+INFO		= \033[1;32m
 NORM		= \033[0m
 
 # Tests
@@ -37,25 +39,33 @@ install:
 	install -t ${PYMODDIR} igitt/*.py
 	py3compile ${PYMODDIR}/*.py
 	if [ ! -d ${WEBDIR} ]; then \
-		mkdir -p ${WEBDIR}; \
-		install -m 644 -t ${WEBDIR} web/*; \
+		install -o igitt -d ${WEBDIR}; \
+		install -o igitt -m 644 -t ${WEBDIR} web/*; \
+	else \
+		echo "${WARN}* Not updating ${WEBDIR}${NORM}"; \
 	fi
 	if ! groups igitt > /dev/null 2>&1; then \
 		adduser --system --disabled-password --disabled-login --group --home ${IGITTHOME} --gecos "Independent GIT Timestamper" igitt; \
 	fi
+	install -d -o igitt ${REPODIR}
 # /etc/igittd.conf contains passwords, so restrict access
 	if [ ! -f ${ETCDIR}/igittd.conf ]; then \
 		install -o igitt -m 600 sample-igittd.conf ${ETCDIR}/igittd.conf; \
+		echo "${INFO}* Customize ${ETCDIR}/igittd.conf${NORM}"; \
 	else \
-		echo "${EM}Not updating ${ETCDIR}/igittd.conf${NORM}"; \
+		echo "${WARN}* Not updating ${ETCDIR}/igittd.conf${NORM}"; \
 	fi
 	if [ ! -f ${SYSTEMDDIR}/igitt.socket ]; then \
 		install -m 644 -t ${SYSTEMDDIR} systemd/*; \
 	else \
-		echo "${EM}Not updating ${SYSTEMDDIR}/igitt.*${NORM}"; \
+		echo "${WARN}* Not updating ${SYSTEMDDIR}/igitt.*${NORM}"; \
 	fi
 	systemctl daemon-reload
 	systemctl enable igitt.service igitt.socket --now
+	if [ ! -d ${IGITTHOME}/.gnupg ]; then \
+		echo "${INFO}* Create an OpenPGP key, e.g. with"; \
+		echo '% sudo -Hu igitt ./gen-dsa3072.sh "My Timestamper" stamper@example'"${NORM}"; \
+	fi
 
 
 test tests:	unit-tests system-tests
