@@ -2,7 +2,7 @@
 Description=IGITT server socket
 
 [Socket]
-ListenStream=[::1]:8080
+ListenStream=[::1]:15177
 Accept=false
 Service=igitt.service
 
