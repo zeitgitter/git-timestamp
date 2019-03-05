@@ -53,7 +53,7 @@ def get_args(args=None, config_file_contents=None):
                       action='append',
                       help="any number of <branch>=<URL> tuples of upstream IGITT timestampers")
   parser.add_argument('--listen-address',
-                      default='::1',
+                      default='::',
                       help="IP address to listen on (when not started by systemd)")
   parser.add_argument('--listen-port',
                       default=8080, type=int,
