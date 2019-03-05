@@ -49,7 +49,8 @@ def get_args(args=None, config_file_contents=None):
   parser.add_argument('--repository',
                       required=True,
                       help="path to the GIT repository")
-  parser.add_argument('--upstream-timestampers',
+  parser.add_argument('--upstream-timestamp',
+                      default=[],
                       action='append',
                       help="any number of <branch>=<URL> tuples of upstream IGITT timestampers")
   parser.add_argument('--listen-address',
@@ -79,5 +80,8 @@ def get_args(args=None, config_file_contents=None):
                       action='version', version=igitt.version.VERSION)
   arg = parser.parse_args(args=args, config_file_contents=config_file_contents)
   arg.own_domain = arg.own_url.replace('https://', '')
+  for i in arg.upstream_timestamp:
+    if not '=' in i:
+      sys.exit("--upstream-timestamp requires <branch>=<url> argument")
 
   return arg

@@ -13,8 +13,12 @@ if [ -r hashes.log ]; then
   echo "Hashes.log should not be here" 2>&1
   exit 1
 fi
-if [ -r hashes.work ]; then
-  echo "Hashes.work should not be here" 2>&1
+if [ ! -r hashes.work ]; then
+  echo "hashes.work should again be here" 2>&1
+  exit 1
+fi
+if [ `wc -l < hashes.work` -ne 1 ]; then
+  echo "There should only be a single ('cross'-)timestamp in hashes.work" 2>&1
   exit 1
 fi
 if [ `git log | grep '^commit ' | wc -l` -ne 2 ]; then
