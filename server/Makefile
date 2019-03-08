@@ -64,8 +64,7 @@ install:
 	systemctl daemon-reload
 	systemctl enable igitt.service igitt.socket --now
 	if [ ! -d ${IGITTHOME}/.gnupg ]; then \
-		echo "${INFO}* Create an OpenPGP key, e.g. with"; \
-		echo '% sudo -Hu igitt ./gen-dsa3072.sh "My Timestamper" stamper@example'"${NORM}"; \
+		echo "${INFO}* Create an OpenPGP key, see ../doc/Keys.md"; \
 	fi
 
 
