@@ -60,6 +60,16 @@ The signing key is only part of the equation. Two other parts are worthwhile men
 - SHA-1 in `git`, and
 - MD5/IDEA for the [PGP Timestamper](http://www.itconsult.co.uk/stamper.htm)
 
+## Key creation
+
+To create a timestamping key out of the full list of algorithms, use
+
+```sh
+gpg --expert --full-key-gen
+```
+
+and follow the options.
+
 ### SHA-1 in `git`
 
 SHA-1 is considered broken by the [SHAttered attack](https://shattered.io/).
