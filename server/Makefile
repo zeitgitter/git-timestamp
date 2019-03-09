@@ -91,3 +91,8 @@ system-tests:
 ## Cleanup
 	${RM} -r ${DAEMONTEMP}
 	killall igittd.py
+
+run-test-daemon:
+	./igittd.py ${DAEMONPARAMS}
+run-test-daemon-fake-time:
+	IGITT_FAKE_TIME=1551155115 ./igittd.py ${DAEMONPARAMS}
