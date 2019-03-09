@@ -186,7 +186,6 @@ def verify_signature_and_timestamp(keyid, signed, signature, args):
   f = tempfile.NamedTemporaryFile(mode='w', delete=False)
   f.write(signature)
   f.close()
-  gpg.verbose = True
   verified = gpg.verify_data(f.name, signed)
   if not verified.valid:
     sys.exit("Not a valid OpenPGP signature")
