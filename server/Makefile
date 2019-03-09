@@ -73,17 +73,9 @@ test tests:	unit-tests system-tests
 unit-tests:
 	nosetests3
 
-system-tests:
+system-tests: prepare-tmp-git kill-daemon
 ## Start daemon
-	-killall igittd.py 2>/dev/null; exit 0
 	IGITT_FAKE_TIME=1551155115 ./igittd.py ${DAEMONPARAMS} &
-## Init repo
-	git init ${DAEMONTEMP}
-# Avoid "gpg: WARNING: unsafe permissions on homedir"
-	chmod 700 ${KEYHOME}
-	gpg --export -a ${KEYID} > ${DAEMONTEMP}/pubkey.asc
-	cd ${DAEMONTEMP} && git add pubkey.asc
-	cd ${DAEMONTEMP} && git commit -S${KEYID} -m "Start timestamping"
 ## Wait for daemon to be ready
 	sleep 0.5
 ## Run tests with daemon
@@ -92,7 +84,18 @@ system-tests:
 	${RM} -r ${DAEMONTEMP}
 	killall igittd.py
 
-run-test-daemon:
+kill-daemon:
+	-killall igittd.py 2>/dev/null; exit 0
+
+prepare-tmp-git:
+	git init ${DAEMONTEMP}
+	chmod 700 ${KEYHOME}
+# Avoid "gpg: WARNING: unsafe permissions on homedir"
+	gpg --export -a ${KEYID} > ${DAEMONTEMP}/pubkey.asc
+	cd ${DAEMONTEMP} && git add pubkey.asc
+	cd ${DAEMONTEMP} && git commit -S${KEYID} -m "Start timestamping"
+	
+run-test-daemon: prepare-tmp-git kill-daemon
 	./igittd.py ${DAEMONPARAMS}
-run-test-daemon-fake-time:
+run-test-daemon-fake-time: prepare-tmp-git kill-daemon
 	IGITT_FAKE_TIME=1551155115 ./igittd.py ${DAEMONPARAMS}
