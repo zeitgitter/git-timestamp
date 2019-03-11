@@ -48,7 +48,7 @@ def setup_module():
     '--gnupg-home',
     str(pathlib.Path(os.path.dirname(os.path.realpath(__file__)),
                      'gnupg')),
-    '--keyid', 'CA4AFAB26C58B209599C8025353DFEC512FA47C7',
+    '--keyid', '353DFEC512FA47C7',
     '--own-url', 'https://hagrid.snakeoil',
     '--max-parallel-timeout', '1',
     '--repository', tmpdir.name,
