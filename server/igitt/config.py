@@ -68,6 +68,30 @@ def get_args(args=None, config_file_contents=None):
                       before failing (default: wait forever)""")
   parser.add_argument('--gnupg-home',
                       help="GnuPG Home Dir to use, default: ~/.gnupg/")
+  parser.add_argument('--external-pgp-timestamper-keyid',
+                      default="70B61F81",
+                      help="PGP key ID to obtain email cross-timestamps from")
+  parser.add_argument('--external-pgp-timestamper-to',
+                      default="clear@stamper.itconsult.co.uk",
+                      help="destination email address "
+                           "to obtain email cross-timestamps from")
+  parser.add_argument('--external-pgp-timestamper-reply',
+                      default="mailer@stamper.itconsult.co.uk",
+                      help="email address used by PGP timestamper "
+                           "in its replies")
+  parser.add_argument('--email-address',
+                      help="our email address; enables "
+                           "cross-timestamping from the PGP timestamper")
+  parser.add_argument('--smtp-server',
+                      help="SMTP server to use for "
+                           "sending mail to PGP Timestamper")
+  parser.add_argument('--imap-server',
+                      help="IMAP server to use for "
+                           "receiving mail from PGP Timestamper")
+  parser.add_argument('--mail-username',
+                      help="username to use for IMAP and SMTP")
+  parser.add_argument('--mail-password',
+                      help="password to use for IMAP and SMTP")
   parser.add_argument('--push-repository',
                       default=[],
                       action='append',
