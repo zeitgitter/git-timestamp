@@ -1,4 +1,4 @@
-#!/usr/bin/python3 -tt
+#!/usr/bin/python3
 #
 # igittd — Independent GIT Timestamping, HTTPS server
 #
