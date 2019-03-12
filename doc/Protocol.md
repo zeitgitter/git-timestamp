@@ -107,6 +107,28 @@ tag signature behavior above, the client should verify that:
     stripped from the resulting
     file](https://github.com/git/git/blob/master/Documentation/technical/signature-format.txt)
 
-(Assuming you branch-sign every commit of the `master` branch into the
+Assuming you branch-sign every commit of the `master` branch into the
 `timestamp` branch, the two will develop in parallel, with `timestamp`
-being a timestamper-signed equivalent of the former.)
+being a timestamper-signed equivalent of the former.
+
+## Many signatures on many projects
+
+If your organisation would like to issue many timestamps a day, we recommend
+operating your own local `igitt` instance and timestamp internally against your
+local instance and only obtain timestamps for your `igitt` repository from
+outside source(s). This results in several advantages:
+
+* No information about your commit rates is leaked.
+* No information about your developer's IP addresses is leaked.
+* You can assure a level of service according to your own needs.
+* You can adjust the security parameters according to your own needs.
+* The global network of timestamping servers is being loaded less, …
+* … even if you cross-timestamp against multiple outside sources.
+* Using multiple cross-timestamps will increase the trust.
+
+(We would appreciate if you would also allow other public timestampers to
+cross-timestamp against your server to increase the overall trust in the
+system.)
+
+✅ Help us building an efficient hierarchy of trusted timestampers, or even a
+complete web of timestampers.
