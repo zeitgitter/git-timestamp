@@ -1,0 +1,12 @@
+/* General */
+html { font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif; font-size: 150%; }
+h1, h2 { background-color: #ddd; }
+h1 { padding-top: 1.5em; }
+p { max-width: 40em; }
+
+/* Footer */
+ul.footer { background-color: #444; list-style-type: none; margin: 0; padding: 0; overflow: hidden; position: fixed; top: 0; width: 100%; } 
+ul.footer li { float: left; border-right: 1px solid #bbb; }
+ul.footer li a { display: block; color: #fff; text-align: center; padding: 1em 1em; text-decoration: none; }
+ul.footer li a:hover { background-color: #000; }
+ul.footer li a.active { background-color: #181; }

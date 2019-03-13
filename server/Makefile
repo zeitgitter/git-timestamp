@@ -42,6 +42,7 @@ install:
 	if [ ! -d ${WEBDIR} ]; then \
 		install -o igitt -d ${WEBDIR}; \
 		install -o igitt -m 644 -t ${WEBDIR} web/*; \
+		echo "${INFO}* Please adapt ${WEBDIR} to your needs${NORM}"; \
 	else \
 		echo "${WARN}* Not updating ${WEBDIR}${NORM}"; \
 	fi

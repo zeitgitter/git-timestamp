@@ -1,0 +1,65 @@
+<!--
+   IGITT — Independent GIT Timestamping
+   
+   Copyright 2019 Marcel Waldvogel <marcel.waldvogel@uni-konstanz.de>
+   
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+   MA 02110-1301, USA.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Privacy Policy • IGITT Server at IGITT_DOMAIN</title>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="igitt.css"/>
+</head>
+<body>
+<h1 class="top">Privacy Policy</h1>
+
+<p>To provide this timestamping service in a trustworthy manner, the
+service <b>irrevocably</b> creates, maintains, and publishes a log
+file of its timestamping activity.</p>
+
+<p>Therefore, the service <b>records and publishes the following information permanently and irrevocably</b>:</p>
+<ul>
+<li>The <b>commit ID</b> of all the commits you requested timestamping
+	for, in the sequence it was processed. This sequence, together
+	with the timestamps on the log, will also give insight into the
+	timestamp returned.<br/>
+	<b>Not</b> stored will be the IDs of the documents within your
+	repository.</li>
+</ul>
+
+<p>In order to maintain the service, we record the following information for up to 7 days, <b>after which it will be deleted:</b></p>
+<ul>
+<li><b>For all requests:</b> Time, IP address, and URL of the request.</li>
+<li><b>For branch timestamps:</b> The ID of the timestamping branch's previous
+	HEAD commit ("parent") and the SHA-1 hash of the
+	<a href="https://git-scm.com/book/en/v2/Git-Internals-Git-Objects">GIT
+	tree object</a>. (In addition to time, IP address, URL, and
+	commit ID).</li>
+<li><b>For tag timestamps:</b> The name of the tag.
+	(In addition to time, IP address, URL, and commit ID).</li>
+</ul>
+
+<ul class="footer">
+<li><a href="./">IGITT Homme</a></li>
+<li><a href="tos.html">Terms of Service</a></li>
+<li><a href="privacy.html" class="active">Privacy Policy</a></li>
+<li><a href="contact.html">Contact Information</a></li>
+</ul>
+</body>
+</html>
