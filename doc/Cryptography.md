@@ -114,3 +114,32 @@ create for an existing old hash.
 Therefore, the PGP Timestamper is still a source of assurance, but should not
 be used as the only means of cross-assurance. Instead, publication and/or
 `igitt` cross-timestamping should be used as an additional means of assurance.
+
+## Some signing speeds
+
+Here are some signing speeds showing the average run time over 10 *sequential*
+runs of `gpg --sign` of a 40-byte input file. For each test, the longest keys
+offered by `gpg --expert --full-gen-key` were used. Shorter keys will be
+faster, `igitt` will also take advantage of multiple cores.
+
+| Processor (single run)           | dsa3072 | rsa4096 | ed25519 | nistp521 | bpP512r1 | secp256k1 |
+| ---------------------------------| -------:| -------:| -------:| --------:| --------:| ---------:|
+| AMD EPYC 7351P (2.4 GHz)         |   23 ms |   59 ms |   38 ms |    49 ms |    30 ms |     13 ms |
+| Intel Core i7-6600U (2.6 GHz)	   |   19 ms |   30 ms |   21 ms |    27 ms |    19 ms |      9 ms |
+| BCM2835 (ARM, Raspberry Pi Zero) |  398 ms | 1192 ms |  575 ms |   901 ms |   785 ms |    219 ms |
+
+A Raspberry Pi Zero (single-core) may thus serve around 1…5 signatures per
+second at the given key lengths, while the AMD EPYC 16…800 signatures per core,
+and the i7-6600 100…300 signatures per core.
+
+One would expect that the AMD processor with its 16 cores could run 16 `gpg`
+processes in parallel and the Intel processor (with 2 real and 4 virtual cores)
+could run 2…4 `gpg` processes in parallel. However, GnuPG 2.x uses a single,
+single-threaded `gpg-agent` for all secret key operations. Therefore, running
+multiple GnuPG processes does not result in higher parallelism; i.e., running
+10 processes "in parallel" will still require roughly 10x as long as running a
+single `gpg` process.
+
+However, I noticed one exception: Running 10 parallel dsa3072 operations on the
+AMD only requires around 80 ms, so it gains about a factor of 3. I do not have
+an explanation for this yet.
