@@ -59,13 +59,15 @@ install:
 	fi
 	if [ ! -f ${SYSTEMDDIR}/igitt.socket ]; then \
 		install -m 644 -t ${SYSTEMDDIR} systemd/*; \
+		systemctl daemon-reload; \
 	else \
 		echo "${WARN}* Not updating ${SYSTEMDDIR}/igitt.*${NORM}"; \
 	fi
-	systemctl daemon-reload
-	systemctl enable igitt.service igitt.socket --now
 	if [ ! -d ${IGITTHOME}/.gnupg ]; then \
-		echo "${INFO}* Create an OpenPGP key, see ../doc/Keys.md"; \
+		systemctl enable igitt.service igitt.socket; \
+		echo "${INFO}* Create an OpenPGP key, see ../doc/Cryptography.md"; \
+	else \
+		systemctl restart igitt.service; \
 	fi
 
 
@@ -95,7 +97,7 @@ prepare-tmp-git:
 	gpg --export -a ${KEYID} > ${DAEMONTEMP}/pubkey.asc
 	cd ${DAEMONTEMP} && git add pubkey.asc
 	cd ${DAEMONTEMP} && git commit -S${KEYID} -m "Start timestamping"
-	
+
 run-test-daemon: prepare-tmp-git kill-daemon
 	./igittd.py ${DAEMONPARAMS}
 run-test-daemon-fake-time: prepare-tmp-git kill-daemon
