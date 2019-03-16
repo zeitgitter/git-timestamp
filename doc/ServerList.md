@@ -6,7 +6,7 @@
 | -------- | ----------------- | ------- | ---------------- | -------------- |
 | Gitta    | gitta.enotar.ch   | CH      | Marcel Waldvogel | -              |
 
-The special nickname `PGP` is used to refer to the [PGP Digital
+The special nickname `stamper` is used to refer to the [PGP Digital
 Timestamping Service](http://www.itconsult.co.uk/stamper.htm),
 established in 1995.
 
