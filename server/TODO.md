@@ -11,3 +11,6 @@
     GnuPG instances, or
   - rewrite the signing operation from scratch.
   Both approaches are, unfortunately, error-prone.
+* Visualize the timestamping graph.
+  - Allow the selection of trusted timestampers.
+  - Show how much leeway the other, possibly untrusted, timestampers have.
