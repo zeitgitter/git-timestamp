@@ -4,7 +4,7 @@
 
 | Nickname | Domain name       | Country | Maintainer       | Timestamped by |
 | -------- | ----------------- | ------- | ---------------- | -------------- |
-| Gitta    | gitta.notar-e.com | CH      | Marcel Waldvogel | -              |
+| Gitta    | gitta.enotar.ch   | CH      | Marcel Waldvogel | -              |
 
 The special nickname `PGP` is used to refer to the [PGP Digital
 Timestamping Service](http://www.itconsult.co.uk/stamper.htm),
