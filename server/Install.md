@@ -23,6 +23,8 @@ cd .. && make install-both
   (parameter `commit-at`).
 * Configure the remaining parameters, including whether to have upstream
   cross-timestamping.
+* Set up a front-end webserver doing HTTPS and proxying.
+* Update the contact parameters in `/var/igitt/web`.
 * Test it thoroughly.
 * If your server should be public, create a pull request with your addition to
   `…/doc/ServerList.md`.
