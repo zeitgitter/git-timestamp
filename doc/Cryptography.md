@@ -129,6 +129,7 @@ faster, `igitt` will also take advantage of multiple cores.
 | Intel Core i7-6600U (2.6 GHz)	   |   19 ms |   30 ms |   21 ms |    27 ms |    19 ms |      9 ms |
 | BCM2835 (ARM, Raspberry Pi Zero) |  398 ms | 1192 ms |  575 ms |   901 ms |   785 ms |    219 ms |
 | BCM2838 (ARM, Raspberry Pi 3 B+) |  144 ms |  602 ms |  217 ms |   357 ms |   318 ms |     82 ms |
+| Odroid XU3 (ARM)                 |   72 ms |  305 ms |  159 ms |   230 ms |   215 ms |     61 ms |
 
 Thus, a meekly Rasbperry Pi Zero can create about 2…5 timestamps per second,
 while a single core (!) of an AMD Ryzen or Intel Core i7 above each achieve
