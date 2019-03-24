@@ -125,18 +125,14 @@ faster, `igitt` will also take advantage of multiple cores.
 | Processor (single run)           | dsa3072 | rsa4096 | ed25519 | nistp521 | bpP512r1 | secp256k1 |
 | ---------------------------------| -------:| -------:| -------:| --------:| --------:| ---------:|
 | AMD EPYC 7351P (2.4 GHz)         |   23 ms |   59 ms |   38 ms |    49 ms |    30 ms |     13 ms |
+| AMD Ryzen 2700 X (3 GHz)         |   10 ms |   28 ms |   21 ms |    27 ms |    22 ms |      9 ms |
 | Intel Core i7-6600U (2.6 GHz)	   |   19 ms |   30 ms |   21 ms |    27 ms |    19 ms |      9 ms |
 | BCM2835 (ARM, Raspberry Pi Zero) |  398 ms | 1192 ms |  575 ms |   901 ms |   785 ms |    219 ms |
-| BCM2835 (ARM, Raspberry Pi 3 B)  |  153 ms |  632 ms |  237 ms |   390 ms |   355 ms |     88 ms |
+| BCM2838 (ARM, Raspberry Pi 3 B+) |  144 ms |  602 ms |  217 ms |   357 ms |   318 ms |     82 ms |
 
-A Raspberry Pi Zero (single-core) may thus serve around 0.8…5 signatures per
-second at the given key lengths, while the Raspberry Pi 3 achieves 1.5…11
-signatures per core, the AMD EPYC 16…800 per core, and the i7-6600 100…300
-signatures per core.
-
-(Please note that our *Raspberry Pi 3 Model B v1.2 Revision a02082* we used for
-this test reports its CPU as an ARMv7 BCM2835, even though the spec says it
-should be an ARMv8 BCM2837.)
+Thus, a meekly Rasbperry Pi Zero can create about 2…5 timestamps per second,
+while a single core (!) of an AMD Ryzen or Intel Core i7 above each achieve
+over 30…100 timestamps per second.
 
 One would expect that the AMD processor with its 16 cores could run 16 `gpg`
 processes in parallel and the Intel processor (with 2 real and 4 virtual cores)
