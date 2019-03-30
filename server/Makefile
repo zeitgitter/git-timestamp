@@ -10,8 +10,8 @@ ETCDIR		= /etc
 SYSTEMDDIR	= ${ETCDIR}/systemd/system
 
 # Color
-WARN		= \033[1;31m
-INFO		= \033[1;32m
+ACT		= \033[7;34m
+INFO		= \033[7;32m
 NORM		= \033[0m
 
 # Tests
@@ -46,26 +46,26 @@ install:
 		install -o igitt -d ${WEBDIR}; \
 		install -o igitt -m 644 -t ${WEBDIR} web/*; \
 	else \
-		echo "${WARN}* Not updating ${WEBDIR}${NORM}"; \
+		echo "${INFO}* Not updating ${WEBDIR}${NORM}"; \
 	fi
-	if grep -q IGITT_ ${WEBDIR}/*; then echo "${INFO}* Please adapt ${WEBDIR} to your needs${NORM}"; fi
+	if grep -q IGITT_ ${WEBDIR}/*; then echo "${ACT}* Please adapt ${WEBDIR} to your needs${NORM}"; fi
 	install -d -o igitt ${REPODIR}
 # /etc/igittd.conf contains passwords, so restrict access
 	if [ ! -f ${ETCDIR}/igittd.conf ]; then \
 		install -o igitt -m 600 sample-igittd.conf ${ETCDIR}/igittd.conf; \
-		echo "${INFO}* Customize ${ETCDIR}/igittd.conf${NORM}"; \
+		echo "${ACT}* Customize ${ETCDIR}/igittd.conf${NORM}"; \
 	else \
-		echo "${WARN}* Not updating ${ETCDIR}/igittd.conf${NORM}"; \
+		echo "${INFO}* Not updating ${ETCDIR}/igittd.conf${NORM}"; \
 	fi
 	if [ ! -f ${SYSTEMDDIR}/igitt.socket ]; then \
 		install -m 644 -t ${SYSTEMDDIR} systemd/*; \
 		systemctl daemon-reload; \
 	else \
-		echo "${WARN}* Not updating ${SYSTEMDDIR}/igitt.*${NORM}"; \
+		echo "${INFO}* Not updating ${SYSTEMDDIR}/igitt.*${NORM}"; \
 	fi
 	if [ ! -d ${IGITTHOME}/.gnupg ]; then \
 		systemctl enable igitt.service igitt.socket; \
-		echo "${INFO}* Create an OpenPGP key, see ../doc/Cryptography.md${NORM}"; \
+		echo "${ACT}* Please create an OpenPGP key, see ../doc/Cryptography.md${NORM}"; \
 	else \
 		systemctl restart igitt.service; \
 	fi
