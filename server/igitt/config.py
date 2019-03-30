@@ -61,9 +61,9 @@ def get_args(args=None, config_file_contents=None):
                       help="port number to listen on (when not started by systemd)")
   parser.add_argument('--max-parallel-signatures',
                       default=2, type=int,
-                      help="maximum number of parallel timestamping operations.
+                      help="""maximum number of parallel timestamping operations.
                       Please not that GnuPG serializes all operations through
-                      the gpg-agent, so parallelism helps very little")
+                      the gpg-agent, so parallelism helps very little""")
   parser.add_argument('--max-parallel-timeout',
                       type=float,
                       help="""number of seconds to wait for a timestamping thread
