@@ -45,10 +45,10 @@ install:
 	if [ ! -d ${WEBDIR} ]; then \
 		install -o igitt -d ${WEBDIR}; \
 		install -o igitt -m 644 -t ${WEBDIR} web/*; \
-		echo "${INFO}* Please adapt ${WEBDIR} to your needs${NORM}"; \
 	else \
 		echo "${WARN}* Not updating ${WEBDIR}${NORM}"; \
 	fi
+	if grep -q IGITT_ ${WEBDIR}/*; then echo "${INFO}* Please adapt ${WEBDIR} to your needs${NORM}"; fi
 	install -d -o igitt ${REPODIR}
 # /etc/igittd.conf contains passwords, so restrict access
 	if [ ! -f ${ETCDIR}/igittd.conf ]; then \
