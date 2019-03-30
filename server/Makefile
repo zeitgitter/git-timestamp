@@ -65,7 +65,7 @@ install:
 	fi
 	if [ ! -d ${IGITTHOME}/.gnupg ]; then \
 		systemctl enable igitt.service igitt.socket; \
-		echo "${INFO}* Create an OpenPGP key, see ../doc/Cryptography.md"; \
+		echo "${INFO}* Create an OpenPGP key, see ../doc/Cryptography.md${NORM}"; \
 	else \
 		systemctl restart igitt.service; \
 	fi
