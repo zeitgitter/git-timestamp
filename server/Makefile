@@ -35,6 +35,9 @@ all:
 	@echo 'Nothing needs to be done for "all"; use "install" or "test" instead'
 
 install:
+	if ! groups igitt > /dev/null 2>&1; then \
+		adduser --system --disabled-password --disabled-login --group --home ${IGITTHOME} --gecos "Independent GIT Timestamper" igitt; \
+	fi
 	mkdir -p ${PYMODDIR}
 	install -t ${SBINDIR} igittd.py
 	install -t ${PYMODDIR} igitt/*.py
@@ -45,9 +48,6 @@ install:
 		echo "${INFO}* Please adapt ${WEBDIR} to your needs${NORM}"; \
 	else \
 		echo "${WARN}* Not updating ${WEBDIR}${NORM}"; \
-	fi
-	if ! groups igitt > /dev/null 2>&1; then \
-		adduser --system --disabled-password --disabled-login --group --home ${IGITTHOME} --gecos "Independent GIT Timestamper" igitt; \
 	fi
 	install -d -o igitt ${REPODIR}
 # /etc/igittd.conf contains passwords, so restrict access
