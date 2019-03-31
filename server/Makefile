@@ -77,9 +77,10 @@ install:
 		if wget --no-verbose -O ${REPODIR}/pubkey.asc 'http://127.0.0.1:15177/?request=get-public-key-v1'; then \
 			(cd ${REPODIR} && sudo -Hu igitt git add pubkey.asc); \
 			echo "${INFO}* Added public key${NORM}"; \
-			if gpg --list-packets ${REPODIR}/pubkey.asc | sudo -Hu igitt tools/set-git-config-from-pubkey.py; then \
+			if sudo -Hu igitt gpg --list-packets ${REPODIR}/pubkey.asc | \
+				sudo -Hu igitt tools/set-git-config-from-pubkey.py ${REPODIR}; then \
 				echo "${INFO}* Set git repo user identity from pubkey.asc${NORM}"; \
-			fi
+			fi; \
 		else \
 			echo "${ACT}* Cannot obtain public key${NORM}"; \
 			rm ${REPODIR}/pubkey.asc; \
