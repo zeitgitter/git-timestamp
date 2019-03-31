@@ -50,6 +50,7 @@ def setup_module():
                      'gnupg')),
     '--keyid', '353DFEC512FA47C7',
     '--own-url', 'https://hagrid.snakeoil',
+    '--max-parallel-signatures', '10',
     '--max-parallel-timeout', '1',
     '--repository', tmpdir.name,
     '--commit-at', ''])  # Every minute
@@ -185,7 +186,7 @@ def test_multithreading1():
   stamper.extra_delay = 0.5
   threads = []
   for i in range(20):
-    t = threading.Thread(target=test_sign_tag)
+    t = threading.Thread(target=test_sign_tag, name="test_multithreading1_%d" % i)
     t.start()
     threads.append(t)
   for t in threads:
@@ -210,7 +211,7 @@ def test_multithreading5():
   stamper.extra_delay = 1.5
   threads = []
   for i in range(20):
-    t = threading.Thread(target=count_sign_tag)
+    t = threading.Thread(target=count_sign_tag, name="test_multithreading5_%d" % i)
     t.start()
     threads.append(t)
   for t in threads:
