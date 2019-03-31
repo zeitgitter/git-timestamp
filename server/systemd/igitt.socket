@@ -2,7 +2,10 @@
 Description=IGITT server socket
 
 [Socket]
-ListenStream=[::1]:15177
+# Only one ListenStream is supported right now
+# ::1 is sometimes not configured
+#ListenStream=[::1]:15177
+ListenStream=127.0.0.1:15177
 Accept=false
 Service=igitt.service
 
