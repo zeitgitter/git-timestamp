@@ -48,7 +48,7 @@ install:
 	else \
 		echo "${INFO}* Not updating ${WEBDIR}${NORM}"; \
 	fi
-	if grep -q IGITT_ ${WEBDIR}/*; then echo "${ACT}* Please adapt ${WEBDIR} to your needs${NORM}"; fi
+	if grep -q _IGITT_ ${WEBDIR}/*; then echo "${ACT}* Please adapt ${WEBDIR} to your needs${NORM}"; fi
 	install -d -o igitt ${REPODIR}
 # /etc/igittd.conf contains passwords, so restrict access
 	if [ ! -f ${ETCDIR}/igittd.conf ]; then \
