@@ -49,7 +49,6 @@ def mailtest():
     '--smtp-server', os.environ['IGITT_SMTP_SERVER'],
     '--mail-username', os.environ['IGITT_USERNAME'],
     '--mail-password', os.environ['IGITT_PASSWORD'],
-    '--email-address', os.environ['IGITT_MAILADDRESS'],
     # Send test mails to self
     '--external-pgp-timestamper-to', os.environ['IGITT_MAILADDRESS'],
     '--external-pgp-timestamper-reply', os.environ['IGITT_MAILADDRESS']
@@ -122,4 +121,9 @@ fa94ffe675454658bd11219693d60844b995a74d
   os.utime(p, times=(ftime, ftime))
   igitt.mail.receive_async()
 
-mailtest()
+if ('IGITT_MAILADDRESS' in os.environ
+    and 'IGITT_IMAP_SERVER' in os.environ
+    and 'IGITT_SMTP_SERVER' in os.environ
+    and 'IGITT_USERNAME' in os.environ
+    and 'IGITT_PASSWORD' in os.environ):
+  mailtest()
