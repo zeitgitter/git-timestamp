@@ -122,7 +122,7 @@ def wait_until():
     # Time for next cycle
     now = time.time()
     dnow = datetime.datetime.utcfromtimestamp(now)
-    strnow = dnow.strftime('HH:MM')
+    strnow = dnow.strftime('%H:%M')
     if re.search(pattern, strnow):
       threading.Thread(target=do_commit, daemon=False).start()
 
