@@ -2,6 +2,7 @@
 # Needs to be run shortly after the full minute
 # so that no rotation occurs during this test
 #
+export LANG=C # So we can match gpg output
 ts="`pwd`/../client/git-timestamp.py"
 repo=`mktemp -d`
 cd $repo
