@@ -1,6 +1,10 @@
 all:
 	@echo "Use make install-client|install-server|install-both|test"
 
+install:
+	@echo "Please select from install-client, install-server, install-both"
+	@echo "For cross-timestamping servers, both should be installed"
+
 install-client:
 	${MAKE} -C client install
 
