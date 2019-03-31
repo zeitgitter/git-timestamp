@@ -69,6 +69,16 @@ install:
 	else \
 		systemctl restart igitt.service; \
 	fi
+	if [ ! -d ${REPODIR}/.git ]; then git init ${REPODIR}; fi
+	if [ ! -d ${REPODIR}/pubkey.asc ]; then \
+		if wget --no-verbose -O ${REPODIR}/pubkey.asc 'http://127.0.0.1:15177/?request=get-public-key-v1'; then \
+			git add ${REPODIR}/pubkey.asc; \
+		else \
+			echo "${ACT}* Cannot obtain public key${NORM}"; \
+			rm ${REPODIR}/pubkey.asc; \
+		fi; \
+	fi
+
 
 
 test tests:	unit-tests system-tests
