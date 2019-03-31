@@ -5,7 +5,7 @@
 * Create a domain and an email address for the timestamper
 * Install the necessary third-party software
 ```sh
-apt install git python3-pygit2 python3-configargparse
+apt install git python3-pygit2 python3-gnupg python3-configargparse
 ```
 * Install `igitt` client and server:
 ```sh
