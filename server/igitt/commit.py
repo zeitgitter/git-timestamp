@@ -114,16 +114,19 @@ def do_commit():
 def wait_until():
   """Every full minute, check whether the time matches"""
   pattern = igitt.config.arg.commit_at
+  actsec = igitt.config.arg.activity_seconds
   now = time.time()
   while True:
-    until = now - (now % 60) + 60
+    until = now - (now % 60) + actsec
+    if until < now:
+        until += 60
     time.sleep(until - now)
 
     # Time for next cycle
     now = time.time()
     dnow = datetime.datetime.utcfromtimestamp(now)
     strnow = dnow.strftime('%H:%M')
-    if re.search(pattern, strnow):
+    if re.match(pattern, strnow):
       threading.Thread(target=do_commit, daemon=False).start()
 
 

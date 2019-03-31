@@ -23,6 +23,7 @@ DAEMONPARAMS	= \
 	--own-url https://hagrid.snakeoil \
 	--gnupg-home ${KEYHOME} \
 	--commit-at '' \
+	--activity-seconds 30 \
 	--repository ${DAEMONTEMP} \
 	--upstream-timestamp stupid-timestamps=http://localhost:8080
 

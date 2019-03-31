@@ -21,6 +21,7 @@
 # Configuration handling
 
 import configargparse
+import random
 import igitt.version
 
 
@@ -43,6 +44,10 @@ def get_args(args=None, config_file_contents=None):
   parser.add_argument('--commit-at',
                       required=True,
                       help="regexp matching HH:MM to commit at")
+  parser.add_argument('--activity-seconds',
+                      type=int,
+                      help="Perform scheduled activities so many seconds "
+                      "after the full minute. Default: Random choice in [1..58]")
   parser.add_argument('--webroot',
                       default='web',
                       help="(preferably absolute) path to the webroot")
@@ -104,7 +109,13 @@ def get_args(args=None, config_file_contents=None):
                       help="Branch to push; option may be given multiple times")
   parser.add_argument('--version',
                       action='version', version=igitt.version.VERSION)
+
   arg = parser.parse_args(args=args, config_file_contents=config_file_contents)
+
+  if arg.activity_seconds is None or arg.activity_seconds not in range(0, 60):
+      # Avoid seconds 59 (on a busy machine, could easily miss a commit)
+      # and 0 (already busy from minute-based activities)
+      arg.activity_seconds = random.randint(1, 58)
   arg.own_domain = arg.own_url.replace('https://', '')
   for i in arg.upstream_timestamp:
     if not '=' in i:

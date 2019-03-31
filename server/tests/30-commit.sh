@@ -1,7 +1,10 @@
 #!/bin/bash
 cd "$DAEMONREPO"
-# Wait for the next full minute (+1 s)
-delay=$((61 - $(date +%S | sed s/^0//)))
+# Wait for the next 30 seconds after the full minute (+1 s)
+delay=$((60 + 30 + 1 - $(date +%S | sed s/^0//)))
+if [ $delay -gt 60 ]; then
+  delay=$(($delay - 60))
+fi
 echo "Waiting $delay seconds for the rotation to have happened"
 sleep $delay
 
