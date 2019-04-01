@@ -24,10 +24,10 @@ increases robustness](./Cryptography.md#algorithm-diversity).
 
 ## Technical parameters
 
-| Nickname    | Algorithm | Key ID           | Commit at  | Timestamped by |
-| ----------- | --------- | ---------------- | ---------- | -------------- |
-| Gitta       | dsa3072   | 8A0B0941E7C49D65 | ..:23 (1h) | Diversity      |
-| Diversity   | rsa4096   | 453E515FCB1593CB | ..:46 (1h) | Gitta          |
+| Nickname    | Algorithm | Key ID           | Interval | Offset | Timestamped by |
+| ----------- | --------- | ---------------- | --------:| ------:| -------------- |
+| Gitta       | dsa3072   | 8A0B0941E7C49D65 |       1h |  23:37 | Diversity      |
+| Diversity   | rsa4096   | 453E515FCB1593CB |       1h |  46:19 | Gitta          |
 
 How to read this: Gitta commits, obtains a cross-timestamp from Diversity, and
 publishes its log every hour, 23 minutes after the hour.
