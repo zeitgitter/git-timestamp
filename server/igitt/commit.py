@@ -47,7 +47,7 @@ def commit_to_git(repo, log, msg="Newly timestamped commits"):
                   '--gpg-sign=' + igitt.config.arg.keyid],
                  cwd=repo).check_returncode()
   # Mark as processed; use only while locked!
-  os.truncate(log, 0)
+  os.remove(log)
 
 
 def commit_dangling(repo, log):
@@ -100,6 +100,8 @@ def do_commit():
       os.stat(tmp)
       rotate_log_file(tmp, log)
       commit_to_git(repo, log)
+      with open(tmp, 'ab'):
+          pass # Recreate hashes.work
     except FileNotFoundError:
       print("Nothing to rotate")
   repositories = igitt.config.arg.push_repository
