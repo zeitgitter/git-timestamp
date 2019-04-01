@@ -75,7 +75,7 @@ install:
 		echo "${INFO}* Initialized repo${NORM}"; \
 	fi
 	if [ ! -f ${REPODIR}/pubkey.asc ]; then \
-		if wget --no-verbose -O ${REPODIR}/pubkey.asc 'http://127.0.0.1:15177/?request=get-public-key-v1'; then \
+		if sudo -Hu igitt wget --no-verbose -O ${REPODIR}/pubkey.asc 'http://127.0.0.1:15177/?request=get-public-key-v1'; then \
 			(cd ${REPODIR} && sudo -Hu igitt git add pubkey.asc); \
 			echo "${INFO}* Added public key${NORM}"; \
 			if sudo -Hu igitt gpg --list-packets ${REPODIR}/pubkey.asc | \
