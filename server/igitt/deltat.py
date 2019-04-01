@@ -1,4 +1,11 @@
 #!/usr/bin/python3
+#
+# deltat.py — Parse a time duration
+#
+# License unknown, based on work by virhilo and Peter on Stackoverflow
+# Modified by Marcel Waldvogel
+#
+
 import re
 from datetime import timedelta
 
@@ -10,7 +17,8 @@ def parse_time(time_str):
     """
     Parse a time string e.g. (2h13m) into a timedelta object.
 
-    Modified from virhilo's answer at https://stackoverflow.com/a/4628148/851699
+    Based on Peter's answer at https://stackoverflow.com/a/51916936/2445204
+    and virhilo's answer at https://stackoverflow.com/a/4628148/851699
 
     :param time_str: A string identifying a duration.  (eg. 2h13m)
     :return datetime.timedelta: A datetime.timedelta object
