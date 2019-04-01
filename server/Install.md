@@ -6,6 +6,7 @@
 * Install the necessary third-party software
 ```sh
 apt install git python3-pygit2 python3-gnupg python3-configargparse
+apt install python3-nose # For tests only
 ```
 * Install `igitt` client and server:
 ```sh
