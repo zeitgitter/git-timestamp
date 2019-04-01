@@ -43,7 +43,6 @@ def mailtest():
     '--own-url', 'https://hagrid.snakeoil',
     '--max-parallel-timeout', '1',
     '--repository', tmpdir.name,
-    '--commit-at', '',  # Every minute
     '--email-address', os.environ['IGITT_MAILADDRESS'],
     '--imap-server', os.environ['IGITT_IMAP_SERVER'],
     '--smtp-server', os.environ['IGITT_SMTP_SERVER'],
@@ -127,3 +126,5 @@ if ('IGITT_MAILADDRESS' in os.environ
     and 'IGITT_USERNAME' in os.environ
     and 'IGITT_PASSWORD' in os.environ):
   mailtest()
+else:
+  print("Skipping mailtest --- configuration environment variables missing")

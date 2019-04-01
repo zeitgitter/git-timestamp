@@ -67,7 +67,6 @@ class MailTests(unittest.TestCase):
       '--own-url', 'https://hagrid.snakeoil',
       '--max-parallel-timeout', '1',
       '--repository', self.tmpdir.name,
-      '--commit-at', '',  # Every minute
       '--email-address', os.environ['IGITT_MAILADDRESS'],
       '--imap-server', os.environ['IGITT_IMAP_SERVER'],
       '--smtp-server', os.environ['IGITT_SMTP_SERVER'],

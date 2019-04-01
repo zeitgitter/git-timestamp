@@ -52,8 +52,7 @@ def setup_module():
     '--own-url', 'https://hagrid.snakeoil',
     '--max-parallel-signatures', '10',
     '--max-parallel-timeout', '1',
-    '--repository', tmpdir.name,
-    '--commit-at', ''])  # Every minute
+    '--repository', tmpdir.name])
   stamper = igitt.stamper.Stamper()
   os.environ['IGITT_FAKE_TIME'] = '1551155115'
 
