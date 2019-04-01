@@ -46,8 +46,8 @@ def commit_to_git(repo, log, msg="Newly timestamped commits"):
   subprocess.run(['git', 'commit', '-m', msg, '--allow-empty',
                   '--gpg-sign=' + igitt.config.arg.keyid],
                  cwd=repo).check_returncode()
-  # Mark as processed
-  os.remove(log)
+  # Mark as processed; use only while locked!
+  os.truncate(log, 0)
 
 
 def commit_dangling(repo, log):

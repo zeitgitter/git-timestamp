@@ -87,6 +87,7 @@ install:
 			rm ${REPODIR}/pubkey.asc; \
 		fi; \
 	fi
+	sudo -Hu igitt touch ${REPODIR}/hashes.work
 
 
 
