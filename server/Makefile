@@ -22,8 +22,8 @@ DAEMONPARAMS	= \
 	--keyid ${KEYID} \
 	--own-url https://hagrid.snakeoil \
 	--gnupg-home ${KEYHOME} \
-	--commit-at '' \
-	--activity-seconds 30 \
+	--commit-interval 1m \
+	--commit-offset 30s \
 	--repository ${DAEMONTEMP} \
 	--upstream-timestamp stupid-timestamps=http://localhost:8080
 
@@ -101,7 +101,7 @@ system-tests: prepare-tmp-git kill-daemon
 ## Wait for daemon to be ready
 	sleep 0.5
 ## Run tests with daemon
-	@d=`mktemp -d`; for i in tests/*; do echo; echo ===== $$i $$d; $$i $$d || exit 1; done; rm -r $$d
+	@d=`mktemp -d`; for i in tests/*; do echo; echo ===== $$i $$d; $$i $$d || exit 1; done; echo ===== Cleanup; ${RM} -r $$d
 ## Cleanup
 	${RM} -r ${DAEMONTEMP}
 	killall igittd.py

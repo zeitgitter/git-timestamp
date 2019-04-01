@@ -23,6 +23,8 @@
 import configargparse
 import random
 import igitt.version
+import igitt.deltat
+import datetime
 
 
 def get_args(args=None, config_file_contents=None):
@@ -41,13 +43,12 @@ def get_args(args=None, config_file_contents=None):
   parser.add_argument('--own-url',
                       required=True,
                       help="the URL of this service")
-  parser.add_argument('--commit-at',
-                      required=True,
-                      help="regexp matching HH:MM to commit at")
-  parser.add_argument('--activity-seconds',
-                      type=int,
-                      help="Perform scheduled activities so many seconds "
-                      "after the full minute. Default: Random choice in [1..58]")
+  parser.add_argument('--commit-interval',
+                      default='4h',
+                      help="how often to commit")
+  parser.add_argument('--commit-offset',
+                      help="when to commit within that interval; e.g. after 37m19.3s. "
+                      "Default: Random choice in the interval")
   parser.add_argument('--webroot',
                       default='web',
                       help="(preferably absolute) path to the webroot")
@@ -112,10 +113,26 @@ def get_args(args=None, config_file_contents=None):
 
   arg = parser.parse_args(args=args, config_file_contents=config_file_contents)
 
-  if arg.activity_seconds is None or arg.activity_seconds not in range(0, 60):
-      # Avoid seconds 59 (on a busy machine, could easily miss a commit)
-      # and 0 (already busy from minute-based activities)
-      arg.activity_seconds = random.randint(1, 58)
+  arg.commit_interval = igitt.deltat.parse_time(arg.commit_interval)
+  if arg.email_address is None:
+    if arg.commit_interval < datetime.timedelta(minutes=1):
+      sys.exit("--commit-interval may not be shorter than 1m")
+  else:
+    if arg.commit_interval < datetime.timedelta(minutes=30):
+      sys.exit("--commit-interval may not be shorter than 30m when "
+              "using the PGP Digital Timestamper")
+
+  if arg.commit_offset is None:
+    # Avoid the seconds around the full interval, to avoid clustering
+    # with other system activity.
+    arg.commit_offset = arg.commit_interval * random.uniform(0.05, 0.95)
+  else:
+    arg.commit_offset = igitt.deltat.parse_time(arg.commit_offset)
+  if arg.commit_offset < datetime.timedelta(seconds=0):
+    sys.exit("--commit-offset must be positive")
+  if arg.commit_offset >= arg.commit_interval:
+    sys.exit("--commit-offset must be less than --commit-interval")
+
   arg.own_domain = arg.own_url.replace('https://', '')
   for i in arg.upstream_timestamp:
     if not '=' in i:

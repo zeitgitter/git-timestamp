@@ -19,8 +19,8 @@ cd .. && make install-both
     of the key should be avoided,** as this creates an unefined state for the
     key for its entire lifetime, not just only after the revocation. Prefer
     to destroy the key before it falls into wrong hands.
-* Chose a unique time to commit your changes and cross-timestamp
-  (parameter `commit-at`).
+* Chose a unique time interval and offset within that interval to commit your
+  changes and cross-timestamp (parameters `commit-interval` and `commit-offset`).
 * Configure the remaining parameters, including whether to have upstream
   cross-timestamping.
 * Set up a front-end webserver doing HTTPS and proxying.
