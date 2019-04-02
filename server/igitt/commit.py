@@ -23,6 +23,7 @@
 # The state machine used is described in ../../doc/StateMachine.md
 
 import datetime
+import logging
 import os
 import re
 import subprocess
@@ -103,7 +104,7 @@ def do_commit():
       with open(tmp, 'ab'):
           pass # Recreate hashes.work
     except FileNotFoundError:
-      print("Nothing to rotate")
+      logging.info("Nothing to rotate")
   repositories = igitt.config.arg.push_repository
   branches = igitt.config.arg.push_branch
   for r in repositories:

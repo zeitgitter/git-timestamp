@@ -25,6 +25,7 @@ import random
 import igitt.version
 import igitt.deltat
 import datetime
+import logging
 
 
 def get_args(args=None, config_file_contents=None):
@@ -37,6 +38,9 @@ def get_args(args=None, config_file_contents=None):
   parser.add_argument('--config-file', '-c',
                       is_config_file=True,
                       help="config file path")
+  parser.add_argument('--debug', '-d',
+                      action='count',
+                      help="increase debugging output")
   parser.add_argument('--keyid',
                       required=True,
                       help="our PGP key ID to timestamp with")
@@ -126,6 +130,7 @@ def get_args(args=None, config_file_contents=None):
     # Avoid the seconds around the full interval, to avoid clustering
     # with other system activity.
     arg.commit_offset = arg.commit_interval * random.uniform(0.05, 0.95)
+    logging.info("Chose --commit-offset %s" % arg.commit_offset)
   else:
     arg.commit_offset = igitt.deltat.parse_time(arg.commit_offset)
   if arg.commit_offset < datetime.timedelta(seconds=0):
@@ -137,5 +142,11 @@ def get_args(args=None, config_file_contents=None):
   for i in arg.upstream_timestamp:
     if not '=' in i:
       sys.exit("--upstream-timestamp requires <branch>=<url> argument")
+
+  if arg.debug:
+    level = logging.WARN - arg.debug * (logging.WARN - logging.INFO)
+  else:
+    level = logging.WARN
+  logging.basicConfig(level=level)
 
   return arg

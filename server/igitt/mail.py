@@ -21,13 +21,15 @@
 # Sending and receiving mail
 
 import os
+import logging
 import subprocess
+import igitt.config
+
 from datetime import datetime, timedelta
 from pathlib import Path
 from time import gmtime, strftime
 from smtplib import SMTP, SMTPException
 from imaplib import IMAP4
-import igitt.config
 
 
 def split_host_port(host, default_port):
@@ -88,7 +90,7 @@ def extract_pgp_body(body):
 def save_signature(bodylines):
   with open(Path(igitt.config.arg.repository, 'hashes.asc'), 'x') as f:
     f.write('\n'.join(bodylines))
-  print("Written!")
+  logging("Written!")
 
 def body_signature_correct(bodylines, stat):
   body = '\n'.join(bodylines)
@@ -105,31 +107,31 @@ def body_signature_correct(bodylines, stat):
                        input=body, stderr=subprocess.PIPE)
   if res.returncode != 0:
     return False
-  print(res.stderr)
+  logging.debug(res.stderr)
   if not '\ngpg: Good signature' in res.stderr:
-    print("Not good signature")
+    logging.warn("Not good signature (%r)" % res.stderr)
     return False
   if not res.stderr.startswith('gpg: Signature made '):
-    print("Signature not made")
+    logging.warn("Signature not made (%r)" % res.stderr)
     return False
   if not ((' key ID %s\n' % igitt.config.arg.external_pgp_timestamper_keyid)
     in res.stderr):
-    print("Wrong KeyID")
+    logging.warn("Wrong KeyID (%r)" % res.stderr)
     return False
   try:
-    print(res.stderr[24:48])
+    logging.debug(res.stderr[24:48])
     sigtime = datetime.strptime(res.stderr[24:48], "%b %d %H:%M:%S %Y %Z")
-    print(sigtime)
+    logging.debug(sigtime)
   except ValueError:
-    print("Illegal date")
+    logging.warn("Illegal date (%r)" % res.stderr)
     return False
   if sigtime > datetime.utcnow() + timedelta(seconds=30):
-    print("Signature time %s lies more than 30 seconds in the future"
+    logging.warn("Signature time %s lies more than 30 seconds in the future"
           % sigtime)
     return False
   modtime = datetime.utcfromtimestamp(stat.st_mtime)
   if sigtime < modtime - timedelta(seconds=30):
-    print("Signature time %s is more than 30 seconds before\n"
+    logging.warn("Signature time %s is more than 30 seconds before\n"
           "file modification time %s"
           % (sigtime, modtime))
     return False
@@ -139,22 +141,22 @@ def body_signature_correct(bodylines, stat):
 def verify_body_and_save_signature(body, stat):
   bodylines = extract_pgp_body(body)
   if bodylines is None:
-    print("No body lines")
+    logging.warn("No body lines")
     return False
 
   res = body_contains_file(bodylines)
   if res is None:
-    print("No res %s" % '\n'.join(bodylines))
+    logging.warn("No res %s" % '\n'.join(bodylines))
     return False
   else:
     (before, after) = res
-    print("before %d, after %d" % (before, after))
+    logging.debug("before %d, after %d" % (before, after))
     if before > 20 or after > 20:
-      print("Before/after wrong")
+      logging.warn("Before/after wrong")
       return False
 
   if not body_signature_correct(bodylines, stat):
-    print("Body signature incorrect")
+    logging.warn("Body signature incorrect")
     return False
 
   save_signature(bodylines)
@@ -197,45 +199,45 @@ def body_contains_file(bodylines):
 
 def imap_idle(imap, stat):
   imap.send(b'%s IDLE\r\n' % (imap._new_tag()))
-  print("IMAP IDLE")
+  logging.debug("IMAP IDLE")
   while True:
-    print("IMAP waiting for IDLE response")
+    logging.debug("IMAP waiting for IDLE response")
     line = imap.readline().strip()
-    print("IMAP IDLE → %s" % line)
-    print("…")
+    logging.debug("IMAP IDLE → %s" % line)
+    logging.debug("…")
     if line == b'' or line.startswith(b'* BYE '):
-      print("IMAP IDLE ends False")
+      logging.debug("IMAP IDLE ends False")
       return False
     if line.endswith(b' EXISTS'):
-      print("You have new mail!")
+      logging.debug("You have new mail!")
       # Stop idling
       imap.send(b'DONE\r\n')
       if check_for_stamper_mail(imap, stat) is True:
-        print("IMAP IDLE ends False")
+        logging.debug("IMAP IDLE ends False")
         return True
-      print("x")
-    print("loop")
+      logging.debug("x")
+    logging.debug("loop")
 
 
 def check_for_stamper_mail(imap, stat):
-  print("IMAP SEARCH…")
+  logging.debug("IMAP SEARCH…")
   (typ, msgs) = imap.search(
     None,
     'FROM', '"%s"' % igitt.config.arg.external_pgp_timestamper_reply,
     'UNSEEN',
     'LARGER', str(stat.st_size),
     'SMALLER', str(stat.st_size + 8192))
-  print("IMAP SEARCH → %s, %s" % (typ, msgs))
+  logging.debug("IMAP SEARCH → %s, %s" % (typ, msgs))
   if len(msgs) == 1 and len(msgs[0]) > 0:
     mseq = msgs[0].replace(b' ', b',')
-    print(mseq)
+    logging.debug(mseq)
     (typ, contents) = imap.fetch(mseq, 'BODY[TEXT]')
-    print("IMAP FETCH → %s, %d" % (typ, len(contents)))
+    logging.debug("IMAP FETCH → %s, %d" % (typ, len(contents)))
     for m in contents:
       if m != b')':
-        print("IMAP FETCH BODY → %s" % m[1][:20])
+        logging.debug("IMAP FETCH BODY → %s" % m[1][:20])
         if verify_body_and_save_signature(m[1], stat):
-          print("Verify_body() succeeded")
+          logging.debug("Verify_body() succeeded")
           return True
   return False
 
@@ -244,7 +246,7 @@ def receive_async():
   try:
     stat = os.stat(Path(igitt.config.arg.repository,
                                 "hashes.log"))
-    print("File is from %d" % stat.st_mtime)
+    logging.debug("File is from %d" % stat.st_mtime)
   except FileNotFoundError:
     return False
   try:

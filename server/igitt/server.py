@@ -27,6 +27,7 @@ import re
 import socket
 import socketserver
 import urllib
+import logging
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import igitt.commit
@@ -46,7 +47,7 @@ class SocketActivationMixin:
       if nfds == 1:
         self.socket = socket.fromfd(3, self.address_family, self.socket_type)
       else:
-        print("Socket activation must provide exactly one socket\n")
+        logging.error("Socket activation must provide exactly one socket (for now)\n")
         exit(1)
     else:
       super().server_bind()
@@ -215,7 +216,7 @@ def run():
   # httpd.socket = ssl.wrap_socket(httpd.socket,
   #        keyfile='cert/key.pem',
   #        certfile='cert/cert.pem', server_side=True)
-  print("Start serving")
+  logging.info("Start serving")
   try:
     httpd.serve_forever()
   except KeyboardInterrupt:
