@@ -38,8 +38,8 @@ def get_args(args=None, config_file_contents=None):
   parser.add_argument('--config-file', '-c',
                       is_config_file=True,
                       help="config file path")
-  parser.add_argument('--debug', '-d',
-                      action='count',
+  parser.add_argument('--debug-level',
+                      default=0, type=int,
                       help="increase debugging output")
   parser.add_argument('--keyid',
                       required=True,
@@ -143,10 +143,7 @@ def get_args(args=None, config_file_contents=None):
     if not '=' in i:
       sys.exit("--upstream-timestamp requires <branch>=<url> argument")
 
-  if arg.debug:
-    level = logging.WARN - arg.debug * (logging.WARN - logging.INFO)
-  else:
-    level = logging.WARN
+  level = logging.WARN - arg.debug_level * (logging.WARN - logging.INFO)
   logging.basicConfig(level=level)
 
   return arg
