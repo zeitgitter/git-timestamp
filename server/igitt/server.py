@@ -18,7 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-# HTTPS handling
+# HTTP request handling
 
 
 import cgi
@@ -92,21 +92,23 @@ class FlatFileRequestHandler(BaseHTTPRequestHandler):
     self.wfile.write(explain)
 
   def do_GET(self):
+    print(self.path)
     if self.path == '/':
       self.send_file('text/html', 'index.html',
                      replace={b'IGITT_DOMAIN': bytes(igitt.config.arg.own_domain,
                                                      'ASCII')})
     else:
-      match = re.match('^/([a-z0-9][-_.a-z0-9]*).(html|css|js)$', self.path, re.IGNORECASE)
+      match = re.match('^/([a-z0-9][-_.a-z0-9]*).(html|css|js|png|jpe?g|svg)$', self.path, re.IGNORECASE)
       mimemap = {
         'html': 'text/html',
         'css': 'text/css',
         'js': 'text/javascript',
         'png': 'image/png',
+        'svg': 'image/svg+xml',
         'jpg': 'image/jpeg',
         'jpeg': 'image/jpeg'}
-      if match and match.group(1) in mimemap:
-        self.send_file(mimemap[match.group(1)], match.group(0))
+      if match and match.group(2) in mimemap:
+        self.send_file(mimemap[match.group(2)], self.path[1:])
       else:
         self.send_bodyerr(406, "Illegal file name",
                           "<p>This type of file/path is not served here.</p>")
