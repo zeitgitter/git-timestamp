@@ -36,30 +36,9 @@ import igitt.stamper
 import igitt.version
 
 
-class SocketActivationMixin:
-  """Use systemd provided socket, if available.
-  When socket activation is used, exactly one socket needs to be passed."""
-
-  def server_bind(self):
-    nfds = 0
-    if os.environ.get('LISTEN_PID', None) == str(os.getpid()):
-      nfds = int(os.environ.get('LISTEN_FDS', 0))
-      if nfds == 1:
-        self.socket = socket.fromfd(3, self.address_family, self.socket_type)
-      else:
-        logging.error("Socket activation must provide exactly one socket (for now)\n")
-        exit(1)
-    else:
-      super().server_bind()
-
-
 class ThreadingHTTPServer(socketserver.ThreadingMixIn, HTTPServer):
   """Replacement for http.server.ThreadingHTTPServer for Python < 3.7"""
   pass
-
-
-class SocketActivationHTTPServer(SocketActivationMixin, ThreadingHTTPServer):
-  address_family = socket.AF_INET6
 
 
 class FlatFileRequestHandler(BaseHTTPRequestHandler):
@@ -211,7 +190,7 @@ class StamperRequestHandler(FlatFileRequestHandler):
 def run():
   igitt.config.get_args()
   igitt.commit.run()
-  httpd = SocketActivationHTTPServer(
+  httpd = ThreadingHTTPServer(
     (igitt.config.arg.listen_address, igitt.config.arg.listen_port),
     StamperRequestHandler)
   # ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
