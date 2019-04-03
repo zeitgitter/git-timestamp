@@ -60,7 +60,7 @@ class ThreadingHTTPServer(socketserver.ThreadingMixIn, HTTPServer):
 
 
 class SocketActivationHTTPServer(SocketActivationMixin, ThreadingHTTPServer):
-  address_family = socket.AF_INET6
+  pass
 
 
 class FlatFileRequestHandler(BaseHTTPRequestHandler):
