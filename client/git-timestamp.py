@@ -196,7 +196,7 @@ def verify_signature_and_timestamp(keyid, signed, signature, args):
              (verified.sig_timestamp, time_str(verified.sig_timestamp),
               sigtime, time_str(sigtime)))
   if keyid != verified.key_id and keyid != verified.pubkey_fingerprint:
-    sys.exit("Signature with key ID %s; but expected %s" %
+    sys.exit("Received signature with key ID %s; but expected %s -- refusing" %
              (verified.key_id, keyid))
 
 
@@ -231,17 +231,12 @@ def timestamp_tag(repo, commit, keyid, name, args):
   """Obtain and add a signed tag"""
   # pygit2.reference_is_valid_name() is too new
   if not re.match('^[-_a-zA-Z0-9]+$', args.tag):
-    sys.exit("Tag name %s is not valid for timestamping" % args.tag)
+    sys.exit("Tag name '%s' is not valid for timestamping" % args.tag)
   try:
-    r = repo.references['refs/tags/' + args.tag]
-    sys.exit("Tag %s already in use" % args.tag)
+    r = repo.lookup_reference('refs/tags/' + args.tag)
+    sys.exit("Tag '%s' already in use" % args.tag)
   except KeyError:
     pass
-  except AttributeError:
-    import pygit2.__init__
-    sys.exit("git timestamp: Need at least pygit2 0.25.1; installed is %s.\n"
-            "Update with 'pip3 install -U pygit2'."
-            % pygit2.__init__.__version__)
   try:
     r = requests.post(args.server,
                       data={
@@ -255,7 +250,7 @@ def timestamp_tag(repo, commit, keyid, name, args):
     validate_tag(r.text, commit, keyid, name, args)
     print(r.text)
     tagid = repo.write(git.GIT_OBJ_TAG, r.text)
-    repo.references.create('refs/tags/%s' % args.tag, tagid)
+    repo.create_reference('refs/tags/%s' % args.tag, tagid)
   except requests.exceptions.ConnectionError as e:
     sys.exit("Cannot connect to server: %s" % e)
 
@@ -306,15 +301,10 @@ def timestamp_branch(repo, commit, keyid, name, args):
     'tree': commit.tree.id
   }
   try:
-    branch_head = repo.references['refs/heads/' + args.branch]
+    branch_head = repo.lookup_reference('refs/heads/' + args.branch)
     data['parent'] = branch_head.target
   except KeyError:
     pass
-  except AttributeError:
-    import pygit2.__init__
-    sys.exit("git timestamp: Need at least pygit2 0.25.1; installed is %s.\n"
-            "Update with 'pip3 install -U pygit2'."
-            % pygit2.__init__.__version__)
   try:
     r = requests.post(args.server, data)
     if r.status_code != 200:
@@ -322,7 +312,7 @@ def timestamp_branch(repo, commit, keyid, name, args):
                % (r.status_code, r.reason))
     validate_branch(r.text, keyid, name, data, args)
     commitid = repo.write(git.GIT_OBJ_COMMIT, r.text)
-    repo.references.create('refs/heads/' + args.branch, commitid, force=True)
+    repo.create_reference('refs/heads/' + args.branch, commitid, force=True)
   except requests.exceptions.ConnectionError as e:
     sys.exit("Cannot connect to server: %s" % e)
 
@@ -337,7 +327,7 @@ args = get_args()
 try:
   commit = repo.revparse_single(args.commit)
 except KeyError as e:
-  sys.exit("No such revision: %s" % (e,))
+  sys.exit("No such revision: '%s'" % (e,))
 
 (keyid, name) = get_keyid(args.server)
 if args.tag:

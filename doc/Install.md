@@ -3,33 +3,40 @@
 :warning: For server installation information, please visit
 [server/Install.md](../server/Install.md).
 
-## Ubuntu >= 18.04
+## Ubuntu >= 18.04, Debian Stretch, Raspbian 9
 
-On *Ubuntu 18.04* and *Ubuntu 18.10*, you can install the timestamping client
-with:
+On these systems, you can install the timestamping client with:
 
 ```sh
 sudo apt install python3-gnupg python3-pygit2
 sudo make install-client
 ```
 
-## Debian Stretch, Raspbian 9
+## Other packaged systems
 
-The version of `pygit2` installed as part of the distribution is too old
-(0.24.2 instead of >= 0.25.1). So it cannot be installed using the package
-manager and needs to be installed with `pip3` instead:
+* Install `git` (you probably already have this)
+* Install Python3 (tested with versions 3.6 and 3.7)
+* Install GnuPG 2.x (`gpg` binary)
+* Install libraries and headers for `libgit2`, `libffi`, and `libssl`
 
-1. Install the newest version of [`libgit2` from source](https://libgit2.org/).
+Then run:
 
-2. ```sh
-sudo apt install python-pip3 python3-gnupg libffi-dev libssl-dev
-sudo pip3 install -U pygit2
+```sh
+sudo pip3 install python-gnupg pygit2
 sudo make install-client
 ```
 
+:warning: The `pip[3]` package named *just* `gnupg` (no `python-` prefix!) is
+incompatible with `igitt` and may need to be *removed* first, to avoid
+conflicts between the two packages.
+
+
 ## Other systems
 
-On other systems, you might require
+On other systems, you might need to compile things from scratch. Please try to
+avoid this, as this is an arduous process. `libgit2` needs to be at least as
+new as `pygit2`, otherwise compilation as part of `pip3 install pygit2` will
+fail.
 
 * Python 3.x,
 * a C compiler,
@@ -42,9 +49,6 @@ Then run:
 sudo pip3 install python-gnupg pygit2
 sudo make install-client
 ```
-
-:warning: The package `gnupg` (no `python-` prefix) is incompatible with
-`igitt` and may need to be removed first.
 
 
 # Client usage
