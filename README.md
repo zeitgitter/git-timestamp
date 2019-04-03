@@ -156,6 +156,9 @@ It is desirable that as many people and organisations as possible do
 provide timestamping services. So a user may choose a subset of them 
 which are mutually independent and generally trustworthy.
 
+[Installation and typical usage of the timestamping client is documented in
+`doc/Install.md`](doc/Install.md).
+
 # Name
 
 The `igitt` name can refer to
