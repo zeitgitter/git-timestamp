@@ -64,11 +64,11 @@ def get_args(args=None, config_file_contents=None):
                       action='append',
                       help="any number of <branch>=<URL> tuples of upstream IGITT timestampers")
   parser.add_argument('--listen-address',
-                      default='::',
-                      help="IP address to listen on (when not started by systemd)")
+                      default='127.0.0.1', # Still not all machines support ::1
+                      help="IP address to listen on")
   parser.add_argument('--listen-port',
                       default=8080, type=int,
-                      help="port number to listen on (when not started by systemd)")
+                      help="port number to listen on")
   parser.add_argument('--max-parallel-signatures',
                       default=2, type=int,
                       help="""maximum number of parallel timestamping operations.
