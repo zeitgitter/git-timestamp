@@ -55,18 +55,19 @@ information or you were authorized to know it.</p>
 <ul>
 <li><b>Timestamps are issued in real time</b>: You get a timestamp in a matter of
 	seconds, at most.</li>
-<li>The timestamping process results in a valid timestamped signature,
-	which you can immediately store in your GIT repository. (All the
+<li>The timestamping process results in a <b>valid timestamped signature,
+	which you can immediately store in your GIT repository.</b><br/>(All the
 	remaining mumbo-jumbo is just to ensure that timestampers are not
 	mis-issuing any backdated timestamps and that this can also be
 	publicly audited at any time.)</li>
 <li>The audit log for the timestamps is a GIT repository as well, i.e., the
-	input and the output formats are compatible. This allows such logs to
+	input and the output formats are compatible. This follows the Unix
+	component and <em>stdio</em> principle and allows such logs to
 	be timestamped by other IGITT servers as well.</li>
-<li>As a result, a network of timestampers can be built, who cross-timestamp
-	each other.</li>
-<li>Any trustworthy cross-timestamp limits the ability of the receiving
-	timestamper to maliciously issue wrong timestamps. Especially, it is
+<li>As a result, a network of timestampers can be built,
+	<b>cross-timestamping</b> each other.</li>
+<li>Any trustworthy cross-timestamp <b>limits the ability of the receiving
+	timestamper to maliciously issue wrong timestamps.</b> Especially, it is
 	not possible to issue a timestamp after a trustworthy
 	cross-timestamp claiming to have been issued before this
 	cross-timestamp.</li>
@@ -77,6 +78,10 @@ information or you were authorized to know it.</p>
 	than one third or one half of malicious nodes can control
 	the entire network.</li>
 </ul>
+
+<p><a href="https://igitt.ch"><img src="igitt.svg" width="30%" /></a>
+Learn more about timestamping, IGITT, the IGITT network, how to use it,
+and how to join it.</a></p>
 
 
 <ul class="footer">
