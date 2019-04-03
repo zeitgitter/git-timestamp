@@ -144,7 +144,7 @@ in line with the
 # Usage
 
 This software is free software; so you may use it in any way you see 
-fit, in accordance to the (AGPL v3.0 license)[LICENSE.md].
+fit, in accordance to the [AGPL v3.0 license](LICENSE.md).
 
 Timestamping has a need to be as transparent as possible. Therefore, 
 you may want to make information about your timestamping service, 
