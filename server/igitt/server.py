@@ -114,11 +114,14 @@ class FlatFileRequestHandler(BaseHTTPRequestHandler):
         self.send_bodyerr(406, "Illegal file name",
                           "<p>This type of file/path is not served here.</p>")
 
+stamper = None
+public_key = None
 
 class StamperRequestHandler(FlatFileRequestHandler):
   def __init__(self, *args, **kwargs):
-    self.public_key = None
-    self.stamper = igitt.stamper.Stamper()
+    global stamper
+    if stamper is None:
+      stamper = igitt.stamper.Stamper()
     self.protocol_version = 'HTTP/1.1'
     super().__init__(*args, **kwargs)
 
@@ -126,13 +129,14 @@ class StamperRequestHandler(FlatFileRequestHandler):
     return "IGITT/" + igitt.version.VERSION
 
   def send_public_key(self):
-    if self.public_key == None:
-      self.public_key = self.stamper.get_public_key()
-    if self.public_key == None:
+    global stamper, public_key
+    if public_key == None:
+      public_key = stamper.get_public_key()
+    if public_key == None:
       self.send_bodyerr(500, "Internal server error",
                         "<p>No public key found</p>")
     else:
-      pk = bytes(self.public_key, 'ASCII')
+      pk = bytes(public_key, 'ASCII')
       self.send_response(200)
       self.send_header('Content-Type', 'application/pgp-keys')
       self.send_header('Content-Length', len(pk))
@@ -140,19 +144,20 @@ class StamperRequestHandler(FlatFileRequestHandler):
       self.wfile.write(pk)
 
   def handle_signature(self, params):
+    global stamper
     if 'request' in params:
       if (params['request'][0] == 'stamp-tag-v1'
           and 'commit' in params and 'tagname' in params):
-        return self.stamper.stamp_tag(params['commit'][0],
-                                      params['tagname'][0])
+        return stamper.stamp_tag(params['commit'][0],
+                                 params['tagname'][0])
       elif (params['request'][0] == 'stamp-branch-v1'
             and 'commit' in params and 'tree' in params):
         if 'parent' in params:
-          return self.stamper.stamp_branch(params['commit'][0],
-                                           params['parent'][0], params['tree'][0])
+          return stamper.stamp_branch(params['commit'][0],
+                                      params['parent'][0], params['tree'][0])
         else:
-          return self.stamper.stamp_branch(params['commit'][0],
-                                           None, params['tree'][0])
+          return stamper.stamp_branch(params['commit'][0],
+                                      None, params['tree'][0])
     else:
       return 406
 
