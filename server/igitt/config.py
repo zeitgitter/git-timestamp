@@ -47,6 +47,18 @@ def get_args(args=None, config_file_contents=None):
   parser.add_argument('--own-url',
                       required=True,
                       help="the URL of this service")
+  parser.add_argument('--domain',
+                      help="the domain name, for HTML substitution and SMTP greeting. "
+                      "Defaults to host part of --own-url")
+  parser.add_argument('--country',
+                      required=True,
+                      help="the jurisdiction this falls under, for HTML substitution")
+  parser.add_argument('--owner',
+                      required=True,
+                      help="owner and operator of this instance, for HTML substitution")
+  parser.add_argument('--contact',
+                      required=True,
+                      help="contact for this instance, for HTML substitution")
   parser.add_argument('--commit-interval',
                       default='4h',
                       help="how often to commit")
@@ -138,7 +150,9 @@ def get_args(args=None, config_file_contents=None):
   if arg.commit_offset >= arg.commit_interval:
     sys.exit("--commit-offset must be less than --commit-interval")
 
-  arg.own_domain = arg.own_url.replace('https://', '')
+  if arg.domain is None:
+    arg.domain = arg.own_url.replace('https://', '')
+
   for i in arg.upstream_timestamp:
     if not '=' in i:
       sys.exit("--upstream-timestamp requires <branch>=<url> argument")

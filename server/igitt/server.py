@@ -93,11 +93,16 @@ class FlatFileRequestHandler(BaseHTTPRequestHandler):
     self.wfile.write(explain)
 
   def do_GET(self):
-    print(self.path)
+#    subst = {}
+#    for i in ('domain', 'owner', 'contact', 'country'):
+#      subst[bytes('IGITT_' + upper(i), 'ASCII')] = bytes(igitt.config.arg[i], 'UTF-8')
+    subst = {b'IGITT_DOMAIN': bytes(igitt.config.arg.domain, 'UTF-8'),
+        b'IGITT_OWNER': bytes(igitt.config.arg.owner, 'UTF-8'),
+        b'IGITT_CONTACT': bytes(igitt.config.arg.contact, 'UTF-8'),
+        b'IGITT_COUNTRY': bytes(igitt.config.arg.country, 'UTF-8')}
+
     if self.path == '/':
-      self.send_file('text/html', 'index.html',
-                     replace={b'IGITT_DOMAIN': bytes(igitt.config.arg.own_domain,
-                                                     'ASCII')})
+      self.send_file('text/html', 'index.html', replace=subst)
     else:
       match = re.match('^/([a-z0-9][-_.a-z0-9]*).(html|css|js|png|jpe?g|svg)$', self.path, re.IGNORECASE)
       mimemap = {
@@ -109,7 +114,10 @@ class FlatFileRequestHandler(BaseHTTPRequestHandler):
         'jpg': 'image/jpeg',
         'jpeg': 'image/jpeg'}
       if match and match.group(2) in mimemap:
-        self.send_file(mimemap[match.group(2)], self.path[1:])
+        if match.group(2) == 'html':
+          self.send_file(mimemap[match.group(2)], self.path[1:], replace=subst)
+        else:
+          self.send_file(mimemap[match.group(2)], self.path[1:])
       else:
         self.send_bodyerr(406, "Illegal file name",
                           "<p>This type of file/path is not served here.</p>")

@@ -21,6 +21,7 @@ KEYHOME		= ${CURDIR}/igitt/tests/gnupg/
 DAEMONPARAMS	= \
 	--keyid ${KEYID} \
 	--own-url https://hagrid.snakeoil \
+	--owner '?' --contact '?' --country '?' \
 	--gnupg-home ${KEYHOME} \
 	--commit-interval 1m \
 	--commit-offset 30s \

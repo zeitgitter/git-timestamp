@@ -47,7 +47,7 @@ def send(body, subject='Stamping request', to=None):
     to=igitt.config.arg.external_pgp_timestamper_to
   (host, port) = split_host_port(igitt.config.arg.smtp_server, 587)
   with SMTP(host, port=port,
-            local_hostname=igitt.config.arg.own_domain) as smtp:
+            local_hostname=igitt.config.arg.domain) as smtp:
     smtp.starttls()
     smtp.login(igitt.config.arg.mail_username,
                igitt.config.arg.mail_password)

@@ -6,7 +6,7 @@
 * Install the necessary third-party software
 ```sh
 apt install git python3-pygit2 python3-gnupg python3-configargparse
-apt install python3-nose # For tests only
+apt install python3-nose # Only needed for testing
 ```
 * Install `igitt` client and server:
 ```sh
@@ -20,12 +20,13 @@ cd .. && make install-both
     of the key should be avoided,** as this creates an unefined state for the
     key for its entire lifetime, not just only after the revocation. Prefer
     to destroy the key before it falls into wrong hands.
+* Enter the maintainer information in the `[Maintainer]` part of
+  `/etc/igittd.conf`.
 * Chose a unique time interval and offset within that interval to commit your
   changes and cross-timestamp (parameters `commit-interval` and `commit-offset`).
 * Configure the remaining parameters, including whether to have upstream
   cross-timestamping.
 * Set up a front-end webserver doing HTTPS and proxying.
-* Update the contact parameters in `/var/igitt/web`.
 * Test it thoroughly.
 * If your server should be public, create a pull request with your addition to
   `…/doc/ServerList.md`.
