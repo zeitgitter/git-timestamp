@@ -237,6 +237,11 @@ def timestamp_tag(repo, commit, keyid, name, args):
     sys.exit("Tag %s already in use" % args.tag)
   except KeyError:
     pass
+  except AttributeError:
+    import pygit2.__init__
+    sys.exit("git timestamp: Need at least pygit2 0.25.1; installed is %s.\n"
+            "Update with 'pip3 install -U pygit2'."
+            % pygit2.__init__.__version__)
   try:
     r = requests.post(args.server,
                       data={
@@ -305,6 +310,11 @@ def timestamp_branch(repo, commit, keyid, name, args):
     data['parent'] = branch_head.target
   except KeyError:
     pass
+  except AttributeError:
+    import pygit2.__init__
+    sys.exit("git timestamp: Need at least pygit2 0.25.1; installed is %s.\n"
+            "Update with 'pip3 install -U pygit2'."
+            % pygit2.__init__.__version__)
   try:
     r = requests.post(args.server, data)
     if r.status_code != 200:
