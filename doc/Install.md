@@ -3,33 +3,53 @@
 :warning: For server installation information, please visit
 [server/Install.md](../server/Install.md).
 
-This installation has been tested on *Ubuntu 18.10* and *Raspbian 9*:
+## Ubuntu >= 18.04
+
+On *Ubuntu 18.04* and *Ubuntu 18.10*, you can install the timestamping client
+with:
 
 ```sh
 sudo apt install python3-gnupg python3-pygit2
-make install-client
+sudo make install-client
 ```
+
+## Debian Stretch, Raspbian 9
+
+The version of `pygit2` installed as part of the distribution is too old
+(0.24.2 instead of >= 0.25.1). So it cannot be installed using the package
+manager and needs to be installed with `pip3` instead:
+
+1. Install the newest version of [`libgit2` from source](https://libgit2.org/).
+
+2. ```sh
+sudo apt install python-pip3 python3-gnupg libffi-dev libssl-dev
+sudo pip3 install -U pygit2
+sudo make install-client
+```
+
+## Other systems
 
 On other systems, you might require
 
 * Python 3.x,
-* a C compiler, and
-* the `git` tools, header files, and libraries
+* a C compiler,
+* the libraries and headers for `libgit2`, `libffi` and `libssl`, and
+* the `git` tools, header files, and libraries.
 
-and then run:
+Then run:
 
 ```sh
-pip3 install python-gnupg pygit2
-make install-client
+sudo pip3 install python-gnupg pygit2
+sudo make install-client
 ```
 
 :warning: The package `gnupg` (no `python-` prefix) is incompatible with
 `igitt` and may need to be removed first.
 
 
-## Client usage
+# Client usage
 
-### One-off/rare stamping: With tags
+## One-off/rare stamping: With tags
 
 In a `git` repository of your choice, simply run
 ```sh
@@ -52,7 +72,7 @@ version, they should describe in their privacy policy, accessible from the
 server's URL. A typical usage might be to keep them for one to two weeks only,
 to identify problems or abuse.
 
-### Frequent stamping: In a branch
+## Frequent stamping: In a branch
 
 If you would like to timestamp your repository on a regular basis, then you
 might not like the many additional tags cluttering the output of `git tag`.
@@ -92,5 +112,5 @@ When timestamping multiple source branches or using multiple timestampers,
 we recommend to use a distinct branch for each (source branch, timestamper)
 pair for clarity.
 
-Thanks to the inner workings of `git`, the timestamped copy of the source tree
-only occupies a few hundred bytes, independent of the size of the source tree.
+Thanks to the inner workings of `git`, the timestamped "copy" of the source tree
+occupies at most a few hundred bytes, independent of the size of the source tree.
