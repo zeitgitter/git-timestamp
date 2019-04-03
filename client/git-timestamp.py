@@ -248,9 +248,9 @@ def timestamp_tag(repo, commit, keyid, name, args):
       sys.exit("Timestamping request failed; server responded with %d %s"
                % (r.status_code, r.reason))
     validate_tag(r.text, commit, keyid, name, args)
-    print(r.text)
     tagid = repo.write(git.GIT_OBJ_TAG, r.text)
     repo.create_reference('refs/tags/%s' % args.tag, tagid)
+#    print("Added signed tag '%s'" % args.tag)
   except requests.exceptions.ConnectionError as e:
     sys.exit("Cannot connect to server: %s" % e)
 
