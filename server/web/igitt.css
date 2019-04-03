@@ -2,7 +2,7 @@
 html { font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif; font-size: 150%; }
 h1, h2 { background-color: #ddd; }
 h1 { padding-top: 1.5em; }
-p { max-width: 40em; }
+p, li { max-width: 40em; }
 
 /* Footer */
 ul.footer { background-color: #444; list-style-type: none; margin: 0; padding: 0; overflow: hidden; position: fixed; top: 0; width: 100%; } 
