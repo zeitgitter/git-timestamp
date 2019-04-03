@@ -29,6 +29,7 @@ import socketserver
 import urllib
 import logging
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
 
 import igitt.commit
 import igitt.config
@@ -44,7 +45,7 @@ class ThreadingHTTPServer(socketserver.ThreadingMixIn, HTTPServer):
 class FlatFileRequestHandler(BaseHTTPRequestHandler):
   def send_file(self, content_type, filename, replace={}):
     try:
-      f = open('web/%s' % filename, 'rb')
+      f = open(Path(igitt.config.arg.webroot, filename), 'rb')
       contents = f.read()
       f.close()
       for k, v in replace.items():
@@ -55,8 +56,8 @@ class FlatFileRequestHandler(BaseHTTPRequestHandler):
       self.end_headers()
       self.wfile.write(contents)
     except IOError as e:
-      send_bodyerr(404, "File not found",
-                   "This file was not found on this server")
+      self.send_bodyerr(404, "File not found",
+                        "This file was not found on this server")
 
   def send_bodyerr(self, status, title, body):
     explain = """<html><head><title>%s</title></head>
