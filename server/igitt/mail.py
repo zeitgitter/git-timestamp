@@ -245,7 +245,7 @@ def check_for_stamper_mail(imap, stat):
 def receive_async():
   try:
     stat = os.stat(Path(igitt.config.arg.repository,
-                                "hashes.log"))
+                                "hashes.log").as_posix())
     logging.debug("File is from %d" % stat.st_mtime)
   except FileNotFoundError:
     return False

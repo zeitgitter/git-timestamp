@@ -94,8 +94,8 @@ def do_commit():
   3. (Optionally) cross-timestamp
   4. (Optionally) push"""
   repo = igitt.config.arg.repository
-  tmp = Path(repo, 'hashes.work')
-  log = Path(repo, 'hashes.log')
+  tmp = Path(repo, 'hashes.work').as_posix()
+  log = Path(repo, 'hashes.log').as_posix()
   with serialize:
     commit_dangling(repo, log)
     try:
