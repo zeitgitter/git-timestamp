@@ -68,10 +68,11 @@ def rotate_log_file(tmp, log):
 
 
 def push_upstream(repo, to, branches):
+  logging.info("Pushing to %s" % (['git', 'push', to] + branches))
   ret = subprocess.run(['git', 'push', to] + branches,
                        cwd=repo)
   if ret.returncode != 0:
-    sys.stderr.write("git push %s %s failed" % (to, branches))
+    logging.error("'git push %s %s' failed" % (to, branches))
 
 
 def cross_timestamp(repo, branch, server):
@@ -90,8 +91,8 @@ def do_commit():
   0. Check if there is anything uncommitted
   1. Rotate log file
   2. Commit to git
-  3. (Optionally) push
-  4. (Optionally) cross-timestamp"""
+  3. (Optionally) cross-timestamp
+  4. (Optionally) push"""
   repo = igitt.config.arg.repository
   tmp = Path(repo, 'hashes.work')
   log = Path(repo, 'hashes.log')
@@ -107,11 +108,14 @@ def do_commit():
       logging.info("Nothing to rotate")
   repositories = igitt.config.arg.push_repository
   branches = igitt.config.arg.push_branch
-  for r in repositories:
-    push_upstream(repo, r, branches)
   for r in igitt.config.arg.upstream_timestamp:
+    logging.info("Cross-timestamping %s" % r);
     (branch, server) = r.split('=', 1)
     cross_timestamp(repo, branch, server)
+  for r in repositories:
+    logging.info("Pushing upstream to %s" % r);
+    push_upstream(repo, r, branches)
+  logging.info("do_commit done")
 
 
 def wait_until():

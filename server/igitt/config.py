@@ -72,8 +72,7 @@ def get_args(args=None, config_file_contents=None):
                       required=True,
                       help="path to the GIT repository")
   parser.add_argument('--upstream-timestamp',
-                      default=[],
-                      action='append',
+                      default="",
                       help="any number of <branch>=<URL> tuples of upstream IGITT timestampers")
   parser.add_argument('--listen-address',
                       default='127.0.0.1', # Still not all machines support ::1
@@ -117,14 +116,11 @@ def get_args(args=None, config_file_contents=None):
   parser.add_argument('--mail-password',
                       help="password to use for IMAP and SMTP")
   parser.add_argument('--push-repository',
-                      nargs='*',
-                      action='append',
-                      help="Repository to push to; option may be given multiple times")
+                      help="Space-separated list of repositores to push to; "
+                      "setting this enables automatic push")
   parser.add_argument('--push-branch',
-                      default=[],
-                      nargs='*',
-                      action='append',
-                      help="Branch to push; option may be given multiple times")
+                      default="",
+                      help="Space-separated list of branches to push")
   parser.add_argument('--version',
                       action='version', version=igitt.version.VERSION)
 
@@ -154,9 +150,14 @@ def get_args(args=None, config_file_contents=None):
   if arg.domain is None:
     arg.domain = arg.own_url.replace('https://', '')
 
+  # Work around ConfigArgParse list bugs by implementing lists ourselves
+  arg.upstream_timestamp = arg.upstream_timestamp.split()
+  arg.push_repository = arg.push_repository.split()
+  arg.push_branch = arg.push_branch.split()
+
   for i in arg.upstream_timestamp:
     if not '=' in i:
-      sys.exit("--upstream-timestamp requires <branch>=<url> argument")
+      sys.exit("--upstream-timestamp requires (space-separated list of) <branch>=<url> arguments")
 
   level = logging.WARN - arg.debug_level * (logging.WARN - logging.INFO)
   logging.basicConfig(level=level)
