@@ -8,21 +8,21 @@
 On these systems, you can install the timestamping client with:
 
 ```sh
-sudo apt install python3-gnupg python3-pygit2
+sudo apt install python3-gnupg python3-pygit2 python3-requests
 sudo make install-client
 ```
 
 ## Other packaged systems
 
 * Install `git` (you probably already have this)
-* Install Python3 (tested with versions 3.6 and 3.7)
+* Install Python3 (tested with versions 3.5, 3.6, and 3.7)
 * Install GnuPG 2.x (`gpg` binary)
 * Install libraries and headers for `libgit2`, `libffi`, and `libssl`
 
 Then run:
 
 ```sh
-sudo pip3 install python-gnupg pygit2
+sudo pip3 install python-gnupg pygit2 requests
 sudo make install-client
 ```
 
