@@ -88,7 +88,7 @@ def extract_pgp_body(body):
 
 
 def save_signature(bodylines):
-  with open(Path(igitt.config.arg.repository, 'hashes.asc'), 'x') as f:
+  with open(Path(igitt.config.arg.repository, 'hashes.asc').as_posix(), 'x') as f:
     f.write('\n'.join(bodylines))
   logging("Written!")
 
@@ -167,7 +167,7 @@ def body_contains_file(bodylines):
   if bodylines is None:
     return None
   linesbefore = 0
-  with open(Path(igitt.config.arg.repository, 'hashes.log'), 'r') as f:
+  with open(Path(igitt.config.arg.repository, 'hashes.log').as_posix(), 'r') as f:
     # A few empty/comment lines at the beginning
     firstline = f.readline().rstrip()
     for i in range(len(bodylines)):

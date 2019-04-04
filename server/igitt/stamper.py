@@ -89,7 +89,7 @@ class Stamper:
             return None
 
     def log_commit(self, commit):
-        with open(Path(igitt.config.arg.repository, 'hashes.work'),
+        with open(Path(igitt.config.arg.repository, 'hashes.work').as_posix(),
                 'ab', buffering=0) as f:
             f.write(bytes(commit + '\n', 'ASCII'))
             os.fsync(f.fileno())
