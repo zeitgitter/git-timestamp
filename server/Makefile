@@ -26,7 +26,7 @@ DAEMONPARAMS	= \
 	--commit-interval 1m \
 	--commit-offset 30s \
 	--repository ${DAEMONTEMP} \
-	--upstream-timestamp stupid-timestamps=http://localhost:8080
+	--upstream-timestamp stupid-timestamps=http://127.0.0.1:8080
 
 # For `gpg` and `git commit -S`
 export GNUPGHOME= ${KEYHOME}
@@ -75,7 +75,7 @@ install:
 		sudo -Hu igitt git init ${REPODIR}; \
 		echo "${INFO}* Initialized repo${NORM}"; \
 	fi
-	if [ ! -f ${REPODIR}/pubkey.asc ]; then \
+	if [ ! -s ${REPODIR}/pubkey.asc ]; then \
 		if sudo -Hu igitt wget --no-verbose -O ${REPODIR}/pubkey.asc 'http://127.0.0.1:15177/?request=get-public-key-v1'; then \
 			(cd ${REPODIR} && sudo -Hu igitt git add pubkey.asc); \
 			echo "${INFO}* Added public key${NORM}"; \
