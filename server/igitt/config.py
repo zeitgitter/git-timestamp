@@ -117,11 +117,12 @@ def get_args(args=None, config_file_contents=None):
   parser.add_argument('--mail-password',
                       help="password to use for IMAP and SMTP")
   parser.add_argument('--push-repository',
-                      default=[],
+                      nargs='*',
                       action='append',
                       help="Repository to push to; option may be given multiple times")
   parser.add_argument('--push-branch',
                       default=[],
+                      nargs='*',
                       action='append',
                       help="Branch to push; option may be given multiple times")
   parser.add_argument('--version',
