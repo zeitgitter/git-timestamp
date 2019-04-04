@@ -5,12 +5,12 @@
 * Create a domain and an email address for the timestamper
 * Install the necessary third-party software
 ```sh
-apt install git python3-pygit2 python3-gnupg python3-configargparse
-apt install python3-nose # Only needed for testing
+sudo apt install git python3-pygit2 python3-gnupg python3-configargparse
+sudo apt install python3-nose # Only needed for testing
 ```
 * Install `igitt` client and server:
 ```sh
-cd .. && make install-both
+cd .. && sudo make install-both
 ```
 * As user `igitt`, create an OpenPGP key using `sudo -H -u igitt gpg --expert --full-gen-key`:
   - All it ever needs to do is signing; encryption is not needed.
@@ -35,7 +35,7 @@ cd .. && make install-both
 
 * Install GnuPG 1.x (for downward compatibility with the old PGP 2.x key)
 ```sh
-apt install gnupg1
+sudo apt install gnupg1
 ```
 * Create a mail account and enter its parameters into the configuration file.  
   You may want to use a non-public email address for this; it will not show
