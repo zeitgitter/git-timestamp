@@ -46,7 +46,7 @@ class SocketActivationMixin:
     if os.environ.get('LISTEN_PID', None) == str(os.getpid()):
       nfds = int(os.environ.get('LISTEN_FDS', 0))
       if nfds == 1:
-        self.socket = socket.fromfd(3, self.address_family, self.socket_type)
+        self.socket = socket.socket(fileno=3)
       else:
         logging.error("Socket activation must provide exactly one socket (for now)\n")
         exit(1)
