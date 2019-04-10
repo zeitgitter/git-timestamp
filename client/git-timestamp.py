@@ -53,6 +53,8 @@ class GitArgumentParser(argparse.ArgumentParser):
         if 'default' in kwargs:
           kwargs['help'] += "; fallback default: '%s'" % kwargs['default']
         kwargs['default'] = val
+        if 'required' in kwargs:
+          del kwargs['required']
       except KeyError:
         kwargs['help'] += "Can be set by git config '%s'" % gitopt
         if 'default' in kwargs:
