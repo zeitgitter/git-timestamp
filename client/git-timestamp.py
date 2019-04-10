@@ -53,6 +53,8 @@ class GitArgumentParser(argparse.ArgumentParser):
         if 'default' in kwargs:
           kwargs['help'] += "; fallback default: '%s'" % kwargs['default']
         kwargs['default'] = val
+        if 'required' in kwargs:
+          del kwargs['required']
       except KeyError:
         kwargs['help'] += "Can be set by git config '%s'" % gitopt
         if 'default' in kwargs:
@@ -303,6 +305,8 @@ def timestamp_branch(repo, commit, keyid, name, args):
   try:
     branch_head = repo.lookup_reference('refs/heads/' + args.branch)
     data['parent'] = branch_head.target
+    if repo[branch_head.target].parent_ids[1] == commit.id:
+        sys.exit("Already timestamped commit %s to branch %s" % (commit.id.hex, args.branch))
   except KeyError:
     pass
   try:
