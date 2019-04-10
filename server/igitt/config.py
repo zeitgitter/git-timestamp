@@ -116,10 +116,11 @@ def get_args(args=None, config_file_contents=None):
   parser.add_argument('--mail-password',
                       help="password to use for IMAP and SMTP")
   parser.add_argument('--push-repository',
+                      default='',
                       help="Space-separated list of repositores to push to; "
                       "setting this enables automatic push")
   parser.add_argument('--push-branch',
-                      default="",
+                      default='',
                       help="Space-separated list of branches to push")
   parser.add_argument('--version',
                       action='version', version=igitt.version.VERSION)
