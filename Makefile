@@ -7,12 +7,14 @@ install:
 
 install-client:
 	${MAKE} -C client install
-
 install-server:
 	${MAKE} -C server install
 
 install-both: install-client install-server
 
-test:
-	${MAKE} -C server test
+test:	test-client test-server
 
+test-server:
+	${MAKE} -C server test
+test-client:
+	${MAKE} -C client test

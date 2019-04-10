@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Prevent actual duplicate entries created by `git timestamp --branch`
 - Documented that `git timestamp --help` does not work and to use `-h`, as
   `--help` is swallowed by `git` and not forwarded to `git-timestamp`.
+- Client system tests (require Internet connectivity)
 
 ### Server
 - Ability to run multiple GnuPG (including gpg-agents) in parallel
