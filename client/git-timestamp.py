@@ -72,6 +72,10 @@ def get_args():
     epilog="""Use exactly one of --tag and --branch.
             When in doubt, use --tag for single/rare timestamping,
             and --branch for reqular timestamping.""")
+  parser.add('-h', '--help',
+             help="""Show this help message and exit. When called as
+             'git timestamp' (space, not dash), use '-h', as '--help' is 
+             interpreted by 'git'."""
   parser.add('--tag',
              help="Create a new timestamped tag named TAG")
   parser.add('--branch',
