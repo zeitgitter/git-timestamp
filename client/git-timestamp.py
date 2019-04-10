@@ -258,9 +258,9 @@ def timestamp_tag(repo, commit, keyid, name, args):
 def validate_branch(text, keyid, name, data, args):
   """Check this branch commit head to toe"""
   if len(text) > 8000:
-    sys.exit("Returned branch too long (%d > 8000)" % len(text))
+    sys.exit("Returned branch commit too long (%d > 8000)" % len(text))
   if not re.match('^[ -~\n]*$', text, re.MULTILINE):
-    sys.exit("Returned tag does not only contain ASCII chars")
+    sys.exit("Returned branch commit does not only contain ASCII chars")
   lead = 'tree %s\n' % data['tree']
   if 'parent' in data:
     lead += 'parent %s\n' % data['parent']
