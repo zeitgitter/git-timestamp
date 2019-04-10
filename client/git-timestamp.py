@@ -311,8 +311,11 @@ def timestamp_branch(repo, commit, keyid, name, args):
   try:
     branch_head = repo.lookup_reference('refs/heads/' + args.branch)
     data['parent'] = branch_head.target
-    if repo[branch_head.target].parent_ids[1] == commit.id:
+    try:
+      if repo[branch_head.target].parent_ids[1] == commit.id:
         sys.exit("Already timestamped commit %s to branch %s" % (commit.id.hex, args.branch))
+    except IndexError:
+      pass
   except KeyError:
     pass
   try:
