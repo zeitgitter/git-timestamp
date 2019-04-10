@@ -68,14 +68,16 @@ class GitArgumentParser(argparse.ArgumentParser):
 def get_args():
   """Parse command line and git config parameters"""
   parser = GitArgumentParser(
+    add_help=False,
     description="Interface to IGITT, the Independent GIT Timestampers.",
     epilog="""Use exactly one of --tag and --branch.
             When in doubt, use --tag for single/rare timestamping,
             and --branch for reqular timestamping.""")
   parser.add('-h', '--help',
+             action='help',
              help="""Show this help message and exit. When called as
              'git timestamp' (space, not dash), use '-h', as '--help' is 
-             interpreted by 'git'."""
+             interpreted by 'git'.""")
   parser.add('--tag',
              help="Create a new timestamped tag named TAG")
   parser.add('--branch',
@@ -309,8 +311,11 @@ def timestamp_branch(repo, commit, keyid, name, args):
   try:
     branch_head = repo.lookup_reference('refs/heads/' + args.branch)
     data['parent'] = branch_head.target
-    if repo[branch_head.target].parent_ids[1] == commit.id:
+    try:
+      if repo[branch_head.target].parent_ids[1] == commit.id:
         sys.exit("Already timestamped commit %s to branch %s" % (commit.id.hex, args.branch))
+    except IndexError:
+      pass
   except KeyError:
     pass
   try:

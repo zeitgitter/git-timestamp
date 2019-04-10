@@ -35,16 +35,43 @@ class Stamper:
     def __init__(self):
         self.sem = threading.BoundedSemaphore(
             igitt.config.arg.max_parallel_signatures)
+        self.gpg_serialize = threading.Lock()
         self.timeout = igitt.config.arg.max_parallel_timeout
         self.url = igitt.config.arg.own_url
         self.keyid = igitt.config.arg.keyid
-        self.gpg = gnupg.GPG(gnupghome=igitt.config.arg.gnupg_home)
-        self.keyinfo = self.gpg.list_keys(keys=self.keyid)
+        self.gpgs = [gnupg.GPG(gnupghome=igitt.config.arg.gnupg_home)]
+        self.keyinfo = self.gpg().list_keys(keys=self.keyid)
         if len(self.keyinfo) == 0:
             raise ValueError("No keys found")
         self.fullid = self.keyinfo[0]['uids'][0]
-        self.pubkey = self.gpg.export_keys(self.keyid)
+        self.pubkey = self.gpg().export_keys(self.keyid)
         self.extra_delay = None
+
+    def gpg(self):
+        """Return the next GnuPG object, in round robin order.
+        Create one, if less than `number-of-gpg-agents` are available."""
+        with self.gpg_serialize:
+          if (len(self.gpgs) < igitt.config.arg.number_of_gpg_agents):
+            home = Path('%s-%d' % (igitt.config.arg.gnupg_home, len(self.gpgs)))
+            # Create symlink if needed; to trick an additional gpg-agent
+            # being started for the same directory
+            try:
+              s = home.lstat()
+            except FileNotFoundError:
+              os.symlink(Path(igitt.config.arg.gnupg_home).name,
+                      home.as_posix())
+            nextgpg = gnupg.GPG(gnupghome=home.as_posix())
+            self.gpgs.append(nextgpg)
+            print(nextgpg)
+            return nextgpg
+          else:
+            # Rotate list left and return element wrapped around (if the list
+            # just became full, this is the one least recently used)
+            nextgpg = self.gpgs[0]
+            self.gpgs = self.gpgs[1:]
+            self.gpgs.append(nextgpg)
+            print(nextgpg)
+            return nextgpg
 
     def sig_time(self):
         """Current time, unless in test mode"""
@@ -78,10 +105,10 @@ class Stamper:
             try:
                 if self.extra_delay:
                     time.sleep(self.extra_delay)
-                ret = self.gpg.sign(data, keyid=self.keyid, binary=False,
-                                    clearsign=False, detach=True,
-                                    extra_args=('--faked-system-time',
-                                        str(now) + '!'))
+                ret = self.gpg().sign(data, keyid=self.keyid, binary=False,
+                                      clearsign=False, detach=True,
+                                      extra_args=('--faked-system-time',
+                                          str(now) + '!'))
             finally:
                 self.sem.release()
             return ret

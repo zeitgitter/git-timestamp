@@ -48,6 +48,7 @@ def setup_module():
     '--gnupg-home',
     str(pathlib.Path(os.path.dirname(os.path.realpath(__file__)),
                      'gnupg')),
+    '--country', '', '--owner', '', '--contact', '',
     '--keyid', '353DFEC512FA47C7',
     '--own-url', 'https://hagrid.snakeoil',
     '--max-parallel-signatures', '10',
