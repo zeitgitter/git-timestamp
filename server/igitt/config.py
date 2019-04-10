@@ -89,6 +89,9 @@ def get_args(args=None, config_file_contents=None):
                       type=float,
                       help="""number of seconds to wait for a timestamping thread
                       before failing (default: wait forever)""")
+  parser.add_argument('--number-of-gpg-agents',
+                      default=1, type=int,
+                      help="number of gpg-agents to run")
   parser.add_argument('--gnupg-home',
                       help="GnuPG Home Dir to use, default: ~/.gnupg/")
   parser.add_argument('--external-pgp-timestamper-keyid',
