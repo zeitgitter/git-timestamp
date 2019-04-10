@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## Changed
 ### Client
 - Made some error messages more consistent
+- `--tag` overrides `--branch`. This allows to store a default branch in
+  `git config`, yet timestamp a tag when necessary.
 
 # 0.9.0 - 2019-04-04
 Initial public release

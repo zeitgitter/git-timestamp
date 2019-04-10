@@ -70,7 +70,7 @@ def get_args():
   parser = GitArgumentParser(
     add_help=False,
     description="Interface to IGITT, the Independent GIT Timestampers.",
-    epilog="""Use exactly one of --tag and --branch.
+    epilog="""--tag takes precedence over --branch.
             When in doubt, use --tag for single/rare timestamping,
             and --branch for reqular timestamping.""")
   parser.add('-h', '--help',
@@ -98,7 +98,7 @@ def get_args():
              gitopt='timestamp.commit-branch',
              help="Which commit to timestamp")
   arg = parser.parse_args()
-  if (arg.tag is None) == (arg.branch is None):
+  if arg.tag is None and arg.branch is None:
     parser.print_help(sys.stderr)
     sys.exit(2)
   return arg
