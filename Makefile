@@ -21,6 +21,7 @@ test-client:
 
 version-check:
 	@grep --with-filename ^VERSION client/git-timestamp.py server/igitt/version.py
+	@echo -n "                    "
 	@grep --with-filename '^# ' CHANGELOG.md | tail +2 | head -1
 
 version-edit:
