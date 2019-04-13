@@ -1,5 +1,5 @@
 all:
-	@echo "Use make install-client|install-server|install-both|test"
+	@echo "Use make install-client|install-server|install-both|test|version-check"
 
 install:
 	@echo "Please select from install-client, install-server, install-both"
@@ -18,3 +18,7 @@ test-server:
 	${MAKE} -C server test
 test-client:
 	${MAKE} -C client test
+
+version-check:
+	@grep --with-filename ^VERSION client/git-timestamp.py server/igitt/version.py
+	@grep --with-filename '^# ' CHANGELOG.md | tail +2 | head -1
