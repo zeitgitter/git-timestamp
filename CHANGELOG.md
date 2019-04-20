@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Client
 - Fetch GnuPG key again if missing from keyring. This fixes unexpected
   behavior when running as sudo vs. natively at root.
+- Work around a bug in older GnuPG installs (create `pubring.kbx` if it does
+  not exist yet before using `scan_keys()`).
 
 ## Changed
 

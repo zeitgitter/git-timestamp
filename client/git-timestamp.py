@@ -104,8 +104,18 @@ def get_args():
   return arg
 
 
+def ensure_gnupg_ready_for_scan_keys():
+  """`scan_keys()` on older GnuPG installs returns an empty list when
+  `~/.gnupg/pubring.kbx` has not yet been created. `list_keys()` or most
+  other commands will create it. Trying to have no match (for speed).
+  Probing for the existance of `pubring.kbx` would be faster, but would
+  require guessing the path of GnuPG-Home."""
+  gpg.list_keys(keys='arbitrary.query@creates.keybox')
+
+
 def validate_key_and_import(text):
   """Is this a single key? Then import it"""
+  ensure_gnupg_ready_for_scan_keys()
   f = tempfile.NamedTemporaryFile(mode='w', delete=False)
   f.write(text)
   f.close()
