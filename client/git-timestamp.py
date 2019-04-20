@@ -31,7 +31,7 @@ import gnupg
 import pygit2 as git
 import requests
 
-VERSION = '0.9.1'
+VERSION = '0.9.1+'
 
 
 class GitArgumentParser(argparse.ArgumentParser):
@@ -106,11 +106,9 @@ def get_args():
 
 def validate_key_and_import(text):
   """Is this a single key? Then import it"""
-  # gnupg.scan_keys() requires input from a named file
   f = tempfile.NamedTemporaryFile(mode='w', delete=False)
   f.write(text)
   f.close()
-  gpg = gnupg.GPG(gnupghome=args.gnupg_home)
   info = gpg.scan_keys(f.name)
   os.unlink(f.name)
   if len(info) != 1 or info[0]['type'] != 'pub' or len(info[0]['uids']) == 0:
@@ -136,8 +134,13 @@ def get_keyid(server):
   key = ''.join(map(lambda x:
                     x if (x >= '0' and x <= '9') or (x >= 'a' and x <= 'z') else '-', key))
   try:
-    return (repo.config['timestamper.%s.keyid' % key],
-            repo.config['timestamper.%s.name' % key])
+    keyid = repo.config['timestamper.%s.keyid' % key]
+    keys = gpg.list_keys(keys=keyid)
+    if len(keys) == 0:
+      sys.stderr.write("WARNING: Key %s missing in keyring;"
+                       " refetching timestamper key\n" % keyid)
+      raise KeyError("GPG Key not found") # Evil hack
+    return (keyid, repo.config['timestamper.%s.name' % key])
   except KeyError:
     # Obtain key in TOFU fashion and remember keyid
     r = requests.get(server, params={'request': 'get-public-key-v1'},
@@ -190,7 +193,6 @@ def validate_timestamp_zone_eol(header, text, offset):
 def verify_signature_and_timestamp(keyid, signed, signature, args):
   """Is the signature valid
   and the signature timestamp within range as well?"""
-  gpg = gnupg.GPG(gnupghome=args.gnupg_home)
   f = tempfile.NamedTemporaryFile(mode='w', delete=False)
   f.write(signature)
   f.close()
@@ -342,6 +344,7 @@ try:
 except KeyError as e:
   sys.exit("No such revision: '%s'" % (e,))
 
+gpg = gnupg.GPG(gnupghome=args.gnupg_home)
 (keyid, name) = get_keyid(args.server)
 if args.tag:
   timestamp_tag(repo, commit, keyid, name, args)
