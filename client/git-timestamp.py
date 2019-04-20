@@ -31,7 +31,7 @@ import gnupg
 import pygit2 as git
 import requests
 
-VERSION = '0.9.0+'
+VERSION = '0.9.1'
 
 
 class GitArgumentParser(argparse.ArgumentParser):
