@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# 0.9.1+ - [Unreleased]
+## Added
+### Client
+- Automatically derive default timestamp branch name from servername
+  (first component not named 'igitt') followd by '-timestamps'.
+
+## Fixed
+### Client
+- Fetch GnuPG key again if missing from keyring. This fixes unexpected
+  behavior when running as sudo vs. natively at root.
+- Work around a bug in older GnuPG installs (create `pubring.kbx` if it does
+  not exist yet before using `scan_keys()`).
+
+## Changed
+
 # 0.9.1 - 2019-04-19
 ## Added
 ### Client

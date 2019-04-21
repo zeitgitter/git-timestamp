@@ -31,7 +31,7 @@ import gnupg
 import pygit2 as git
 import requests
 
-VERSION = '0.9.1'
+VERSION = '0.9.1+'
 
 
 class GitArgumentParser(argparse.ArgumentParser):
@@ -65,6 +65,14 @@ class GitArgumentParser(argparse.ArgumentParser):
   add = add_argument
 
 
+def timestamp_branch_name(fields):
+  """Return the first field not being 'igitt'"""
+  for i in fields:
+    if i != '' and i != 'igitt':
+      return i + '-timestamps'
+  return 'igitt-timestamps'
+
+
 def get_args():
   """Parse command line and git config parameters"""
   parser = GitArgumentParser(
@@ -82,8 +90,9 @@ def get_args():
              help="Create a new timestamped tag named TAG")
   parser.add('--branch',
              gitopt='timestamp.branch',
-             help=("Create a timestamped commit in branch BRANCH,\n"
-                   "with identical contents as the specified commit"))
+             help=("""Create a timestamped commit in branch BRANCH,
+                   with identical contents as the specified commit.
+                   Default name derived from servername plus '-timestamps'"""))
   parser.add('--server',
              required=True,
              gitopt='timestamp.server',
@@ -99,18 +108,28 @@ def get_args():
              help="Which commit to timestamp")
   arg = parser.parse_args()
   if arg.tag is None and arg.branch is None:
-    parser.print_help(sys.stderr)
-    sys.exit(2)
+    # Automatically derive branch name
+    # Split on '.' or '/'
+    fields = arg.server.replace('/', '.').split('.')
+    arg.branch = timestamp_branch_name(fields[1:])
   return arg
+
+
+def ensure_gnupg_ready_for_scan_keys():
+  """`scan_keys()` on older GnuPG installs returns an empty list when
+  `~/.gnupg/pubring.kbx` has not yet been created. `list_keys()` or most
+  other commands will create it. Trying to have no match (for speed).
+  Probing for the existance of `pubring.kbx` would be faster, but would
+  require guessing the path of GnuPG-Home."""
+  gpg.list_keys(keys='arbitrary.query@creates.keybox')
 
 
 def validate_key_and_import(text):
   """Is this a single key? Then import it"""
-  # gnupg.scan_keys() requires input from a named file
+  ensure_gnupg_ready_for_scan_keys()
   f = tempfile.NamedTemporaryFile(mode='w', delete=False)
   f.write(text)
   f.close()
-  gpg = gnupg.GPG(gnupghome=args.gnupg_home)
   info = gpg.scan_keys(f.name)
   os.unlink(f.name)
   if len(info) != 1 or info[0]['type'] != 'pub' or len(info[0]['uids']) == 0:
@@ -136,8 +155,13 @@ def get_keyid(server):
   key = ''.join(map(lambda x:
                     x if (x >= '0' and x <= '9') or (x >= 'a' and x <= 'z') else '-', key))
   try:
-    return (repo.config['timestamper.%s.keyid' % key],
-            repo.config['timestamper.%s.name' % key])
+    keyid = repo.config['timestamper.%s.keyid' % key]
+    keys = gpg.list_keys(keys=keyid)
+    if len(keys) == 0:
+      sys.stderr.write("WARNING: Key %s missing in keyring;"
+                       " refetching timestamper key\n" % keyid)
+      raise KeyError("GPG Key not found") # Evil hack
+    return (keyid, repo.config['timestamper.%s.name' % key])
   except KeyError:
     # Obtain key in TOFU fashion and remember keyid
     r = requests.get(server, params={'request': 'get-public-key-v1'},
@@ -190,7 +214,6 @@ def validate_timestamp_zone_eol(header, text, offset):
 def verify_signature_and_timestamp(keyid, signed, signature, args):
   """Is the signature valid
   and the signature timestamp within range as well?"""
-  gpg = gnupg.GPG(gnupghome=args.gnupg_home)
   f = tempfile.NamedTemporaryFile(mode='w', delete=False)
   f.write(signature)
   f.close()
@@ -342,6 +365,7 @@ try:
 except KeyError as e:
   sys.exit("No such revision: '%s'" % (e,))
 
+gpg = gnupg.GPG(gnupghome=args.gnupg_home)
 (keyid, name) = get_keyid(args.server)
 if args.tag:
   timestamp_tag(repo, commit, keyid, name, args)
