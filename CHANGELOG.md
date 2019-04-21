@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # 0.9.1+ - [Unreleased]
 ## Added
+### Client
+- Automatically derive default timestamp branch name from servername
+  (first component not named 'igitt') followd by '-timestamps'.
 
 ## Fixed
 ### Client

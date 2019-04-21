@@ -65,6 +65,14 @@ class GitArgumentParser(argparse.ArgumentParser):
   add = add_argument
 
 
+def timestamp_branch_name(fields):
+  """Return the first field not being 'igitt'"""
+  for i in fields:
+    if i != '' and i != 'igitt':
+      return i + '-timestamps'
+  return 'igitt-timestamps'
+
+
 def get_args():
   """Parse command line and git config parameters"""
   parser = GitArgumentParser(
@@ -82,8 +90,9 @@ def get_args():
              help="Create a new timestamped tag named TAG")
   parser.add('--branch',
              gitopt='timestamp.branch',
-             help=("Create a timestamped commit in branch BRANCH,\n"
-                   "with identical contents as the specified commit"))
+             help=("""Create a timestamped commit in branch BRANCH,
+                   with identical contents as the specified commit.
+                   Default name derived from servername plus '-timestamps'"""))
   parser.add('--server',
              required=True,
              gitopt='timestamp.server',
@@ -99,8 +108,10 @@ def get_args():
              help="Which commit to timestamp")
   arg = parser.parse_args()
   if arg.tag is None and arg.branch is None:
-    parser.print_help(sys.stderr)
-    sys.exit(2)
+    # Automatically derive branch name
+    # Split on '.' or '/'
+    fields = arg.server.replace('/', '.').split('.')
+    arg.branch = timestamp_branch_name(fields[1:])
   return arg
 
 
