@@ -1,5 +1,5 @@
 all:
-	@echo "Use make install-client|install-server|install-both|test|version-check"
+	@echo "Use make install-client|install-server|install-both|apt|test|version-check"
 
 install:
 	@echo "Please select from install-client, install-server, install-both"
@@ -7,6 +7,7 @@ install:
 
 install-both: install-client install-server
 test:	test-client test-server
+apt:	apt-client apt-server
 
 %-client:
 	${MAKE} -C client $*
