@@ -66,7 +66,7 @@ class SocketActivationHTTPServer(SocketActivationMixin, ThreadingHTTPServer):
 class FlatFileRequestHandler(BaseHTTPRequestHandler):
   def send_file(self, content_type, filename, replace={}):
     try:
-      f = open(Path(igitt.config.arg.webroot, filename).as_posix(), 'rb')
+      f = Path(igitt.config.arg.webroot, filename).open(mode='rb')
       contents = f.read()
       f.close()
       for k, v in replace.items():

@@ -2,10 +2,13 @@ PREFIX	= /usr/local
 BINDIR	= ${PREFIX}/bin
 
 all:
-	echo "Use make install or test"
+	echo "Use make install, apt, or test"
 
 install:
 	install --backup --compare git-timestamp.py ${BINDIR}/git-timestamp
+
+apt dependencies:
+	apt install python3-gnupg python3-pygit2 python3-requests
 
 test tests:	system-tests
 

@@ -34,7 +34,7 @@ export GNUPGHOME= ${KEYHOME}
 export DAEMONREPO=${DAEMONTEMP}
 
 all:
-	@echo 'Nothing needs to be done for "all"; use "install" or "test" instead'
+	@echo 'Nothing needs to be done for "all"; use "install", "apt", or "test" instead'
 
 install:
 	if ! groups igitt > /dev/null 2>&1; then \
@@ -90,6 +90,8 @@ install:
 	fi
 	sudo -Hu igitt touch ${REPODIR}/hashes.work
 
+apt:
+	apt install git python3-pygit2 python3-gnupg python3-configargparse python3-nose
 
 
 test tests:	unit-tests system-tests
