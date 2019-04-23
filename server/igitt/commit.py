@@ -42,7 +42,7 @@ serialize = threading.Lock()
 
 
 def commit_to_git(repo, log, msg="Newly timestamped commits"):
-  subprocess.run(['git', 'add', log],
+  subprocess.run(['git', 'add', log.as_posix()],
                  cwd=repo).check_returncode()
   subprocess.run(['git', 'commit', '-m', msg, '--allow-empty',
                   '--gpg-sign=' + igitt.config.arg.keyid],
@@ -64,7 +64,7 @@ def commit_dangling(repo, log):
 
 
 def rotate_log_file(tmp, log):
-  os.rename(tmp, log)
+  tmp.rename(log)
 
 
 def push_upstream(repo, to, branches):
@@ -94,15 +94,15 @@ def do_commit():
   3. (Optionally) cross-timestamp
   4. (Optionally) push"""
   repo = igitt.config.arg.repository
-  tmp = Path(repo, 'hashes.work').as_posix()
-  log = Path(repo, 'hashes.log').as_posix()
+  tmp = Path(repo, 'hashes.work')
+  log = Path(repo, 'hashes.log')
   with serialize:
     commit_dangling(repo, log)
     try:
-      os.stat(tmp)
+      tmp.stat()
       rotate_log_file(tmp, log)
       commit_to_git(repo, log)
-      with open(tmp, 'ab'):
+      with tmp.open(mode='ab'):
           pass # Recreate hashes.work
     except FileNotFoundError:
       logging.info("Nothing to rotate")

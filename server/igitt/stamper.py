@@ -58,8 +58,7 @@ class Stamper:
             try:
               s = home.lstat()
             except FileNotFoundError:
-              os.symlink(Path(igitt.config.arg.gnupg_home).name,
-                      home.as_posix())
+              home.symlink_to(igitt.config.arg.gnupg_home)
             nextgpg = gnupg.GPG(gnupghome=home.as_posix())
             self.gpgs.append(nextgpg)
             print(nextgpg)
@@ -116,8 +115,8 @@ class Stamper:
             return None
 
     def log_commit(self, commit):
-        with open(Path(igitt.config.arg.repository, 'hashes.work').as_posix(),
-                'ab', buffering=0) as f:
+        with Path(igitt.config.arg.repository,
+                'hashes.work').open(mode='ab', buffering=0) as f:
             f.write(bytes(commit + '\n', 'ASCII'))
             os.fsync(f.fileno())
 
