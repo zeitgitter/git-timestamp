@@ -26,6 +26,7 @@ import re
 import sys
 import tempfile
 import time
+import traceback
 
 import gnupg
 import pygit2 as git
@@ -367,7 +368,11 @@ def main():
     except KeyError as e:
       sys.exit("No such revision: '%s'" % (e,))
     
-    gpg = gnupg.GPG(gnupghome=args.gnupg_home)
+    try:
+        gpg = gnupg.GPG(gnupghome=args.gnupg_home)
+    except TypeError:
+        traceback.print_exc()
+        sys.exit("*** 'git timestamp' needs 'python-gnupg' module from PyPI, not 'gnupg'")
     (keyid, name) = get_keyid(args.server)
     if args.tag:
       timestamp_tag(repo, commit, keyid, name, args)
