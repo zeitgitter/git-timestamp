@@ -353,21 +353,27 @@ def timestamp_branch(repo, commit, keyid, name, args):
     sys.exit("Cannot connect to server: %s" % e)
 
 
-requests.__title__ = 'git-timestamp/%s %s' % (VERSION, requests.__title__)
-path = git.discover_repository(os.getcwd())
-if path == None:
-  sys.exit("Not a git repository")
-repo = git.Repository(path)
-args = get_args()
+def main():
+    global repo, gpg
+    requests.__title__ = 'git-timestamp/%s %s' % (VERSION, requests.__title__)
+    path = git.discover_repository(os.getcwd())
+    if path == None:
+      sys.exit("Not a git repository")
+    repo = git.Repository(path)
+    args = get_args()
+    
+    try:
+      commit = repo.revparse_single(args.commit)
+    except KeyError as e:
+      sys.exit("No such revision: '%s'" % (e,))
+    
+    gpg = gnupg.GPG(gnupghome=args.gnupg_home)
+    (keyid, name) = get_keyid(args.server)
+    if args.tag:
+      timestamp_tag(repo, commit, keyid, name, args)
+    else:
+      timestamp_branch(repo, commit, keyid, name, args)
 
-try:
-  commit = repo.revparse_single(args.commit)
-except KeyError as e:
-  sys.exit("No such revision: '%s'" % (e,))
 
-gpg = gnupg.GPG(gnupghome=args.gnupg_home)
-(keyid, name) = get_keyid(args.server)
-if args.tag:
-  timestamp_tag(repo, commit, keyid, name, args)
-else:
-  timestamp_branch(repo, commit, keyid, name, args)
+if __name__ == "__main__":
+    main()
