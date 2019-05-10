@@ -93,9 +93,6 @@ class FlatFileRequestHandler(BaseHTTPRequestHandler):
     self.wfile.write(explain)
 
   def do_GET(self):
-#    subst = {}
-#    for i in ('domain', 'owner', 'contact', 'country'):
-#      subst[bytes('IGITT_' + upper(i), 'ASCII')] = bytes(igitt.config.arg[i], 'UTF-8')
     subst = {b'IGITT_DOMAIN': bytes(igitt.config.arg.domain, 'UTF-8'),
         b'IGITT_OWNER': bytes(igitt.config.arg.owner, 'UTF-8'),
         b'IGITT_CONTACT': bytes(igitt.config.arg.contact, 'UTF-8'),
