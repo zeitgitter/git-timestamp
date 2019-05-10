@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## Fixed
 
 ## Changed
+- Split into client (git-timestamp) and server (zeitgitterd).
+
 ### Client
 - Persistent information about the timestampers' keys is now stored
   in the global git configuration (key also stored globally; more TOFU-like)
