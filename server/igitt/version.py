@@ -18,4 +18,4 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-VERSION = '0.9.1+'
+VERSION = '0.9.2'

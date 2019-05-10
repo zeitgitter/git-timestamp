@@ -15,11 +15,11 @@ apt:	apt-client apt-server
 	${MAKE} -C server $*
 
 version-check:
-	@grep --with-filename ^VERSION client/git-timestamp.py server/igitt/version.py
-	@echo -n "                    "
+	@grep --with-filename ^VERSION client/igitt_client/timestamp.py server/igitt/version.py | sed 's/^s/         s/'
+	@echo -n "                             "
 	@grep --with-filename '^# ' CHANGELOG.md | tail +2 | head -1
 
 version-edit:
-	vi +/^VERSION client/git-timestamp.py
+	vi +/^VERSION client/igitt_client/timestamp.py
 	vi +/^VERSION server/igitt/version.py
 	vi +1 '+/^# [0-9]' CHANGELOG.md

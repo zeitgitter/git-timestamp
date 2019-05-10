@@ -1,4 +1,7 @@
-#!/usr/bin/python3 -tt
+#!/usr/bin/python -tt
+# -*- coding: utf-8 -*-
+# (keep hashbang line for `make install`)
+
 #
 # git timestamp — Independent GIT Timestamping client
 #
@@ -32,12 +35,12 @@ import gnupg
 import pygit2 as git
 import requests
 
-VERSION = '0.9.1+'
+VERSION = '0.9.2'
 
 
 class GitArgumentParser(argparse.ArgumentParser):
   def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
+    super(GitArgumentParser, self).__init__(*args, **kwargs)
 
   def add_argument(self, *args, **kwargs):
     """Insert git config options between command line and default"""
@@ -61,9 +64,18 @@ class GitArgumentParser(argparse.ArgumentParser):
         if 'default' in kwargs:
           kwargs['help'] += "; fallback default: '%s'" % kwargs['default']
       del kwargs['gitopt']
-    return super().add_argument(*args, **kwargs)
+    return super(GitArgumentParser, self).add_argument(*args, **kwargs)
 
   add = add_argument
+
+
+def asciibytes(data):
+  """For Python 2/3 compatibility:
+  If it is 'bytes' already, do nothing, otherwise convert to ASCII Bytes"""
+  if isinstance(data, bytes):
+    return data
+  else:
+    return data.encode('ASCII')
 
 
 def timestamp_branch_name(fields):
@@ -252,7 +264,7 @@ tagger %s ''' % (commit.id, args.tag, name)
 
   pgpstart = text.find('\n-----BEGIN PGP SIGNATURE-----\n\n', len(lead))
   if pgpstart >= 0:
-    signed = bytes(text[:pgpstart + 1], 'ASCII')
+    signed = asciibytes(text[:pgpstart + 1])
     signature = text[pgpstart + 1:]
     verify_signature_and_timestamp(keyid, signed, signature, args)
   else:
@@ -316,7 +328,7 @@ author %s ''' % (data['commit'], name)
     sys.exit("Incorrect OpenPGP signature in signed branch commit")
   signature = sig.group()
   # Everything except the signature
-  signed = bytes(text[:pos] + text[pos+7+sig.end() - 1:], 'ASCII')
+  signed = asciibytes(text[:pos] + text[pos+7+sig.end() - 1:])
   signature = signature.replace('\n ', '\n')
   verify_signature_and_timestamp(keyid, signed, signature, args)
 
