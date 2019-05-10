@@ -10,7 +10,7 @@ def extract_version(filename):
                 if match[2] == '':
                     return match[1]
                 else:
-                    return match[1] + '.post7'
+                    return match[1] + '.post'
     exit("Cannot extract version number from %s" % filename)
 
 
