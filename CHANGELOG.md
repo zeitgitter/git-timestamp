@@ -6,8 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # 0.9.2+ - [Unreleased]
 ## Added
+
 ## Fixed
+
 ## Changed
+### Client
+- Persistent information about the timestampers' keys is now stored
+  in the global git configuration (key also stored globally; more TOFU-like)
+
 
 # 0.9.2 - 2019-05-10
 ## Added

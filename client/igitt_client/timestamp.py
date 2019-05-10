@@ -182,8 +182,9 @@ def get_keyid(server):
     if r.status_code != 200:
       sys.exit("Server responded with %d %s" % (r.status_code, r.reason))
     (keyid, name) = validate_key_and_import(r.text)
-    repo.config['timestamper.%s.keyid' % key] = keyid
-    repo.config['timestamper.%s.name' % key] = name
+    gcfg = git.Config.get_global_config()
+    gcfg['timestamper.%s.keyid' % key] = keyid
+    gcfg['timestamper.%s.name' % key] = name
     return (keyid, name)
 
 
