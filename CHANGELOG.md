@@ -9,17 +9,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `make apt` installs dependencies on systems supporting `apt`
 
 ### Client
+- Added Python 2.x compatibility; tested with 2.7
 - Automatically derive default timestamp branch name from servername
   (first component not named 'igitt') followd by '-timestamps'.
+- Better error message when wrong `gnupg` module has been installed
 
 ## Fixed
 ### Client
 - Fetch GnuPG key again if missing from keyring. This fixes unexpected
-  behavior when running as sudo vs. natively at root.
+  behavior when running as sudo vs. natively as root.
 - Work around a bug in older GnuPG installs (create `pubring.kbx` if it does
-  not exist yet before using `scan_keys()`).
+  not yet exist before attempting `scan_keys()`).
 
 ## Changed
+- Higher-level README
+
+### Client
+- Is now implemented as a package (`make install` still installs a flat file
+  though, for simplicity)
+
 
 # 0.9.1 - 2019-04-19
 ## Added
@@ -31,7 +39,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Client system tests (require Internet connectivity)
 
 ### Server
-- Ability to run multiple GnuPG (including gpg-agents) in parallel
+- Ability to run multiple GnuPG processes (including gpg-agents) in parallel
 - Handle missing `--push-repository` (again)
 
 ## Fixed
