@@ -84,7 +84,8 @@ class Stamper:
         # '$' always matches '\n' as well. Don't want this here.
         if '\n' in tag:
             return False
-        return re.match('^[a-z][-_a-z0-9]{,99}$', tag, re.IGNORECASE)
+        return (re.match('^[a-z][-._a-z0-9]{,99}$', tag, re.IGNORECASE)
+                and ".." not in tag)
 
     def valid_commit(self, commit):
         # '$' always matches '\n' as well. Don't want this here.

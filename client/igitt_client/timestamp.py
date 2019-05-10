@@ -275,7 +275,7 @@ tagger %s ''' % (commit.id, args.tag, name)
 def timestamp_tag(repo, commit, keyid, name, args):
     """Obtain and add a signed tag"""
     # pygit2.reference_is_valid_name() is too new
-    if not re.match('^[-_a-zA-Z0-9]+$', args.tag):
+    if not re.match('^[-._a-zA-Z0-9]+$', args.tag) or ".." in args.tag:
         sys.exit("Tag name '%s' is not valid for timestamping" % args.tag)
     try:
         r = repo.lookup_reference('refs/tags/' + args.tag)
@@ -295,7 +295,6 @@ def timestamp_tag(repo, commit, keyid, name, args):
         validate_tag(r.text, commit, keyid, name, args)
         tagid = repo.write(git.GIT_OBJ_TAG, r.text)
         repo.create_reference('refs/tags/%s' % args.tag, tagid)
-    #    print("Added signed tag '%s'" % args.tag)
     except requests.exceptions.ConnectionError as e:
         sys.exit("Cannot connect to server: %s" % e)
 
@@ -337,7 +336,8 @@ author %s ''' % (data['commit'], name)
 def timestamp_branch(repo, commit, keyid, name, args):
     """Obtain and add branch commit; create/update branch head"""
     # pygit2.reference_is_valid_name() is too new
-    if not re.match('^[-_a-zA-Z0-9]+$', args.branch):
+    if (not re.match('^[-._a-zA-Z0-9]{1,100}$', args.branch)
+            or ".." in args.branch):
         sys.exit("Branch name %s is not valid for timestamping" % args.tag)
     branch_head = None
     data = {
