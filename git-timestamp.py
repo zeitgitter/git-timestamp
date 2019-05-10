@@ -1,3 +1,3 @@
 #!/usr/bin/python
-from igitt_client import timestamp
+from git_timestamp import timestamp
 timestamp.main()
