@@ -51,26 +51,26 @@ class Stamper:
         """Return the next GnuPG object, in round robin order.
         Create one, if less than `number-of-gpg-agents` are available."""
         with self.gpg_serialize:
-          if (len(self.gpgs) < igitt.config.arg.number_of_gpg_agents):
-            home = Path('%s-%d' % (igitt.config.arg.gnupg_home, len(self.gpgs)))
-            # Create symlink if needed; to trick an additional gpg-agent
-            # being started for the same directory
-            try:
-              s = home.lstat()
-            except FileNotFoundError:
-              home.symlink_to(igitt.config.arg.gnupg_home)
-            nextgpg = gnupg.GPG(gnupghome=home.as_posix())
-            self.gpgs.append(nextgpg)
-            print(nextgpg)
-            return nextgpg
-          else:
-            # Rotate list left and return element wrapped around (if the list
-            # just became full, this is the one least recently used)
-            nextgpg = self.gpgs[0]
-            self.gpgs = self.gpgs[1:]
-            self.gpgs.append(nextgpg)
-            print(nextgpg)
-            return nextgpg
+            if (len(self.gpgs) < igitt.config.arg.number_of_gpg_agents):
+                home = Path('%s-%d' % (igitt.config.arg.gnupg_home, len(self.gpgs)))
+                # Create symlink if needed; to trick an additional gpg-agent
+                # being started for the same directory
+                try:
+                    s = home.lstat()
+                except FileNotFoundError:
+                    home.symlink_to(igitt.config.arg.gnupg_home)
+                nextgpg = gnupg.GPG(gnupghome=home.as_posix())
+                self.gpgs.append(nextgpg)
+                print(nextgpg)
+                return nextgpg
+            else:
+                # Rotate list left and return element wrapped around (if the list
+                # just became full, this is the one least recently used)
+                nextgpg = self.gpgs[0]
+                self.gpgs = self.gpgs[1:]
+                self.gpgs.append(nextgpg)
+                print(nextgpg)
+                return nextgpg
 
     def sig_time(self):
         """Current time, unless in test mode"""
@@ -78,7 +78,7 @@ class Stamper:
 
     def get_public_key(self):
         return self.pubkey
-    
+
     def valid_tag(self, tag):
         """Tag validity defined in doc/Protocol.md"""
         # '$' always matches '\n' as well. Don't want this here.
@@ -107,16 +107,16 @@ class Stamper:
                 ret = self.gpg().sign(data, keyid=self.keyid, binary=False,
                                       clearsign=False, detach=True,
                                       extra_args=('--faked-system-time',
-                                          str(now) + '!'))
+                                                  str(now) + '!'))
             finally:
                 self.sem.release()
             return ret
-        else: # Timeout
+        else:  # Timeout
             return None
 
     def log_commit(self, commit):
         with Path(igitt.config.arg.repository,
-                'hashes.work').open(mode='ab', buffering=0) as f:
+                  'hashes.work').open(mode='ab', buffering=0) as f:
             f.write(bytes(commit + '\n', 'ASCII'))
             os.fsync(f.fileno())
 
@@ -133,7 +133,7 @@ tagger %s %d +0000
 
 %s tag timestamp
 """ % (commit, tagname, self.fullid, now,
-        self.url)
+       self.url)
 
             sig = self.limited_sign(now, commit, tagobj)
             if sig == None:
@@ -142,7 +142,7 @@ tagger %s %d +0000
                 return tagobj + str(sig)
         else:
             return 406
-    
+
     def stamp_branch(self, commit, parent, tree):
         if (self.valid_commit(commit) and self.valid_commit(tree)
                 and (parent == None or self.valid_commit(parent))):

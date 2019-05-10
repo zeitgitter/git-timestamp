@@ -1,6 +1,8 @@
 #!/usr/bin/python3
-import setuptools
 import re
+
+import setuptools
+
 
 def extract_version(filename):
     with open(filename, 'r') as fh:

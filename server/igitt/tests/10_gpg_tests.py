@@ -30,84 +30,84 @@ import igitt.stamper
 
 
 def assertEqual(a, b):
-  if type(a) != type(b):
-    raise AssertionError(
-      "Assertion failed: Type mismatch %r (%s) != %r (%s)"
-      % (a, type(a), b, type(b)))
-  elif a != b:
-    raise AssertionError(
-      "Assertion failed: Value mismatch: %r (%s) != %r (%s)"
-      % (a, type(a), b, type(b)))
+    if type(a) != type(b):
+        raise AssertionError(
+            "Assertion failed: Type mismatch %r (%s) != %r (%s)"
+            % (a, type(a), b, type(b)))
+    elif a != b:
+        raise AssertionError(
+            "Assertion failed: Value mismatch: %r (%s) != %r (%s)"
+            % (a, type(a), b, type(b)))
 
 
 def setup_module():
-  global stamper
-  global tmpdir
-  tmpdir = tempfile.TemporaryDirectory()
-  igitt.config.get_args(args=[
-    '--gnupg-home',
-    str(pathlib.Path(os.path.dirname(os.path.realpath(__file__)),
-                     'gnupg')),
-    '--country', '', '--owner', '', '--contact', '',
-    '--keyid', '353DFEC512FA47C7',
-    '--own-url', 'https://hagrid.snakeoil',
-    '--max-parallel-signatures', '10',
-    '--max-parallel-timeout', '1',
-    '--repository', tmpdir.name])
-  stamper = igitt.stamper.Stamper()
-  os.environ['IGITT_FAKE_TIME'] = '1551155115'
+    global stamper
+    global tmpdir
+    tmpdir = tempfile.TemporaryDirectory()
+    igitt.config.get_args(args=[
+        '--gnupg-home',
+        str(pathlib.Path(os.path.dirname(os.path.realpath(__file__)),
+                         'gnupg')),
+        '--country', '', '--owner', '', '--contact', '',
+        '--keyid', '353DFEC512FA47C7',
+        '--own-url', 'https://hagrid.snakeoil',
+        '--max-parallel-signatures', '10',
+        '--max-parallel-timeout', '1',
+        '--repository', tmpdir.name])
+    stamper = igitt.stamper.Stamper()
+    os.environ['IGITT_FAKE_TIME'] = '1551155115'
 
 
 def teardown_module():
-  del os.environ['IGITT_FAKE_TIME']
-  tmpdir.cleanup()
+    del os.environ['IGITT_FAKE_TIME']
+    tmpdir.cleanup()
 
 
 def test_commit():
-  assert stamper.valid_commit('0123456789012345678901234567890123456789')
-  assert stamper.valid_commit('0123456789abcdef678901234567890123456789')
-  assert not stamper.valid_commit('012345678901234567890123456789012345678')
-  assert not stamper.valid_commit('0123456789012345678901234567890123456789\n')
-  assert not stamper.valid_commit('01234567890123456789012345678901234567890')
-  assert not stamper.valid_commit('0123456789ABCDEF678901234567890123456789')
-  assert not stamper.valid_commit('0123456789abcdefghij01234567890123456789')
-  for i in (set(range(0, 255))
-            - set(range(ord('0'), ord('0') + 10))
-            - set(range(ord('a'), ord('a') + 6))):
-    commit = chr(i) * 40
-    if stamper.valid_commit(commit):
-      raise AssertionError(
-        "Assertion failed: '%s' (%d) is valid commit" % (commit, i))
+    assert stamper.valid_commit('0123456789012345678901234567890123456789')
+    assert stamper.valid_commit('0123456789abcdef678901234567890123456789')
+    assert not stamper.valid_commit('012345678901234567890123456789012345678')
+    assert not stamper.valid_commit('0123456789012345678901234567890123456789\n')
+    assert not stamper.valid_commit('01234567890123456789012345678901234567890')
+    assert not stamper.valid_commit('0123456789ABCDEF678901234567890123456789')
+    assert not stamper.valid_commit('0123456789abcdefghij01234567890123456789')
+    for i in (set(range(0, 255))
+              - set(range(ord('0'), ord('0') + 10))
+              - set(range(ord('a'), ord('a') + 6))):
+        commit = chr(i) * 40
+        if stamper.valid_commit(commit):
+            raise AssertionError(
+                "Assertion failed: '%s' (%d) is valid commit" % (commit, i))
 
 
 def test_tag():
-  assert stamper.valid_tag('a')
-  assert stamper.valid_tag('a' * 100)
-  assert stamper.valid_tag('A' * 100)
-  assert stamper.valid_tag('abcdefghijklmnopqrstuvwxyz0123456789-_')
-  assert not stamper.valid_tag('')
-  for i in (set(range(0, 255))
-            - set((ord('-'), ord('_')))
-            - set(range(ord('0'), ord('0') + 10))
-            - set(range(ord('A'), ord('A') + 26))
-            - set(range(ord('a'), ord('a') + 26))):
-    if stamper.valid_tag('a' + chr(i)):
-      raise AssertionError(
-        "Assertion failed: 'a%s' (%d) is valid tag" % (chr(i), i))
-  for i in (set(range(0, 255))
-            - set(range(ord('A'), ord('A') + 26))
-            - set(range(ord('a'), ord('a') + 26))):
-    if stamper.valid_tag(chr(i)):
-      raise AssertionError(
-        "Assertion failed: '%s' (%d) is valid tag" % (chr(i), i))
-  assert not stamper.valid_tag('a ')
-  assert not stamper.valid_tag('0')
-  assert not stamper.valid_tag('a' * 101)
+    assert stamper.valid_tag('a')
+    assert stamper.valid_tag('a' * 100)
+    assert stamper.valid_tag('A' * 100)
+    assert stamper.valid_tag('abcdefghijklmnopqrstuvwxyz0123456789-_')
+    assert not stamper.valid_tag('')
+    for i in (set(range(0, 255))
+              - set((ord('-'), ord('_')))
+              - set(range(ord('0'), ord('0') + 10))
+              - set(range(ord('A'), ord('A') + 26))
+              - set(range(ord('a'), ord('a') + 26))):
+        if stamper.valid_tag('a' + chr(i)):
+            raise AssertionError(
+                "Assertion failed: 'a%s' (%d) is valid tag" % (chr(i), i))
+    for i in (set(range(0, 255))
+              - set(range(ord('A'), ord('A') + 26))
+              - set(range(ord('a'), ord('a') + 26))):
+        if stamper.valid_tag(chr(i)):
+            raise AssertionError(
+                "Assertion failed: '%s' (%d) is valid tag" % (chr(i), i))
+    assert not stamper.valid_tag('a ')
+    assert not stamper.valid_tag('0')
+    assert not stamper.valid_tag('a' * 101)
 
 
 def test_pubkey():
-  pubkey = stamper.get_public_key()
-  assertEqual(pubkey, """-----BEGIN PGP PUBLIC KEY BLOCK-----
+    pubkey = stamper.get_public_key()
+    assertEqual(pubkey, """-----BEGIN PGP PUBLIC KEY BLOCK-----
 
 mQGiBFx0B0kRBACw2++3YW1ECOVsXBCd0RuXdIJHaJ8z4EfPhG6cnJWeITFawTBw
 4uboTu2NZ99qWH/eEGcOGS38TZvZHbti65AeWkks8SV7nuwuWXF4td0+dVXkDieP
@@ -128,9 +128,9 @@ eUVPRmPROLObWS2mzfEAn1dMGgRB2pPRQeaayWyodleWuWZy
 
 
 def test_sign_tag():
-  tagstamp = stamper.stamp_tag('1' * 40, 'sample-timestamping-tag')
-  print(tagstamp)
-  assertEqual(tagstamp, """object 1111111111111111111111111111111111111111
+    tagstamp = stamper.stamp_tag('1' * 40, 'sample-timestamping-tag')
+    print(tagstamp)
+    assertEqual(tagstamp, """object 1111111111111111111111111111111111111111
 type commit
 tag sample-timestamping-tag
 tagger Hagrid Snakeoil Timestomping Service <timestomping@hagrid.snakeoil> 1551155115 +0000
@@ -146,9 +146,9 @@ x4NcAJ92bPgI8D7Qz0MH5WCTmCSw9ohNPwCfe0DEodj23WzTicziH/3INpnEzKk=
 
 
 def test_sign_branch1():
-  branchstamp = stamper.stamp_branch('1' * 40, '2' * 40, '3' * 40)
-  print(branchstamp)
-  assertEqual(branchstamp, """tree 3333333333333333333333333333333333333333
+    branchstamp = stamper.stamp_branch('1' * 40, '2' * 40, '3' * 40)
+    print(branchstamp)
+    assertEqual(branchstamp, """tree 3333333333333333333333333333333333333333
 parent 2222222222222222222222222222222222222222
 parent 1111111111111111111111111111111111111111
 author Hagrid Snakeoil Timestomping Service <timestomping@hagrid.snakeoil> 1551155115 +0000
@@ -165,9 +165,9 @@ https://hagrid.snakeoil branch timestamp 2019-02-26 04:25:15 UTC
 
 
 def test_sign_branch2():
-  branchstamp = stamper.stamp_branch('1' * 40, None, '3' * 40)
-  print(branchstamp)
-  assertEqual(branchstamp, """tree 3333333333333333333333333333333333333333
+    branchstamp = stamper.stamp_branch('1' * 40, None, '3' * 40)
+    print(branchstamp)
+    assertEqual(branchstamp, """tree 3333333333333333333333333333333333333333
 parent 1111111111111111111111111111111111111111
 author Hagrid Snakeoil Timestomping Service <timestomping@hagrid.snakeoil> 1551155115 +0000
 committer Hagrid Snakeoil Timestomping Service <timestomping@hagrid.snakeoil> 1551155115 +0000
@@ -183,14 +183,14 @@ https://hagrid.snakeoil branch timestamp 2019-02-26 04:25:15 UTC
 
 
 def test_multithreading1():
-  stamper.extra_delay = 0.5
-  threads = []
-  for i in range(20):
-    t = threading.Thread(target=test_sign_tag, name="test_multithreading1_%d" % i)
-    t.start()
-    threads.append(t)
-  for t in threads:
-    t.join()
+    stamper.extra_delay = 0.5
+    threads = []
+    for i in range(20):
+        t = threading.Thread(target=test_sign_tag, name="test_multithreading1_%d" % i)
+        t.start()
+        threads.append(t)
+    for t in threads:
+        t.join()
 
 
 counter_lock = threading.Lock()
@@ -198,23 +198,23 @@ counter = 0
 
 
 def count_sign_tag():
-  global counter
-  try:
-    test_sign_tag()
-    with counter_lock:
-      counter = counter + 1
-  except AssertionError:
-    pass
+    global counter
+    try:
+        test_sign_tag()
+        with counter_lock:
+            counter = counter + 1
+    except AssertionError:
+        pass
 
 
 def test_multithreading5():
-  stamper.extra_delay = 1.5
-  threads = []
-  for i in range(20):
-    t = threading.Thread(target=count_sign_tag, name="test_multithreading5_%d" % i)
-    t.start()
-    threads.append(t)
-  for t in threads:
-    t.join()
-  print('counter =' + str(counter))
-  assert (counter == 10)
+    stamper.extra_delay = 1.5
+    threads = []
+    for i in range(20):
+        t = threading.Thread(target=count_sign_tag, name="test_multithreading5_%d" % i)
+        t.start()
+        threads.append(t)
+    for t in threads:
+        t.join()
+    print('counter =' + str(counter))
+    assert (counter == 10)

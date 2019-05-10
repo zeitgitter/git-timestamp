@@ -9,7 +9,6 @@
 import re
 from datetime import timedelta
 
-
 regex = re.compile(r'^((?P<days>[\.\d]+?)d)? *'
                    r'((?P<hours>[\.\d]+?)h)? *'
                    r'((?P<minutes>[\.\d]+?)m)? *'
@@ -30,5 +29,5 @@ def parse_time(time_str):
     assert parts is not None, """Could not parse any time information from '{}'.
     Examples of valid strings: '8h', '2d 8h 5m 2s', '2m4.3s'""".format(time_str)
     time_params = {name: float(param)
-            for name, param in parts.groupdict().items() if param}
+                   for name, param in parts.groupdict().items() if param}
     return timedelta(**time_params)
