@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Client
 - Default server set to `https://gitta.enotar.ch`; can be changed with
   `git config [--global] timestamper.server …`
+- Allow dots in tag/branch names, as long as they are not next to each other
+  (i.e., `..` is not allowed)
 
 ## Fixed
 
