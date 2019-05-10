@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `make apt` installs dependencies on systems supporting `apt`
 
 ### Client
+- Distributable via PyPI
 - Added Python 2.x compatibility; tested with 2.7
 - Automatically derive default timestamp branch name from servername
   (first component not named 'igitt') followd by '-timestamps'.
