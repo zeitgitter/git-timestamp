@@ -1,25 +1,21 @@
+PREFIX	= /usr/local
+BINDIR	= ${PREFIX}/bin
+
 all:
-	@echo "Use make install-client|install-server|install-both|apt|test|version-check"
+	echo "Use make install, apt, or test"
 
 install:
-	@echo "Please select from install-client, install-server, install-both"
-	@echo "For cross-timestamping servers, both should be installed"
+	install --backup --compare igitt_client/timestamp.py ${BINDIR}/git-timestamp
 
-install-both: install-client install-server
-test:	test-client test-server
-apt:	apt-client apt-server
+apt dependencies:
+	apt install python3-gnupg python3-pygit2 python3-requests
 
-%-client:
-	${MAKE} -C client $*
-%-server:
-	${MAKE} -C server $*
+test tests:	system-tests
 
-version-check:
-	@grep --with-filename ^VERSION client/igitt_client/timestamp.py server/igitt/version.py | sed 's/^s/         s/'
-	@echo -n "                             "
-	@grep --with-filename '^# ' CHANGELOG.md | tail +2 | head -1
+system-tests:
+	@d=`mktemp -d`; for i in tests/*; do echo; echo ===== $$i $$d; $$i $$d || exit 1; done; echo ===== Cleanup; ${RM} -r $$d
 
-version-edit:
-	vi +/^VERSION client/igitt_client/timestamp.py
-	vi +/^VERSION server/igitt/version.py
-	vi +1 '+/^# [0-9]' CHANGELOG.md
+pypi:
+	${RM} -f dist/*
+	./setup.py sdist bdist_wheel
+	twine upload dist/*

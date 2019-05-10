@@ -24,7 +24,7 @@ if ! gpg --list-keys | grep -q 9C67D18C5119896C35FE3E0D8A0B0941E7C49D65; then
 fi
 
 # Check config
-tail -3 $d/.git/config > $d/10-tag-config-real.txt
+grep -A2 gitta-enotar-ch $HOME/.gitconfig > $d/10-tag-config-real.txt
 cat > $d/10-tag-config-verify.txt << EOF
 [timestamper "gitta-enotar-ch"]
 	keyid = 8A0B0941E7C49D65
