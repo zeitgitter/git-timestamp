@@ -107,7 +107,7 @@ def get_args():
                    with identical contents as the specified commit.
                    Default name derived from servername plus '-timestamps'"""))
   parser.add('--server',
-             required=True,
+             default='https://gitta.enotar.ch',
              gitopt='timestamp.server',
              help="IGITT server to obtain timestamp from")
   parser.add('--gnupg-home',

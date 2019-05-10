@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # 0.9.2+ - [Unreleased]
 ## Added
+### Client
+- Default server set to `https://gitta.enotar.ch`; can be changed with
+  `git config [--global] timestamper.server …`
 
 ## Fixed
 
