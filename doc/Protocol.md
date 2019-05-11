@@ -1,6 +1,6 @@
-# The `igitt` Protocol
+# The `zeitgitter` Protocol
 
-The `igitt` protocol sits on top of HTTPS and can be used to obtain
+The `zeitgitter` protocol sits on top of HTTPS and can be used to obtain
 timestamped, signed `git` objects to be added to one's `git` repository,
 typically using the [`git timestamp`](../client/) command.
 
@@ -114,8 +114,8 @@ being a timestamper-signed equivalent of the former.
 ## Many signatures on many projects
 
 If your organisation would like to issue many timestamps a day, we recommend
-operating your own local `igitt` instance and timestamp internally against your
-local instance and only obtain timestamps for your `igitt` repository from
+operating your own local `zeitgitter` instance and timestamp internally against your
+local instance and only obtain timestamps for your `zeitgitter` repository from
 outside source(s). This results in several advantages:
 
 * No information about your commit rates is leaked.

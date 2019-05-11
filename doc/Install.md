@@ -27,7 +27,7 @@ sudo make install-client
 ```
 
 :warning: The `pip[3]` package named *just* `gnupg` (no `python-` prefix!) is
-incompatible with `igitt` and may need to be *removed* first, to avoid
+incompatible with `zeitgitter` and may need to be *removed* first, to avoid
 conflicts between the two packages.
 
 

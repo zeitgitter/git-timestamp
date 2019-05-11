@@ -1,4 +1,4 @@
-# List of public `igitt` servers
+# List of public `zeitgitter` servers
 
 ## Access
 
