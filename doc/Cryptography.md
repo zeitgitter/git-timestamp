@@ -113,14 +113,14 @@ create for an existing old hash.
 
 Therefore, the PGP Timestamper is still a source of assurance, but should not
 be used as the only means of cross-assurance. Instead, publication and/or
-`igitt` cross-timestamping should be used as an additional means of assurance.
+`zeitgitter` cross-timestamping should be used as an additional means of assurance.
 
 ## Some signing speeds
 
 Here are some signing speeds showing the average run time over 10 *sequential*
 runs of `gpg --sign` of a 40-byte input file. For each test, the longest keys
 offered by `gpg --expert --full-gen-key` were used. Shorter keys will be
-faster, `igitt` will also take advantage of multiple cores.
+faster, `zeitgitter` will also take advantage of multiple cores.
 
 | Processor (single run)           | dsa3072 | rsa4096 | ed25519 | nistp521 | bpP512r1 | secp256k1 |
 | ---------------------------------| -------:| -------:| -------:| --------:| --------:| ---------:|

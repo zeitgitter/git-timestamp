@@ -58,14 +58,14 @@ proof to the requestor. Instead,
   years?"](https://originstamp.org); sorry, but direct linking to that entry
   does not work. You have to scroll down and open the FAQ item yourself).
 
-On the other hand, `igitt` timestamping
+On the other hand, `zeitgitter` timestamping
 - returns an *immediate* timestamped signature as a proof, and
 - only requires the other operations to show that the timestamper
   itself is not misbehaving.
 
 As a further benefit, a network of independent timestampers
 
-- is much more energy efficient: An `igitt` timestamper on a tiny computer
+- is much more energy efficient: An `zeitgitter` timestamper on a tiny computer
   such as a Raspberry Pi may consume less than
   [one Watt](https://www.pidramble.com/wiki/benchmarks/power-consumption),
   while the Blockchain used
@@ -100,21 +100,21 @@ A disadvantage of the PGP Timestamper is its archaic interface and the log
 delays (several minutes). Also, the signatures are hard to verify by
 non-experts.
 
-# `igitt` goals
+# `zeitgitter` goals
 
-`igitt` is inspired by the PGP Timestamper, but trying to as simple to use as
+`zeitgitter` is inspired by the PGP Timestamper, but trying to as simple to use as
 possible in a `git` context.
 
-The goal of `igitt` is to provide as many independent timestamping services as
+The goal of `zeitgitter` is to provide as many independent timestamping services as
 possible, so a user (or organization) can freely select a subset fulfulling
 their needs.
 
 To establish trust in the service, the source code is made available under an
 open source license.
 
-# `igitt` operation
+# `zeitgitter` operation
 
-`igitt` listens on an HTTPS port and awaits `POST` requests for signing a tag
+`zeitgitter` listens on an HTTPS port and awaits `POST` requests for signing a tag
 or a branch commit. It then returns the appropriate information, ready for the
 client to integrate it into its `git` repository, from where it then can be
 
@@ -137,7 +137,7 @@ This allows a compact, energy-efficient basis for many notarization services.
 
 # Name
 
-The [name `igitt`](https://www.duden.de/rechtschreibung/igitt) tries to keep
+The [name `zeitgitter`](https://www.duden.de/rechtschreibung/zeitgitter) tries to keep
 in line with the
 [slang naming philosophy behind `git`](https://github.com/git/git/blob/e83c5163316f89bfbde7d9ab23ca2e25604af290/README)).
 
@@ -161,11 +161,11 @@ which are mutually independent and generally trustworthy.
 
 # Naming
 
-The `igitt` name can refer to
-- the underlying protocol ("`igitt` protocol"),
+The `zeitgitter` name can refer to
+- the underlying protocol ("`zeitgitter` protocol"),
 - this software or other servers implementing the protocol
-  ("`igitt` server"), or
-- the entire network of servers ("`igitt` network", "`igitt` system").
+  ("`zeitgitter` server"), or
+- the entire network of servers ("`zeitgitter` network", "`zeitgitter` system").
 
 It *should not* refer to an individual service, especially not a
 public service. When chosing a name for your service, please try to come

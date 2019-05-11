@@ -79,18 +79,18 @@ def asciibytes(data):
 
 
 def timestamp_branch_name(fields):
-    """Return the first field not being 'igitt'"""
+    """Return the first field not being 'igitt', '*stamp*', 'zeitgitter'"""
     for i in fields:
-        if i != '' and i != 'igitt':
+        if i != '' and i != 'igitt' and i != 'zeitgitter' and 'stamp' not in i:
             return i + '-timestamps'
-    return 'igitt-timestamps'
+    return 'zeitgitter-timestamps'
 
 
 def get_args():
     """Parse command line and git config parameters"""
     parser = GitArgumentParser(
         add_help=False,
-        description="Interface to IGITT, the Independent GIT Timestampers.",
+        description="Interface to Zeitgitter, the Independent GIT Timestampers.",
         epilog="""--tag takes precedence over --branch.
             When in doubt, use --tag for single/rare timestamping,
             and --branch for reqular timestamping.""")
