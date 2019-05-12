@@ -35,7 +35,7 @@ import gnupg
 import pygit2 as git
 import requests
 
-VERSION = '0.9.4'
+VERSION = '0.9.4+'
 
 
 class GitArgumentParser(argparse.ArgumentParser):
@@ -355,7 +355,8 @@ def timestamp_branch(repo, commit, keyid, name, args):
         branch_head = repo.lookup_reference('refs/heads/' + args.branch)
         data['parent'] = branch_head.target
         try:
-            if repo[branch_head.target].parent_ids[1] == commit.id:
+            if (repo[branch_head.target].parent_ids[0] == commit.id or
+                    repo[branch_head.target].parent_ids[1] == commit.id):
                 sys.exit("Already timestamped commit %s to branch %s" % (commit.id.hex, args.branch))
         except IndexError:
             pass
