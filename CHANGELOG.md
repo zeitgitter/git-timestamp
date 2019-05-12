@@ -6,7 +6,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # 0.9.2+ - [Unreleased]
 ## Added
-### Client
 - Default server set to `https://gitta.enotar.ch`; can be changed with
   `git config [--global] timestamper.server …`
 - Allow dots in tag/branch names, as long as they are not next to each other
@@ -18,10 +17,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Changed
 - Split into client (git-timestamp) and server (zeitgitterd).
-
-### Client
 - Persistent information about the timestampers' keys is now stored
   in the global git configuration (key also stored globally; more TOFU-like)
+- Updated `enotar.ch` and `igitt.ch` URLs to `zeitgitter.net`
 
 
 # 0.9.2 - 2019-05-10

@@ -2,10 +2,10 @@
 
 ## Access
 
-| Nickname    | URL                          | Started    | Notes                   |
-| ----------- | ---------------------------- | ---------- | ----------------------- |
-| Gitta       | https://gitta.enotar.ch/     | 2019-04-01 | public                  |
-| Diversity   | https://diversity.enotar.ch/ | 2019-04-04 | cross-timestamping only |
+| Nickname    | URL                               | Started    | Notes                   |
+| ----------- | --------------------------------- | ---------- | ----------------------- |
+| Gitta       | https://gitta.zeitgitter.net/     | 2019-04-01 | public                  |
+| Diversity   | https://diversity.zeitgitter.net/ | 2019-04-04 | cross-timestamping only |
 
 Diversity was chosen to use a slow timestamping mechanism, i.e. one which
 timestampers are unlikely to use. This is used to achieve diversity in the

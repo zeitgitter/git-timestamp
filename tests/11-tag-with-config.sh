@@ -19,7 +19,7 @@ git commit -m "Random change $RANDOM"
 tagid=v$RANDOM
 
 # Change config
-git config timestamp.server https://gitta.enotar.ch
+git config timestamp.server https://gitta.zeitgitter.ch
 
 # Create tag with server from config
 $h/git-timestamp.py --tag $tagid
@@ -36,7 +36,7 @@ git commit -m "Random commit $RANDOM" -a
 
 # Create tag with even more options
 yatag=r$RANDOM
-$h/git-timestamp.py --tag $yatag --server https://diversity.enotar.ch
+$h/git-timestamp.py --tag $yatag --server https://diversity.zeitgitter.net
 
 # Check tag existence
 if ! git tag | grep -q $yatag; then
