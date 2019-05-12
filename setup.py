@@ -34,7 +34,7 @@ setuptools.setup(
     python_requires='>=2.7',
     entry_points={
         'console_scripts': [
-            'git-timestamp=igitt_client.timestamp:main',
+            'git-timestamp=git_timestamp.timestamp:main',
         ],
     },
     classifiers=[
