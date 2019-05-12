@@ -67,7 +67,8 @@ Optional arguments:
   identical contents as the specified commit. Default name derived from
   servername plus '-timestamps'. Can be set by git config 'timestamp.branch'
 * **--server SERVER**: Zeitgitter server to obtain timestamp from. Can be set
-  by git config 'timestamp.server'
+  by git config 'timestamp.server'; fallback default:
+  'https://gitta.zeitgitter.net'
 * **--gnupg-home GNUPG_HOME**: Where to store timestamper public keys. Can be
   set by git config 'timestamp.gnupg-home'
 
