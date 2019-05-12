@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Fixed
 - Added `setuptools` to dependencies
+- Handle HTTP POST redirects adequately
 
 ## Changed
 - Split into client (git-timestamp) and server (zeitgitterd).
