@@ -35,7 +35,7 @@ import gnupg
 import pygit2 as git
 import requests
 
-VERSION = '0.9.3'
+VERSION = '0.9.4'
 
 
 class GitArgumentParser(argparse.ArgumentParser):
@@ -179,7 +179,7 @@ def get_keyid(server):
         # Obtain key in TOFU fashion and remember keyid
         r = requests.get(server, params={'request': 'get-public-key-v1'},
                          timeout=30)
-        quit_if_http_error(args, r)
+        quit_if_http_error(server, r)
         (keyid, name) = validate_key_and_import(r.text)
         gcfg = git.Config.get_global_config()
         gcfg['timestamper.%s.keyid' % key] = keyid
@@ -270,12 +270,12 @@ tagger %s ''' % (commit.id, args.tag, name)
     else:
         sys.exit("No OpenPGP signature found")
 
-def quit_if_http_error(args, r):
+def quit_if_http_error(server, r):
     if r.status_code == 301:
         sys.exit("Timestamping server URL changed from %s to %s\n"
                 "Please change this on the command line(s) or run\n"
                 "    git config [--global] timestamp.server %s"
-                % (args.server, r.headers['Location'], r.headers['Location']))
+                % (server, r.headers['Location'], r.headers['Location']))
     if r.status_code != 200:
         sys.exit("Timestamping request failed; server responded with %d %s"
                  % (r.status_code, r.reason))
@@ -297,7 +297,7 @@ def timestamp_tag(repo, commit, keyid, name, args):
                               'commit': commit.id,
                               'tagname': args.tag
                           }, allow_redirects=False)
-        quit_if_http_error(args, r)
+        quit_if_http_error(args.server, r)
         validate_tag(r.text, commit, keyid, name, args)
         tagid = repo.write(git.GIT_OBJ_TAG, r.text)
         repo.create_reference('refs/tags/%s' % args.tag, tagid)
@@ -363,7 +363,7 @@ def timestamp_branch(repo, commit, keyid, name, args):
         pass
     try:
         r = requests.post(args.server, data=data, allow_redirects=False)
-        quit_if_http_error(args, r)
+        quit_if_http_error(args.server, r)
         validate_branch(r.text, keyid, name, data, args)
         commitid = repo.write(git.GIT_OBJ_COMMIT, r.text)
         repo.create_reference('refs/heads/' + args.branch, commitid, force=True)

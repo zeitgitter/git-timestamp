@@ -19,7 +19,7 @@ git commit -m "Random change $RANDOM"
 tagid=v$RANDOM
 
 # Change config
-git config timestamp.server https://gitta.zeitgitter.ch
+git config timestamp.server https://gitta.zeitgitter.net
 
 # Create tag with server from config
 $h/git-timestamp.py --tag $tagid
