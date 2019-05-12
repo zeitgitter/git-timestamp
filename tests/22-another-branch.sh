@@ -20,7 +20,7 @@ branchname=gitta-$RANDOM-timestamps
 
 # Change config
 git config timestamp.branch gitta-timestamps
-git config timestamp.server https://gitta.enotar.ch
+git config timestamp.server https://gitta.zeitgitter.net
 
 # Create tag with branch and server from config
 $h/git-timestamp.py --branch $branchname

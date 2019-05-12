@@ -53,7 +53,7 @@ git-timestamp [-h] [--tag TAG] [--branch BRANCH] [--server SERVER]
               [COMMIT]
 ```
 
-Interface to IGITT, the Independent GIT Timestampers.
+Interface to Zeitgitter, the Independent GIT Timestampers.
 
 Positional arguments:
 * **COMMIT**: Which commit to timestamp. Can be set by git config
@@ -66,8 +66,9 @@ Optional arguments:
 * **--branch BRANCH**: Create a timestamped commit in branch BRANCH, with
   identical contents as the specified commit. Default name derived from
   servername plus '-timestamps'. Can be set by git config 'timestamp.branch'
-* **--server SERVER**: IGITT server to obtain timestamp from. Can be set by git
-  config 'timestamp.server'
+* **--server SERVER**: Zeitgitter server to obtain timestamp from. Can be set
+  by git config 'timestamp.server'; fallback default:
+  'https://gitta.zeitgitter.net'
 * **--gnupg-home GNUPG_HOME**: Where to store timestamper public keys. Can be
   set by git config 'timestamp.gnupg-home'
 
@@ -82,6 +83,6 @@ argument's description.
 - [Timestamping: Why and how?](doc/Timestamping.md)
 - [Client installation](doc/Install.md)
 - [Protocol description](doc/Protocol.md)
-- [List of public `igitt` servers](doc/ServerList.md)
+- [List of public *Zeitgitter* servers](doc/ServerList.md)
 - [Discussion of the use of (weak) cryptography](doc/Cryptography.md)
 

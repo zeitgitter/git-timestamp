@@ -19,7 +19,7 @@ git commit -m "Random change $RANDOM"
 tagid=v$RANDOM
 
 # Change config
-git config timestamp.server https://gitta.enotar.ch
+git config timestamp.server https://gitta.zeitgitter.net
 git config timestamp.branch gitta-timestamps
 
 # Create tag with server from config

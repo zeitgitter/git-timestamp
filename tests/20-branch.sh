@@ -42,7 +42,7 @@ git commit -m "Random commit $RANDOM" -a
 
 # Create a second branch node
 yatag=r$RANDOM
-$h/git-timestamp.py --server https://diversity.enotar.ch
+$h/git-timestamp.py --server https://diversity.zeitgitter.net
 
 # Branch should be identical
 if ! git diff --quiet gitta-timestamps; then

@@ -15,7 +15,7 @@ echo $RANDOM > a.txt
 git add a.txt
 git commit -m "Random change $RANDOM"
 tagid=v$RANDOM
-$h/git-timestamp.py --tag $tagid --server https://gitta.enotar.ch
+$h/git-timestamp.py --tag $tagid --server https://gitta.zeitgitter-net
 
 # Check key import
 if ! gpg --list-keys | grep -q 9C67D18C5119896C35FE3E0D8A0B0941E7C49D65; then
@@ -24,11 +24,11 @@ if ! gpg --list-keys | grep -q 9C67D18C5119896C35FE3E0D8A0B0941E7C49D65; then
 fi
 
 # Check config
-grep -A2 gitta-enotar-ch $HOME/.gitconfig > $d/10-tag-config-real.txt
+grep -A2 gitta-zeitgitter-net $HOME/.gitconfig > $d/10-tag-config-real.txt
 cat > $d/10-tag-config-verify.txt << EOF
-[timestamper "gitta-enotar-ch"]
+[timestamper "gitta-zeitgitter-net"]
 	keyid = 8A0B0941E7C49D65
-	name = Gitta Timestamping Service <gitta@enotar.ch>
+	name = Gitta Timestamping Service <gitta@zeitgitter-net>
 EOF
 diff $d/10-tag-config*.txt
 
