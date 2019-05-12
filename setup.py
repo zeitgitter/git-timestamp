@@ -30,7 +30,7 @@ setuptools.setup(
     url="https://gitlab.com/zeitgitter/git-timestamp",
     license='AGPLv3',
     packages=setuptools.find_packages(),
-    install_requires=['pygit2', 'python-gnupg', 'requests'],
+    install_requires=['pygit2', 'python-gnupg', 'requests', 'setuptools'],
     python_requires='>=2.7',
     entry_points={
         'console_scripts': [

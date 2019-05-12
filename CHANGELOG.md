@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   (i.e., `..` is not allowed)
 
 ## Fixed
+- Added `setuptools` to dependencies
 
 ## Changed
 - Split into client (git-timestamp) and server (zeitgitterd).
