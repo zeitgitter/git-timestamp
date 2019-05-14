@@ -27,6 +27,9 @@ Timestamping was used way before Blockchain was even conceived of:
   (before 1982),
 - [cryptographic commitment schemes](https://en.wikipedia.org/wiki/Commitment_scheme)
   (since 1988),
+- [digital timestamping](https://link.springer.com/chapter/10.1007/3-540-38424-3_32)
+  and its problems and solutions was first documented in a scientific
+  publication in 1990,
 - [PGP Timestamping service](http://www.itconsult.co.uk/stamper.htm)
   (established 1995), or
 - [LOCKSS](https://en.wikipedia.org/wiki/LOCKSS) (since 2000),
