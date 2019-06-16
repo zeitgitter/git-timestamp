@@ -35,7 +35,7 @@ import gnupg
 import pygit2 as git
 import requests
 
-VERSION = '0.9.4+'
+VERSION = '0.9.5'
 
 
 class GitArgumentParser(argparse.ArgumentParser):
@@ -154,6 +154,45 @@ def validate_key_and_import(text):
     return (info[0]['keyid'], info[0]['uids'][0])
 
 
+def get_global_config_if_possible():
+    """Try to return global git configuration, which normally lies in
+    `~/.gitconfig`.
+
+    However (https://github.com/libgit2/pygit2/issues/915),
+    * `get_global_config()` fails, if the underlying file does not
+      exist yet, and
+    * the name of the underlying file cannot be determined while
+      remaining portable and avoiding configuration incompatibilities
+      (`pygit2` does not expose `libgit2`'s underlying name function).
+
+    Therefore, we do not simply `touch ~/.gitconfig` first, but
+    1. try `get_global_config()` (raises `IOError` in Python2, `OSError`
+       in Python3),
+    2. try `get_xdg_config()` (relying on the alternative global location
+       `$XDG_CONFIG_HOME/git/config`, typically aka `~/.config/git/config`
+       (this might fail due to the file not being there either (`OSError`,
+       `IOError`), or because the installed `libgit2`/`pygit2` is too old
+       (`AttributeError`; function added in 2014 only),
+    3. `touch ~/.gitconfig` and retry `get_global_config()`, and, as fallback
+    4. use the repo's `.git/config`, which should always be there."""
+    try:
+        return git.Config.get_global_config()           # 1
+    except (IOError, OSError):
+        try:
+            return git.Config.get_xdg_config()          # 2
+        except (IOError, OSError, AttributeError):
+            try:
+                sys.stderr.write("INFO: Creating ~/.gitconfig\n")
+                with open(os.path.join(os.getenv('HOME'), '.gitconfig'), 'a'):
+                    pass
+                return git.Config.get_global_config()   # 3
+            except (IOError, OSError):
+                sys.stderr.write("INFO: Cannot record key ID in global config,"
+                        " falling back to repo config\n")
+                return repo.config                      # 4
+    # Not reached
+
+
 def get_keyid(server):
     """Return keyid/fullname from git config, if known.
     Otherwise, request it from server and remember TOFU-style"""
@@ -181,7 +220,7 @@ def get_keyid(server):
                          timeout=30)
         quit_if_http_error(server, r)
         (keyid, name) = validate_key_and_import(r.text)
-        gcfg = git.Config.get_global_config()
+        gcfg = get_global_config_if_possible()
         gcfg['timestamper.%s.keyid' % key] = keyid
         gcfg['timestamper.%s.name' % key] = name
         return (keyid, name)

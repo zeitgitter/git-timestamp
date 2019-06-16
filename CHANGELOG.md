@@ -4,11 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# 0.9.4+ - [Unreleased]
+# 0.9.5 - 2019-06-16
 ## Added
+- Mention Haber/Stornetta in documentation
 
 ## Fixed
+- No more exception on initial key import
 - Detect duplicate timestamp on timestamp branch root as well
+- Fixed path for `make install`
+- Do not abort if `~/.gitconfig` does not exist when using a timestamper
+  for the first time (working around a `pygit2` problem)
 
 ## Changed
 

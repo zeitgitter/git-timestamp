@@ -5,7 +5,7 @@ all:
 	echo "Use make install, apt, or test"
 
 install:
-	install --backup --compare igitt_client/timestamp.py ${BINDIR}/git-timestamp
+	install --backup --compare git_timestamp/timestamp.py ${BINDIR}/git-timestamp
 
 apt dependencies:
 	apt install python3-gnupg python3-pygit2 python3-requests
