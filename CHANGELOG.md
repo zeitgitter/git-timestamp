@@ -6,9 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # 0.9.4+ - [Unreleased]
 ## Added
+- Mention Haber/Stornetta in documentation
 
 ## Fixed
+- No more exception on initial key import
 - Detect duplicate timestamp on timestamp branch root as well
+- Fixed path for `make install`
 
 ## Changed
 
