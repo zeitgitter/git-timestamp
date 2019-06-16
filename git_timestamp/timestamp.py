@@ -35,7 +35,7 @@ import gnupg
 import pygit2 as git
 import requests
 
-VERSION = '0.9.5'
+VERSION = '0.9.5+'
 
 
 class GitArgumentParser(argparse.ArgumentParser):
@@ -99,6 +99,9 @@ def get_args():
                help="""Show this help message and exit. When called as
              'git timestamp' (space, not dash), use '-h', as '--help' is 
              interpreted by 'git'.""")
+    parser.add('--version',
+               action='version',
+               version="git timestamp v%s" % VERSION)
     parser.add('--tag',
                help="Create a new timestamped tag named TAG")
     parser.add('--branch',
