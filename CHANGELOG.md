@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - No more exception on initial key import
 - Detect duplicate timestamp on timestamp branch root as well
 - Fixed path for `make install`
+- Do not abort if `~/.gitconfig` does not exist when using a timestamper
+  for the first time (working around a `pygit2` problem)
 
 ## Changed
 
