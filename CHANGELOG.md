@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## Fixed
 
 ## Changed
+- Changed client license to MIT
 
 
 # 0.9.5 - 2019-06-16
