@@ -147,17 +147,7 @@ in line with the
 # Usage
 
 This software is free software; so you may use it in any way you see 
-fit, in accordance to the [AGPL v3.0 license](LICENSE.md).
-
-Timestamping has a need to be as transparent as possible. Therefore, 
-you may want to make information about your timestamping service, 
-including the running code and its settings, available publicly anyway. 
-AGPL was chosen to reflect this spirit. Please contact me if you 
-require other licensing terms.
-
-It is desirable that as many people and organisations as possible do 
-provide timestamping services. So a user may choose a subset of them 
-which are mutually independent and generally trustworthy.
+fit, in accordance to the [MIT license](LICENSE.md).
 
 [Installation and typical usage of the timestamping client is documented in
 `doc/Install.md`](doc/Install.md).
@@ -188,4 +178,3 @@ The client should perform the following tests on objects returned from this serv
   - The tag message is at most 1000 ASCII chars long (printable + carriage return + newline)
   - The PGP signature is at most 2000 ASCII chars long (base64 + space + equal sign + carriage return + newline)
   - The PGP signature verifies OK
-
