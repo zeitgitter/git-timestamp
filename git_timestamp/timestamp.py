@@ -162,11 +162,12 @@ def get_global_config_if_possible():
     `~/.gitconfig`.
 
     However (https://github.com/libgit2/pygit2/issues/915),
-    * `get_global_config()` fails, if the underlying file does not
-      exist yet, and
-    * the name of the underlying file cannot be determined while
-      remaining portable and avoiding configuration incompatibilities
-      (`pygit2` does not expose `libgit2`'s underlying name function).
+    `get_global_config()` fails, if the underlying file does not
+    exist yet. (The [paths may be
+    determined](https://github.com/libgit2/pygit2/issues/915#issuecomment-503300141)
+    by
+    `pygit2.option(pygit2.GIT_OPT_GET_SEARCH_PATH, pygit2.GIT_CONFIG_LEVEL_GLOBAL)` 
+    and similar.)
 
     Therefore, we do not simply `touch ~/.gitconfig` first, but
     1. try `get_global_config()` (raises `IOError` in Python2, `OSError`
@@ -185,8 +186,10 @@ def get_global_config_if_possible():
             return git.Config.get_xdg_config()          # 2
         except (IOError, OSError, AttributeError):
             try:
-                sys.stderr.write("INFO: Creating ~/.gitconfig\n")
-                with open(os.path.join(os.getenv('HOME'), '.gitconfig'), 'a'):
+                sys.stderr.write("INFO: Creating global .gitconfig\n")
+                with open(os.path.join(
+                        git.option(git.GIT_OPT_GET_SEARCH_PATH, git.GIT_CONFIG_LEVEL_GLOBAL),
+                        '.gitconfig'), 'a'):
                     pass
                 return git.Config.get_global_config()   # 3
             except (IOError, OSError):

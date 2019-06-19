@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Changed
 - Changed client license to MIT
+- Use [`pygit2` information for global `.gitconfig` path
+  determination](https://github.com/libgit2/pygit2/issues/915#issuecomment-503300141)
 
 
 # 0.9.5 - 2019-06-16
