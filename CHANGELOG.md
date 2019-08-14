@@ -4,9 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# 0.9.5+ - [Unreleased]
+# 0.9.6 - 2019-08-14
 ## Added
 - `--version` option
+- Support for
+  [inclusion in other packages](./README.md#inclusion-in-other-packages)
+  by providing default-enabled or default-disabled operation.
 
 ## Fixed
 
@@ -14,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Changed client license to MIT
 - Use [`pygit2` information for global `.gitconfig` path
   determination](https://github.com/libgit2/pygit2/issues/915#issuecomment-503300141)
+- Avoid picking `www` from servername when auto-naming the branch
 
 
 # 0.9.5 - 2019-06-16
