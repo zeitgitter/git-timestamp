@@ -42,7 +42,7 @@ setuptools.setup(
         "Environment :: Console",
         "Intended Audience :: Information Technology",
         "Programming Language :: Python",
-        "License :: OSI Approved :: MIT",
+        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Natural Language :: English",
         "Topic :: Software Development :: Version Control :: Git",
