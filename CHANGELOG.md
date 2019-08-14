@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 # 0.9.5+ - [Unreleased]
 ## Added
 - `--version` option
+- Support for
+  [inclusion in other packages](./README.md#inclusion-in-other-packages)
+  by providing default-enabled or default-disabled operation.
 
 ## Fixed
 

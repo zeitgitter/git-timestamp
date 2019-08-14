@@ -86,6 +86,11 @@ def timestamp_branch_name(fields):
     return 'zeitgitter-timestamps'
 
 
+def truth(s):
+    """Is never called for `None`; returning `None` signals refusal"""
+    return bool(distutils.util.strtobool(s))
+
+
 def get_args():
     """Parse command line and git config parameters"""
     parser = GitArgumentParser(
@@ -116,6 +121,15 @@ def get_args():
     parser.add('--gnupg-home',
                gitopt='timestamp.gnupg-home',
                help="Where to store timestamper public keys")
+    parser.add('--enable',
+               type=truth,
+               gitopt='timestamp.enable',
+               help="""Forcibly enable/disable timestamping operations; mainly
+                   for use in `git config`""")
+    parser.add('--require-enable',
+               action='store_true',
+               help="""Disable operation unless `git config timestamp.enable`
+                   has explicitely been set to true""")
     parser.add('commit',
                nargs='?',
                default='HEAD',
@@ -123,6 +137,10 @@ def get_args():
                gitopt='timestamp.commit-branch',
                help="Which commit to timestamp")
     arg = parser.parse_args()
+    if arg.enable == False:
+        sys.exit("Timestamping explicitely disabled")
+    if arg.require_enable and arg.enable != True:
+        sys.exit("Timestamping not explicitely enabled")
     if arg.tag is None and arg.branch is None:
         # Automatically derive branch name
         # Split on '.' or '/'
