@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+
+# 0.9.6+ - [Unreleased]
+## Added
+
+## Fixed
+
+## Changed
+
+
 # 0.9.6 - 2019-08-14
 ## Added
 - `--version` option
@@ -109,6 +118,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Made some error messages more consistent
 - `--tag` overrides `--branch`. This allows to store a default branch in
   `git config`, yet timestamp a tag when necessary.
+
 
 # 0.9.0 - 2019-04-04
 Initial public release
