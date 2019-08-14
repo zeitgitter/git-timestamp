@@ -24,6 +24,7 @@
 # This has not been modularized for ease of installation
 
 import argparse
+import distutils.util
 import os
 import re
 import sys
@@ -53,14 +54,14 @@ class GitArgumentParser(argparse.ArgumentParser):
             gitopt = kwargs['gitopt']
             try:
                 val = repo.config[gitopt]
-                kwargs['help'] += "Defaults to '%s' from git config '%s'" % (val, gitopt)
+                kwargs['help'] += "Defaults to '%s' from `git config %s`" % (val, gitopt)
                 if 'default' in kwargs:
                     kwargs['help'] += "; fallback default: '%s'" % kwargs['default']
                 kwargs['default'] = val
                 if 'required' in kwargs:
                     del kwargs['required']
             except KeyError:
-                kwargs['help'] += "Can be set by git config '%s'" % gitopt
+                kwargs['help'] += "Can be set by `git config %s`" % gitopt
                 if 'default' in kwargs:
                     kwargs['help'] += "; fallback default: '%s'" % kwargs['default']
             del kwargs['gitopt']
@@ -96,29 +97,31 @@ def get_args():
     """Parse command line and git config parameters"""
     parser = GitArgumentParser(
         add_help=False,
-        description="Interface to Zeitgitter, the Independent GIT Timestampers.",
-        epilog="""--tag takes precedence over --branch.
-            When in doubt, use --tag for single/rare timestamping,
-            and --branch for reqular timestamping.""")
+        description="""Interface to Zeitgitter, the network of
+                    independent GIT timestampers.""",
+        epilog="""`--tag` takes precedence over `--branch`.
+            When in doubt, use `--tag` for single/rare timestamping,
+            and `--branch` for reqular timestamping.""")
     parser.add('-h', '--help',
                action='help',
                help="""Show this help message and exit. When called as
-             'git timestamp' (space, not dash), use '-h', as '--help' is 
-             interpreted by 'git'.""")
+             'git timestamp' (space, not dash), use `-h`, as `--help` is 
+             captured by `git` itself.""")
     parser.add('--version',
                action='version',
-               version="git timestamp v%s" % VERSION)
+               version="git timestamp v%s" % VERSION,
+               help="Show program's version number and exit")
     parser.add('--tag',
                help="Create a new timestamped tag named TAG")
     parser.add('--branch',
                gitopt='timestamp.branch',
-               help=("""Create a timestamped commit in branch BRANCH,
+               help="""Create a timestamped commit in branch BRANCH,
                    with identical contents as the specified commit.
-                   Default name derived from servername plus '-timestamps'"""))
+                   Default name derived from servername plus `-timestamps`""")
     parser.add('--server',
                default='https://gitta.zeitgitter.net',
                gitopt='timestamp.server',
-               help="IGITT server to obtain timestamp from")
+               help="Zeitgitter server to obtain timestamp from")
     parser.add('--gnupg-home',
                gitopt='timestamp.gnupg-home',
                help="Where to store timestamper public keys")

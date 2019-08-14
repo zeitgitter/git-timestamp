@@ -48,35 +48,65 @@ servers.
 ### Options
 
 ```sh
-git-timestamp [-h] [--tag TAG] [--branch BRANCH] [--server SERVER]
-              [--gnupg-home GNUPG_HOME]
-              [COMMIT]
+usage: timestamp.py [-h] [--version] [--tag TAG] [--branch BRANCH]
+                    [--server SERVER] [--gnupg-home GNUPG_HOME]
+                    [--enable ENABLE] [--require-enable]
+                    [COMMIT]
 ```
+Interface to Zeitgitter, the network of independent GIT timestampers.
 
-Interface to Zeitgitter, the Independent GIT Timestampers.
+positional arguments:
+*  **COMMIT**:          Which commit to timestamp. Can be set by `git config
+                        timestamp.commit-branch`; fallback default: 'HEAD'
 
-Positional arguments:
-* **COMMIT**: Which commit to timestamp. Can be set by git config
-  'timestamp.commit-branch'; fallback default: 'HEAD'
+optional arguments:
+* **-h**, **--help**:   Show this help message and exit. When called as `git
+                        timestamp` (space, not dash), use `-h`, as `--help` is
+                        captured by `git` itself.
+* **--version**:        Show program's version number and exit
+* **--tag** TAG:        Create a new timestamped tag named TAG
+* **--branch** BRANCH:  Create a timestamped commit in branch BRANCH, with
+                        identical contents as the specified commit. Default
+                        name derived from servername plus `-timestamps`. Can
+                        be set by `git config timestamp.branch`
+* **--server** SERVER:  Zeitgitter server to obtain timestamp from. Can be set
+                        by `git config timestamp.server`; fallback default:
+                        `https://gitta.zeitgitter.net`
+* **--gnupg-home** GNUPG_HOME:
+                        Where to store timestamper public keys. Can be set by
+                        git config `timestamp.gnupg-home`
+* **--enable** ENABLE:  Forcibly enable/disable timestamping operations;
+                        mainly for use in `git config`. Can be set by `git
+                        config timestamp.enable`
+* **--require-enable**: Disable operation unless `git config timestamp.enable`
+                        has explicitely been set to true
 
-Optional arguments:
-* **-h, --help**: Show this help message and exit. When called as 'git
-  timestamp' (space, not dash), use '-h', as '--help' is interpreted by 'git'.
-* **--tag TAG**: Create a new timestamped tag named TAG
-* **--branch BRANCH**: Create a timestamped commit in branch BRANCH, with
-  identical contents as the specified commit. Default name derived from
-  servername plus '-timestamps'. Can be set by git config 'timestamp.branch'
-* **--server SERVER**: Zeitgitter server to obtain timestamp from. Can be set
-  by git config 'timestamp.server'; fallback default:
-  'https://gitta.zeitgitter.net'
-* **--gnupg-home GNUPG_HOME**: Where to store timestamper public keys. Can be
-  set by git config 'timestamp.gnupg-home'
+`--tag` takes precedence over `--branch`. When in doubt, use `--tag` for
+single/rare timestamping, and `--branch` for reqular timestamping.
 
-**--tag** takes precedence over **--branch**. When in doubt, use **--tag** for single/rare
-timestamping, and **--branch** for reqular timestamping.
 
-Defaults can be stored (per-repository or globally) with `git config`; see each
-argument's description.
+## Inclusion in other packages
+
+Timestamping can be a useful add-on feature for many operations, including
+verifying whether a repository has been tampered with. For example, we use it
+extensively together with [`etckeeper`](https://etckeeper.branchable.com/)
+for tamper-evidence.
+
+If you would like to include timestamping as an optional component in your
+software, you have to first decide whether timestamping should be *on* or *off*
+by default for your software:
+* **default-on**: Just call `git timestamp` as normal. Users can disable
+  timestamping on a per-repository basis by running
+  `git config timestamp.enable false` at any time.
+* **default-off**: Timestamp with the option `--require-enable`. Then, users
+  have to first run `git config timestamp.enable true` in the repository.
+In any case, you should check whether `git timestamp` has been installed before
+calling it. In a shell, you could do this as follows:
+```sh
+if which git-timestamp > /dev/null; then
+  git timestamp OPTIONS
+fi
+```
 
 ## General and Client Documentation
 
