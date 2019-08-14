@@ -79,9 +79,10 @@ def asciibytes(data):
 
 
 def timestamp_branch_name(fields):
-    """Return the first field not being 'igitt', '*stamp*', 'zeitgitter'"""
+    """Return the first field except 'www', 'igitt', '*stamp*', 'zeitgitter'"""
     for i in fields:
-        if i != '' and i != 'igitt' and i != 'zeitgitter' and 'stamp' not in i:
+        if (i != '' and i != 'www' and i != 'igitt' and i != 'zeitgitter'
+                and 'stamp' not in i):
             return i + '-timestamps'
     return 'zeitgitter-timestamps'
 

@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Changed client license to MIT
 - Use [`pygit2` information for global `.gitconfig` path
   determination](https://github.com/libgit2/pygit2/issues/915#issuecomment-503300141)
+- Avoid picking `www` from servername when auto-naming the branch
 
 
 # 0.9.5 - 2019-06-16
