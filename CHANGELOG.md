@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## Fixed
 
 ## Changed
+- `ZEITGITTER_FAKE_TIME` now used for testing
 
 
 # 0.9.6 - 2019-08-14
