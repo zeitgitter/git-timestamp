@@ -256,7 +256,7 @@ def get_keyid(server):
 
 def sig_time():
     """Current time, unless in test mode"""
-    return int(os.getenv('IGITT_FAKE_TIME', time.time()))
+    return int(os.getenv('ZEITGITTER_FAKE_TIME', time.time()))
 
 
 def validate_timestamp(stamp):
