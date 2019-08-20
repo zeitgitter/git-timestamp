@@ -12,6 +12,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Changed
 - `ZEITGITTER_FAKE_TIME` now used for testing
+- Support optional boolean arguments: If the option (e.g., `--enable` or
+  `--quiet`) is specified without an argument, it defaults to true; if the
+  option is not specified, it defaults to false. This allows changing an
+  option on the command line which has been specified differently in
+  `git config`. Having a `--no-…` counterpart would not allow consistent
+  overriding of `git config` options on the command line in both directions.
+  The downside: Having such an option last before the positional arguments
+  requires explicit specification of `true` to avoid parsing the positional
+  argument as the truth value.
 
 
 # 0.9.6 - 2019-08-14

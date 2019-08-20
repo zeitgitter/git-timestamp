@@ -88,9 +88,16 @@ def timestamp_branch_name(fields):
     return 'zeitgitter-timestamps'
 
 
-def truth(s):
-    """Is never called for `None`; returning `None` signals refusal"""
-    return bool(distutils.util.strtobool(s))
+class DefaultTrueIfPresent(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        if values is None:
+            values = True
+        else:
+            try:
+                values = bool(distutils.util.strtobool(values))
+            except ValueError:
+                raise argparse.ArgumentError(self, "Requires boolean value")
+        setattr(namespace, self.dest, values)
 
 
 def get_args():
@@ -101,8 +108,11 @@ def get_args():
                     independent GIT timestampers.""",
         epilog="""`--tag` takes precedence over `--branch`.
             When in doubt, use `--tag` for single/rare timestamping,
-            and `--branch` for reqular timestamping.""")
-    parser.add('-h', '--help',
+            and `--branch` for reqular timestamping.
+            `bool` values can be specified as true/false/yes/no/0/1.
+            Arguments with optional `bool` options default to true if
+            the argument is present, false if absent.""")
+    parser.add('--help', '-h',
                action='help',
                help="""Show this help message and exit. When called as
              'git timestamp' (space, not dash), use `-h`, as `--help` is 
@@ -126,7 +136,9 @@ def get_args():
                gitopt='timestamp.gnupg-home',
                help="Where to store timestamper public keys")
     parser.add('--enable',
-               type=truth,
+               nargs='?',
+               action=DefaultTrueIfPresent,
+               metavar='bool',
                gitopt='timestamp.enable',
                help="""Forcibly enable/disable timestamping operations; mainly
                    for use in `git config`""")
