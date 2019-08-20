@@ -146,6 +146,12 @@ def get_args():
                action='store_true',
                help="""Disable operation unless `git config timestamp.enable`
                    has explicitely been set to true""")
+    parser.add('--quiet', '-q',
+               nargs='?',
+               action=DefaultTrueIfPresent,
+               metavar='bool',
+               gitopt='timestamp.quiet',
+               help="Only output error messages")
     parser.add('commit',
                nargs='?',
                default='HEAD',
@@ -185,7 +191,7 @@ def validate_key_and_import(text):
     if len(info) != 1 or info[0]['type'] != 'pub' or len(info[0]['uids']) == 0:
         sys.exit("Invalid key returned")
     res = gpg.import_keys(text)
-    if res.count == 1:
+    if res.count == 1 and not config.quiet:
         print("Imported new key %s: %s" %
               (info[0]['keyid'], info[0]['uids'][0]))
     return (info[0]['keyid'], info[0]['uids'][0])
