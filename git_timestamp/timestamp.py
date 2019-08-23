@@ -180,7 +180,7 @@ def ensure_gnupg_ready_for_scan_keys():
     gpg.list_keys(keys='arbitrary.query@creates.keybox')
 
 
-def validate_key_and_import(text):
+def validate_key_and_import(text, args):
     """Is this a single key? Then import it"""
     ensure_gnupg_ready_for_scan_keys()
     f = tempfile.NamedTemporaryFile(mode='w', delete=False)
@@ -191,7 +191,7 @@ def validate_key_and_import(text):
     if len(info) != 1 or info[0]['type'] != 'pub' or len(info[0]['uids']) == 0:
         sys.exit("Invalid key returned")
     res = gpg.import_keys(text)
-    if res.count == 1 and not config.quiet:
+    if res.count == 1 and not args.quiet:
         print("Imported new key %s: %s" %
               (info[0]['keyid'], info[0]['uids'][0]))
     return (info[0]['keyid'], info[0]['uids'][0])
@@ -239,36 +239,36 @@ def get_global_config_if_possible():
     # Not reached
 
 
-def get_keyid(server):
+def get_keyid(args):
     """Return keyid/fullname from git config, if known.
     Otherwise, request it from server and remember TOFU-style"""
-    key = server
-    if key.startswith('http://'):
-        key = key[7:]
-    elif key.startswith('https://'):
-        key = key[8:]
-    while key.endswith('/'):
-        key = key[0:-1]
+    keyname = args.server
+    if keyname.startswith('http://'):
+        keyname = keyname[7:]
+    elif keyname.startswith('https://'):
+        keyname = keyname[8:]
+    while keyname.endswith('/'):
+        keyname = keyname[0:-1]
     # Replace everything outside 0-9a-z with '-':
-    key = ''.join(map(lambda x:
-                      x if (x >= '0' and x <= '9') or (x >= 'a' and x <= 'z') else '-', key))
+    keyname = ''.join(map(lambda x:
+                      x if (x >= '0' and x <= '9') or (x >= 'a' and x <= 'z') else '-', keyname))
     try:
-        keyid = repo.config['timestamper.%s.keyid' % key]
+        keyid = repo.config['timestamper.%s.keyid' % keyname]
         keys = gpg.list_keys(keys=keyid)
         if len(keys) == 0:
             sys.stderr.write("WARNING: Key %s missing in keyring;"
                              " refetching timestamper key\n" % keyid)
             raise KeyError("GPG Key not found")  # Evil hack
-        return (keyid, repo.config['timestamper.%s.name' % key])
+        return (keyid, repo.config['timestamper.%s.name' % keyname])
     except KeyError:
         # Obtain key in TOFU fashion and remember keyid
-        r = requests.get(server, params={'request': 'get-public-key-v1'},
+        r = requests.get(args.server, params={'request': 'get-public-key-v1'},
                          timeout=30)
-        quit_if_http_error(server, r)
-        (keyid, name) = validate_key_and_import(r.text)
+        quit_if_http_error(args.server, r)
+        (keyid, name) = validate_key_and_import(r.text, args)
         gcfg = get_global_config_if_possible()
-        gcfg['timestamper.%s.keyid' % key] = keyid
-        gcfg['timestamper.%s.name' % key] = name
+        gcfg['timestamper.%s.keyid' % keyname] = keyid
+        gcfg['timestamper.%s.name' % keyname] = name
         return (keyid, name)
 
 
@@ -476,7 +476,7 @@ def main():
     except TypeError:
         traceback.print_exc()
         sys.exit("*** 'git timestamp' needs 'python-gnupg' module from PyPI, not 'gnupg'")
-    (keyid, name) = get_keyid(args.server)
+    (keyid, name) = get_keyid(args)
     if args.tag:
         timestamp_tag(repo, commit, keyid, name, args)
     else:
