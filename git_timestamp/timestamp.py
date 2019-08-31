@@ -32,7 +32,7 @@ import tempfile
 import time
 import traceback
 
-import gnupg        # Provided e.g. by `pip install python-gnupg`
+import gnupg # Provided e.g. by `pip install python-gnupg` (try with `pip2`/`pip3` if `pip` does not work)
 import pygit2 as git
 import requests
 
@@ -475,7 +475,11 @@ def main():
         gpg = gnupg.GPG(gnupghome=args.gnupg_home)
     except TypeError:
         traceback.print_exc()
-        sys.exit("*** `git timestamp` needs `python-gnupg` module from PyPI, not `gnupg`\n    Possible remedy: `pip uninstall gnupg; pip install python-gnupg`")
+        sys.exit("*** `git timestamp` needs `python-gnupg`"
+                " module from PyPI, not `gnupg`\n"
+                "    Possible remedy: `pip uninstall gnupg;"
+                " pip install python-gnupg`\n"
+                "    (try `pip2`/`pip3` if it does not work with `pip`)")
     (keyid, name) = get_keyid(args)
     print(name)
     if args.tag:
