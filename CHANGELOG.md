@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `--quiet` option
 
 ## Fixed
+- Handle `--server http://localhost:1234`
 
 ## Changed
 - `ZEITGITTER_FAKE_TIME` now used for testing

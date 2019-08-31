@@ -83,7 +83,7 @@ def timestamp_branch_name(fields):
     """Return the first field except 'www', 'igitt', '*stamp*', 'zeitgitter'"""
     for i in fields:
         if (i != '' and i != 'www' and i != 'igitt' and i != 'zeitgitter'
-                and 'stamp' not in i):
+                and 'stamp' not in i and ':' not in i):
             return i + '-timestamps'
     return 'zeitgitter-timestamps'
 
@@ -429,7 +429,7 @@ def timestamp_branch(repo, commit, keyid, name, args):
     # pygit2.reference_is_valid_name() is too new
     if (not re.match('^[-._a-zA-Z0-9]{1,100}$', args.branch)
             or ".." in args.branch):
-        sys.exit("Branch name %s is not valid for timestamping" % args.tag)
+        sys.exit("Branch name %s is not valid for timestamping" % args.branch)
     branch_head = None
     data = {
         'request': 'stamp-branch-v1',
@@ -481,7 +481,6 @@ def main():
                 " pip install python-gnupg`\n"
                 "    (try `pip2`/`pip3` if it does not work with `pip`)")
     (keyid, name) = get_keyid(args)
-    print(name)
     if args.tag:
         timestamp_tag(repo, commit, keyid, name, args)
     else:
