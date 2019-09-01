@@ -1,29 +1,59 @@
-# Client installation
+# Client installation using `pip`/`pip3`
 
-:warning: For server installation information, please visit
-[server/Install.md](../server/Install.md).
+## Ubuntu 18.04 LTS/18.10/19.04, Debian Stretch/Buster, Raspbian 9/10
 
-## Ubuntu >= 18.04, Debian Stretch, Raspbian 9
+You can install this using
+```sh
+sudo apt install git python-pip # likely already installed
+sudo pip install git-timestamp
+```
 
-On these systems, you can install the timestamping client with:
+If you already have `git` and `pip` (or `pip3`) installed, and only want to
+install it for yourself, no `root` access is needed and the following is
+sufficient:
 
 ```sh
-sudo apt install python3-gnupg python3-pygit2 python3-requests
-sudo make install-client
+pip install git-timestamp
+```
+
+## Ubuntu 16.04 LTS, Debian Jessie, Raspbian 8
+
+Debian-based operating systems shipped with a version of `pip` before 8.1.0
+(released 2016-03-05), require one additional binary package installation,
+`python-pygit2` or `python3-pygit2`, depending on your default Python version.
+This is to avoid version discrepancies between `libgit2` and `pygit2`.
+
+```sh
+sudo apt install git python-pip # Maybe already installed
+sudo apt install python-pygit2
+sudo pip install git-timestamp
+```
+
+# Client installation from source
+
+## Install on Debian-based operating systems
+
+Assumung Python 3:
+
+```sh
+sudo apt install git python3-gnupg python3-pygit2 python3-requests
+sudo make install
 ```
 
 ## Other packaged systems
 
 * Install `git` (you probably already have this)
-* Install Python3 (tested with versions 3.5, 3.6, and 3.7)
-* Install GnuPG 2.x (`gpg` binary)
-* Install libraries and headers for `libgit2`, `libffi`, and `libssl`
+* Install GnuPG 2.x (`gpg` binary; often already installed together with `git`)
+* Install Python, preferably Pyton3 (tested with versions 3.5, 3.6, and 3.7)
+* Install or upgrade `pip` or `pip3` to at least 8.1.0
+* Install libraries and headers for `libgit2`, `libffi`, and `libssl` (maybe
+  some have already been installed by previous operations)
 
 Then run:
 
 ```sh
 sudo pip3 install python-gnupg pygit2 requests
-sudo make install-client
+sudo make install
 ```
 
 :warning: The `pip[3]` package named *just* `gnupg` (no `python-` prefix!) is
@@ -47,7 +77,7 @@ Then run:
 
 ```sh
 sudo pip3 install python-gnupg pygit2
-sudo make install-client
+sudo make install
 ```
 
 

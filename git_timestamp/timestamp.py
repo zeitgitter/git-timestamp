@@ -32,7 +32,7 @@ import tempfile
 import time
 import traceback
 
-import gnupg
+import gnupg # Provided e.g. by `pip install python-gnupg` (try with `pip2`/`pip3` if `pip` does not work)
 import pygit2 as git
 import requests
 
@@ -80,10 +80,12 @@ def asciibytes(data):
 
 
 def timestamp_branch_name(fields):
-    """Return the first field except 'www', 'igitt', '*stamp*', 'zeitgitter'"""
-    for i in fields:
+    """Return the first field except 'www', 'igitt', '*stamp*', 'zeitgitter'
+    'localhost:8080' is returned as 'localhost-8080'"""
+    for f in fields:
+        i = f.replace(':', '-')
         if (i != '' and i != 'www' and i != 'igitt' and i != 'zeitgitter'
-                and 'stamp' not in i):
+                and 'stamp' not in i and valid_name(i)):
             return i + '-timestamps'
     return 'zeitgitter-timestamps'
 
@@ -180,7 +182,7 @@ def ensure_gnupg_ready_for_scan_keys():
     gpg.list_keys(keys='arbitrary.query@creates.keybox')
 
 
-def validate_key_and_import(text):
+def validate_key_and_import(text, args):
     """Is this a single key? Then import it"""
     ensure_gnupg_ready_for_scan_keys()
     f = tempfile.NamedTemporaryFile(mode='w', delete=False)
@@ -191,7 +193,7 @@ def validate_key_and_import(text):
     if len(info) != 1 or info[0]['type'] != 'pub' or len(info[0]['uids']) == 0:
         sys.exit("Invalid key returned")
     res = gpg.import_keys(text)
-    if res.count == 1 and not config.quiet:
+    if res.count == 1 and not args.quiet:
         print("Imported new key %s: %s" %
               (info[0]['keyid'], info[0]['uids'][0]))
     return (info[0]['keyid'], info[0]['uids'][0])
@@ -239,36 +241,36 @@ def get_global_config_if_possible():
     # Not reached
 
 
-def get_keyid(server):
+def get_keyid(args):
     """Return keyid/fullname from git config, if known.
     Otherwise, request it from server and remember TOFU-style"""
-    key = server
-    if key.startswith('http://'):
-        key = key[7:]
-    elif key.startswith('https://'):
-        key = key[8:]
-    while key.endswith('/'):
-        key = key[0:-1]
+    keyname = args.server
+    if keyname.startswith('http://'):
+        keyname = keyname[7:]
+    elif keyname.startswith('https://'):
+        keyname = keyname[8:]
+    while keyname.endswith('/'):
+        keyname = keyname[0:-1]
     # Replace everything outside 0-9a-z with '-':
-    key = ''.join(map(lambda x:
-                      x if (x >= '0' and x <= '9') or (x >= 'a' and x <= 'z') else '-', key))
+    keyname = ''.join(map(lambda x:
+                      x if (x >= '0' and x <= '9') or (x >= 'a' and x <= 'z') else '-', keyname))
     try:
-        keyid = repo.config['timestamper.%s.keyid' % key]
+        keyid = repo.config['timestamper.%s.keyid' % keyname]
         keys = gpg.list_keys(keys=keyid)
         if len(keys) == 0:
             sys.stderr.write("WARNING: Key %s missing in keyring;"
                              " refetching timestamper key\n" % keyid)
             raise KeyError("GPG Key not found")  # Evil hack
-        return (keyid, repo.config['timestamper.%s.name' % key])
+        return (keyid, repo.config['timestamper.%s.name' % keyname])
     except KeyError:
         # Obtain key in TOFU fashion and remember keyid
-        r = requests.get(server, params={'request': 'get-public-key-v1'},
+        r = requests.get(args.server, params={'request': 'get-public-key-v1'},
                          timeout=30)
-        quit_if_http_error(server, r)
-        (keyid, name) = validate_key_and_import(r.text)
+        quit_if_http_error(args.server, r)
+        (keyid, name) = validate_key_and_import(r.text, args)
         gcfg = get_global_config_if_possible()
-        gcfg['timestamper.%s.keyid' % key] = keyid
-        gcfg['timestamper.%s.name' % key] = name
+        gcfg['timestamper.%s.keyid' % keyname] = keyid
+        gcfg['timestamper.%s.name' % keyname] = name
         return (keyid, name)
 
 
@@ -367,8 +369,7 @@ def quit_if_http_error(server, r):
 
 def timestamp_tag(repo, commit, keyid, name, args):
     """Obtain and add a signed tag"""
-    # pygit2.reference_is_valid_name() is too new
-    if not re.match('^[-._a-zA-Z0-9]+$', args.tag) or ".." in args.tag:
+    if not valid_name(args.tag):
         sys.exit("Tag name '%s' is not valid for timestamping" % args.tag)
     try:
         r = repo.lookup_reference('refs/tags/' + args.tag)
@@ -423,13 +424,19 @@ author %s ''' % (data['commit'], name)
     signature = signature.replace('\n ', '\n')
     verify_signature_and_timestamp(keyid, signed, signature, args)
 
+def valid_name(name):
+    """Can be sanely, universally stored as file name.
+
+    pygit2.reference_is_valid_name() would be better, but is too new
+    [(2018-10-17)](https://github.com/libgit2/pygit2/commit/1a389cc0ba360f1fd53f1352da41c6a2fae92a66)
+    to rely on being available."""
+    return (re.match('^[_a-z][-._a-z0-9]{,99}$', name, re.IGNORECASE)
+            and '..' not in name and not '\n' in name)
 
 def timestamp_branch(repo, commit, keyid, name, args):
     """Obtain and add branch commit; create/update branch head"""
-    # pygit2.reference_is_valid_name() is too new
-    if (not re.match('^[-._a-zA-Z0-9]{1,100}$', args.branch)
-            or ".." in args.branch):
-        sys.exit("Branch name %s is not valid for timestamping" % args.tag)
+    if not valid_name(args.branch):
+        sys.exit("Branch name %s is not valid for timestamping" % args.branch)
     branch_head = None
     data = {
         'request': 'stamp-branch-v1',
@@ -475,8 +482,12 @@ def main():
         gpg = gnupg.GPG(gnupghome=args.gnupg_home)
     except TypeError:
         traceback.print_exc()
-        sys.exit("*** 'git timestamp' needs 'python-gnupg' module from PyPI, not 'gnupg'")
-    (keyid, name) = get_keyid(args.server)
+        sys.exit("*** `git timestamp` needs `python-gnupg`"
+                " module from PyPI, not `gnupg`\n"
+                "    Possible remedy: `pip uninstall gnupg;"
+                " pip install python-gnupg`\n"
+                "    (try `pip2`/`pip3` if it does not work with `pip`)")
+    (keyid, name) = get_keyid(args)
     if args.tag:
         timestamp_tag(repo, commit, keyid, name, args)
     else:
