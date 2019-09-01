@@ -80,10 +80,12 @@ def asciibytes(data):
 
 
 def timestamp_branch_name(fields):
-    """Return the first field except 'www', 'igitt', '*stamp*', 'zeitgitter'"""
-    for i in fields:
+    """Return the first field except 'www', 'igitt', '*stamp*', 'zeitgitter'
+    'localhost:8080' is returned as 'localhost-8080'"""
+    for f in fields:
+        i = f.replace(':', '-')
         if (i != '' and i != 'www' and i != 'igitt' and i != 'zeitgitter'
-                and 'stamp' not in i and ':' not in i):
+                and 'stamp' not in i and valid_name(i)):
             return i + '-timestamps'
     return 'zeitgitter-timestamps'
 
@@ -367,8 +369,7 @@ def quit_if_http_error(server, r):
 
 def timestamp_tag(repo, commit, keyid, name, args):
     """Obtain and add a signed tag"""
-    # pygit2.reference_is_valid_name() is too new
-    if not re.match('^[-._a-zA-Z0-9]+$', args.tag) or ".." in args.tag:
+    if not valid_name(args.tag):
         sys.exit("Tag name '%s' is not valid for timestamping" % args.tag)
     try:
         r = repo.lookup_reference('refs/tags/' + args.tag)
@@ -423,12 +424,18 @@ author %s ''' % (data['commit'], name)
     signature = signature.replace('\n ', '\n')
     verify_signature_and_timestamp(keyid, signed, signature, args)
 
+def valid_name(name):
+    """Can be sanely, universally stored as file name.
+
+    pygit2.reference_is_valid_name() would be better, but is too new
+    [(2018-10-17)](https://github.com/libgit2/pygit2/commit/1a389cc0ba360f1fd53f1352da41c6a2fae92a66)
+    to rely on being available."""
+    return (re.match('^[_a-z][-._a-z0-9]{,99}$', name, re.IGNORECASE)
+            and '..' not in name and not '\n' in name)
 
 def timestamp_branch(repo, commit, keyid, name, args):
     """Obtain and add branch commit; create/update branch head"""
-    # pygit2.reference_is_valid_name() is too new
-    if (not re.match('^[-._a-zA-Z0-9]{1,100}$', args.branch)
-            or ".." in args.branch):
+    if not valid_name(args.branch):
         sys.exit("Branch name %s is not valid for timestamping" % args.branch)
     branch_head = None
     data = {
