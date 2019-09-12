@@ -37,11 +37,29 @@ The timestamping client is called `git timestamp` and allows to issue
 timestamped, signed tags or commits.
 
 To simplify deployment, we provide a free timestamping server at
-[https://gitta.enotar.ch](https://gitta.enotar.ch). It is able to provide several
+[https://gitta.zeitgitter.net](https://gitta.zeitgitter.net).
+It is able to provide several
 million timestamps per day. However, if you or your organization plan to issue
 more than a hundred timestamps per day, please consider installing and using
 your own timestamping server and have it being cross-timestamped with other
 servers.
+
+## Timestamping as a network
+
+The revolutionary idea behind Zeitgitter is to have timestampers cross-verify
+each other. This results in a network which makes it hard to cheat. In fact,
+the network requires **only a single trustworthy member** to prevent all
+others from cheating. Even more so, you do not need to know who the
+non-cheating member is, as long as you can be sure that there is one or not
+all the bad guys are colluding.
+
+In fact, the non-cheating member may even change over time. As long as there is
+always at least one member who does not backdate any timestamps, this role can
+freely move between members.
+
+This extreme resilience makes timestamping with Zeitgitter so trustworthy.
+
+![Timestamping network](./doc/TimestampingNetwork.png)
 
 ## Client Usage
 
