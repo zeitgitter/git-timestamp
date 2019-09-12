@@ -23,7 +23,7 @@ increases robustness](./Cryptography.md#algorithm-diversity).
 "Maintainer" includes everyone with access to the private key, i.e., anyone
 who could fake a timestamp for this machine.
 
-## Technical parameters
+## Security parameters
 
 | Nickname    | Algorithm | Key ID           | Interval | Offset | Timestamped by                  |
 | ----------- | --------- | ---------------- | --------:| ------:| ------------------------------- |
@@ -34,6 +34,8 @@ who could fake a timestamp for this machine.
 
 How to read this: Gitta commits, obtains a cross-timestamp from Diversity, and
 publishes its log every hour, 23 minutes and 37 seconds after the hour.
+
+![Timestamping network](./TimestampingNetwork.png)
 
 ## Publication locations
 
