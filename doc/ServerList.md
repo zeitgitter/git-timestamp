@@ -98,11 +98,3 @@ OriginStamp.
 OriginStamp does provide neither a receipt nor proof of posting which could be
 added to the repository. Also, OriginStamp does not provide for an independent
 archival of its issued timestamps, so there is no two-way timestamping.
-
-# Chosing a good commit time for your own server
-
-To chose a good commit time for your own server, you may take the largest
-interval between any two timestampers and divide it into two uneven sections
-(i.e., divide it roughly according to the [Golden
-ratio](https://en.wikipedia.org/wiki/Golden_ratio). Try to avoid chosing
-the full hour, as some automated processes may already cluster there.
