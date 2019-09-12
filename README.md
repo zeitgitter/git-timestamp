@@ -134,3 +134,9 @@ fi
 - [List of public *Zeitgitter* servers](doc/ServerList.md)
 - [Discussion of the use of (weak) cryptography](doc/Cryptography.md)
 
+# Attributions
+
+Zeitgitter logo is based on [Git Logo](https://git-scm.com/downloads/logos) by
+[Jason Long](https://twitter.com/jasonlong), licensed under the
+[Creative Commons Attribution 3.0
+Unported License](https://creativecommons.org/licenses/by/3.0/).
