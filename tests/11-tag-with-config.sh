@@ -4,19 +4,14 @@ h="$PWD"
 d=$1
 shift
 cd "$d"
-
-# Init GNUPG
 export GNUPGHOME="$d/gnupg"
 mkdir -p -m 700 "$GNUPGHOME"
+git init
 
-# Init GIT
-if [ ! -d .git ]; then
-	git init
-fi
-echo $RANDOM > a.txt
-git add a.txt
-git commit -m "Random change $RANDOM"
-tagid=v$RANDOM
+echo $RANDOM > 11-a.txt
+git add 11-a.txt
+git commit -m "Random change 11-$RANDOM"
+tagid=v11-$RANDOM
 
 # Change config
 git config timestamp.server https://gitta.zeitgitter.net
@@ -31,11 +26,11 @@ if ! git tag | grep -q $tagid; then
 fi
 
 # Yet another commit
-echo $RANDOM >> a.txt
+echo $RANDOM >> 11-a.txt
 git commit -m "Random commit $RANDOM" -a
 
 # Create tag with even more options
-yatag=r$RANDOM
+yatag=r11-$RANDOM
 $h/git-timestamp.py --tag $yatag --server https://diversity.zeitgitter.net
 
 # Check tag existence

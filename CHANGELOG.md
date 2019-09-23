@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # 0.9.7+ - [Unreleased]
 ## Added
+- Can now run selected tests only: `make tests TESTS=tests/20-branch.sh` etc.
 
 ## Fixed
+- No longer allow timestamping a timestamp branch head onto itself
+  (would cause a merge commit with the same parent twice)
 
 ## Changed
 - Updated and extended [ServerList.md](./doc/ServerList.md)

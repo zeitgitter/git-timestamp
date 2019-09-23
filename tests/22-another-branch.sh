@@ -1,22 +1,17 @@
 #!/bin/bash -e
-# Test tag config parameters
+# Test timestamping to a different branch
 h="$PWD"
 d=$1
 shift
 cd "$d"
-
-# Init GNUPG
 export GNUPGHOME="$d/gnupg"
 mkdir -p -m 700 "$GNUPGHOME"
+git init
 
-# Init GIT
-if [ ! -d .git ]; then
-	git init
-fi
 echo $RANDOM > a.txt
 git add a.txt
 git commit -m "Random change $RANDOM"
-branchname=gitta-$RANDOM-timestamps
+branchname=gitta-special-timestamps
 
 # Change config
 git config timestamp.branch gitta-timestamps
