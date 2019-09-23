@@ -134,6 +134,14 @@ def get_args():
                default='https://gitta.zeitgitter.net',
                gitopt='timestamp.server',
                help="Zeitgitter server to obtain timestamp from")
+    parser.add('--append-branch-name',
+               default=True,
+               action=DefaultTrueIfPresent,
+               metavar='bool',
+               gitopt='timestamp.append-branch-name',
+               help="""Whether to append the branch name of the current branch
+                   to the timestamp branch name, i.e., create per-branch
+                   timestamp branches. (`master` will never be appended.)""")
     parser.add('--gnupg-home',
                gitopt='timestamp.gnupg-home',
                help="Where to store timestamper public keys")
@@ -153,13 +161,14 @@ def get_args():
                action=DefaultTrueIfPresent,
                metavar='bool',
                gitopt='timestamp.quiet',
-               help="Only output error messages")
+               help="Suppress diagnostic messages, only print fatal errors")
     parser.add('commit',
                nargs='?',
                default='HEAD',
                metavar='COMMIT',
                gitopt='timestamp.commit-branch',
-               help="Which commit to timestamp")
+               help="""Which commit-ish to timestamp. Must be a branch name
+                       for branch timestamps with `--append-branch-name`""")
     arg = parser.parse_args()
     if arg.enable == False:
         sys.exit("Timestamping explicitely disabled")
@@ -167,7 +176,7 @@ def get_args():
         sys.exit("Timestamping not explicitely enabled")
     if arg.tag is None and arg.branch is None:
         # Automatically derive branch name
-        # Split on '.' or '/'
+        # Split URL on '.' or '/'
         fields = arg.server.replace('/', '.').split('.')
         arg.branch = timestamp_branch_name(fields[1:])
     return arg
@@ -357,6 +366,7 @@ tagger %s ''' % (commit.id, args.tag, name)
     else:
         sys.exit("No OpenPGP signature found")
 
+
 def quit_if_http_error(server, r):
     if r.status_code == 301:
         sys.exit("Timestamping server URL changed from %s to %s\n"
@@ -367,8 +377,13 @@ def quit_if_http_error(server, r):
         sys.exit("Timestamping request failed; server responded with %d %s"
                  % (r.status_code, r.reason))
 
-def timestamp_tag(repo, commit, keyid, name, args):
+
+def timestamp_tag(repo, keyid, name, args):
     """Obtain and add a signed tag"""
+    try:
+        commit = repo.revparse_single(args.commit)
+    except KeyError as e:
+        sys.exit("No such revision: '%s'" % (e,))
     if not valid_name(args.tag):
         sys.exit("Tag name '%s' is not valid for timestamping" % args.tag)
     try:
@@ -434,10 +449,50 @@ def valid_name(name):
     return (re.match('^[_a-z][-._a-z0-9]{,99}$', name, re.IGNORECASE)
             and '..' not in name and not '\n' in name)
 
-def timestamp_branch(repo, commit, keyid, name, args):
+
+def append_branch_name(repo, commit_name, branch_name):
+    """Appends current branch name if not `master`"""
+    if commit_name == 'HEAD':
+        try:
+            comref = repo.lookup_reference(commit_name)
+            comname = comref.target # Branch HEAD points to
+        except git.InvalidSpecError:
+            sys.exit("Invalid HEAD")
+        if comname.startswith('refs/heads/'):
+            comname = comname[len('refs/heads/'):]
+        else:
+            sys.exit("HEAD must point to branch, not %s" % comname)
+    else:
+        try:
+            comref = repo.lookup_reference('refs/heads/' + commit_name)
+            comname = commit_name # Branch name itself
+        except (KeyError, git.InvalidSpecError):
+            sys.exit("%s must be a branch name" % commit_name)
+
+    if comname == 'master':
+        return branch_name
+    else:
+        extended_name = "%s-%s" % (branch_name, comname)
+        if valid_name(extended_name):
+            return extended_name
+        else:
+            sys.exit("Branch name %s is not valid for timestamping\n"
+                    "(constructed from base timestamp branch %s and "
+                    "source branch %s)" % (extended_name, branch_name, comname))
+
+
+def timestamp_branch(repo, keyid, name, args):
     """Obtain and add branch commit; create/update branch head"""
+    # If the base name is already invalid, it cannot become valid by appending
     if not valid_name(args.branch):
-        sys.exit("Branch name %s is not valid for timestamping" % args.branch)
+        sys.exit("Branch name %s is not valid for timestamping" %
+                args.branch)
+    if args.append_branch_name:
+        args.branch = append_branch_name(repo, args.commit, args.branch)
+    try:
+        commit = repo.revparse_single(args.commit)
+    except KeyError as e:
+        sys.exit("No such revision: '%s'" % (e,))
     branch_head = None
     data = {
         'request': 'stamp-branch-v1',
@@ -478,11 +533,6 @@ def main():
     args = get_args()
 
     try:
-        commit = repo.revparse_single(args.commit)
-    except KeyError as e:
-        sys.exit("No such revision: '%s'" % (e,))
-
-    try:
         gpg = gnupg.GPG(gnupghome=args.gnupg_home)
     except TypeError:
         traceback.print_exc()
@@ -493,9 +543,9 @@ def main():
                 "    (try `pip2`/`pip3` if it does not work with `pip`)")
     (keyid, name) = get_keyid(args)
     if args.tag:
-        timestamp_tag(repo, commit, keyid, name, args)
+        timestamp_tag(repo, keyid, name, args)
     else:
-        timestamp_branch(repo, commit, keyid, name, args)
+        timestamp_branch(repo, keyid, name, args)
 
 
 if __name__ == "__main__":
