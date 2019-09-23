@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 # 0.9.7+ - [Unreleased]
 ## Added
 - Can now run selected tests only: `make tests TESTS=tests/20-branch.sh` etc.
+- `--append-branch-name` (default: `yes`) appends the branch name on
+  timestamp branches for non-`master` branches. I.e., `git timestamp`
+  with no additional options will timestamp to `gitta-timestamps` for
+  branch `master` and `gitta-timestamps-foobar` for branch `foobar`.
+  (Timestamping from different branches to the same timestamp branch
+  is not for the faint of heart and has unexpected side effects, including
+  exposing private branches and making temporary branches permanent.)
 
 ## Fixed
 - No longer allow timestamping a timestamp branch head onto itself
