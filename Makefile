@@ -1,5 +1,6 @@
 PREFIX	= /usr/local
 BINDIR	= ${PREFIX}/bin
+TESTS   = tests/*
 
 all:
 	echo "Use make install, apt, or test"
@@ -13,7 +14,7 @@ apt dependencies:
 test tests:	system-tests
 
 system-tests:
-	@d=`mktemp -d`; for i in tests/*; do echo; echo ===== $$i $$d; $$i $$d || exit 1; done; echo ===== Cleanup; ${RM} -r $$d
+	@d=`mktemp -d`; for i in ${TESTS}; do echo; echo ===== $$i $$d; $$i $$d || exit 1; done; echo ===== Cleanup; ${RM} -r $$d
 
 pypi:
 	${RM} -f dist/*
