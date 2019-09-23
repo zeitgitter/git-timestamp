@@ -424,6 +424,7 @@ author %s ''' % (data['commit'], name)
     signature = signature.replace('\n ', '\n')
     verify_signature_and_timestamp(keyid, signed, signature, args)
 
+
 def valid_name(name):
     """Can be sanely, universally stored as file name.
 
@@ -445,6 +446,9 @@ def timestamp_branch(repo, commit, keyid, name, args):
     }
     try:
         branch_head = repo.lookup_reference('refs/heads/' + args.branch)
+        if branch_head.target == commit.id:
+            # Would create a merge commit with the same parent twice
+            sys.exit("Cannot timestamp head of timestamp branch to itself")
         data['parent'] = branch_head.target
         try:
             if (repo[branch_head.target].parent_ids[0] == commit.id or
