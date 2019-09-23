@@ -1,27 +1,21 @@
 #!/bin/bash -e
-# Test tag config parameters
+# Test timestamping to branch
 h="$PWD"
 d=$1
 shift
 cd "$d"
-
-# Init GNUPG
 export GNUPGHOME="$d/gnupg"
 mkdir -p -m 700 "$GNUPGHOME"
+git init
 
-# Init GIT
-if [ ! -d .git ]; then
-	git init
-fi
-echo $RANDOM > a.txt
-git add a.txt
-git commit -m "Random change $RANDOM"
-tagid=v$RANDOM
+echo $RANDOM > 20-a.txt
+git add 20-a.txt
+git commit -m "Random change 20-$RANDOM"
 
 # Change config
 git config timestamp.branch gitta-timestamps
 
-# Create tag with branch and server from config
+# Create branch with branch and server from config
 $h/git-timestamp.py
 
 # Check branch existence
@@ -37,11 +31,10 @@ if ! git diff --quiet gitta-timestamps; then
 fi
 
 # Yet another commit
-echo $RANDOM >> a.txt
-git commit -m "Random commit $RANDOM" -a
+echo $RANDOM >> 20-a.txt
+git commit -m "Random commit 20-$RANDOM" -a
 
 # Create a second branch node
-yatag=r$RANDOM
 $h/git-timestamp.py --server https://diversity.zeitgitter.net
 
 # Branch should be identical
@@ -52,3 +45,6 @@ fi
 
 # Cryptographically verify all of them
 git verify-commit gitta-timestamps gitta-timestamps^
+
+# Clean up
+git config --unset timestamp.branch

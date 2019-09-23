@@ -4,17 +4,14 @@ h="$PWD"
 d=$1
 shift
 cd "$d"
-
-# Init GNUPG
 export GNUPGHOME="$d/gnupg"
 mkdir -m 700 "$GNUPGHOME"
-
-# Init GIT
 git init
-echo $RANDOM > a.txt
-git add a.txt
-git commit -m "Random change $RANDOM"
-tagid=v$RANDOM
+
+echo $RANDOM > 10-a.txt
+git add 10-a.txt
+git commit -m "Random change 10-$RANDOM"
+tagid=v10-$RANDOM
 $h/git-timestamp.py --tag $tagid --server https://gitta.zeitgitter.net
 
 # Check key import
