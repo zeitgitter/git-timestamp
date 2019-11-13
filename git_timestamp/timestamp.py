@@ -36,15 +36,18 @@ import gnupg # Provided e.g. by `pip install python-gnupg` (try with `pip2`/`pip
 import pygit2 as git
 import requests
 
-VERSION = '1.0.0'
+VERSION = '1.0.0+'
 
 
 class GitArgumentParser(argparse.ArgumentParser):
+    """Insert git config options between command line and default.
+
+    WARNING: There is no way to handle custom actions correctly by default, so
+    your custom actions need to include a `convert_default(value)` method."""
     def __init__(self, *args, **kwargs):
         super(GitArgumentParser, self).__init__(*args, **kwargs)
 
     def add_argument(self, *args, **kwargs):
-        """Insert git config options between command line and default"""
         global repo
         if 'gitopt' in kwargs:
             if 'help' in kwargs:
@@ -53,7 +56,16 @@ class GitArgumentParser(argparse.ArgumentParser):
                 kwargs['help'] = ''
             gitopt = kwargs['gitopt']
             try:
-                val = repo.config[gitopt]
+                if 'action' in kwargs and issubclass(kwargs['action'],
+                        argparse.Action):
+                    try:
+                        val = kwargs['action'].convert_default(repo.config[gitopt])
+                    except AttributeError:
+                        raise NotImplementedError("Custom action `%r' passed "
+                                "to GitArgumentParser does not support "
+                                "`convert_default()' method." % kwargs['action'])
+                else:
+                    val = repo.config[gitopt]
                 kwargs['help'] += "Defaults to '%s' from `git config %s`" % (val, gitopt)
                 if 'default' in kwargs:
                     kwargs['help'] += "; fallback default: '%s'" % kwargs['default']
@@ -96,11 +108,14 @@ class DefaultTrueIfPresent(argparse.Action):
             values = True
         else:
             try:
-                values = bool(distutils.util.strtobool(values))
+                values = self.convert_default(values)
             except ValueError:
                 raise argparse.ArgumentError(self, "Requires boolean value")
         setattr(namespace, self.dest, values)
 
+    @classmethod
+    def convert_default(cls, value):
+        return bool(distutils.util.strtobool(value))
 
 def get_args():
     """Parse command line and git config parameters"""

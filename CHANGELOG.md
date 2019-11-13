@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+# 1.0.0+ - 2019-09-23
+## Added
+
+## Fixed
+- `enable = false` in `git config` is no longer treated as a True value
+
+## Changed
+
+
 # 1.0.0 - 2019-09-23
 ## Added
 - Can now run selected tests only: `make tests TESTS=tests/20-branch.sh` etc.
