@@ -117,7 +117,7 @@ def get_args():
     parser.add('--help', '-h',
                action='help',
                help="""Show this help message and exit. When called as
-             'git timestamp' (space, not dash), use `-h`, as `--help` is 
+             'git timestamp' (space, not dash), use `-h`, as `--help` is
              captured by `git` itself.""")
     parser.add('--version',
                action='version',
@@ -217,7 +217,7 @@ def get_global_config_if_possible():
     exist yet. (The [paths may be
     determined](https://github.com/libgit2/pygit2/issues/915#issuecomment-503300141)
     by
-    `pygit2.option(pygit2.GIT_OPT_GET_SEARCH_PATH, pygit2.GIT_CONFIG_LEVEL_GLOBAL)` 
+    `pygit2.option(pygit2.GIT_OPT_GET_SEARCH_PATH, pygit2.GIT_CONFIG_LEVEL_GLOBAL)`
     and similar.)
 
     Therefore, we do not simply `touch ~/.gitconfig` first, but
