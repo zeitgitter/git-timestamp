@@ -5,7 +5,7 @@
 #
 # git timestamp — Independent GIT Timestamping client
 #
-# Copyright (C) 2019 Marcel Waldvogel
+# Copyright (C) 2019, 2020 Marcel Waldvogel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -323,8 +323,9 @@ def validate_timestamp_zone_eol(header, text, offset):
         istamp = int(stamp)
         sigtime = sig_time()
         if not validate_timestamp(istamp):
-            sys.exit("Returned %s timestamp (%d, %s) too far off now (%d, %s)" %
-                     (header, istamp, time_str(istamp), sigtime, time_str(sigtime)))
+            sys.exit("Ignoring returned %s timestamp (%s) as possible falseticker\n"
+                     "(off by %d seconds compared to this computer's time; check clock)"
+                     % (header, time_str(istamp), istamp-sigtime))
     except ValueError:
         sys.exit("Returned %s timestamp '%s' is not a number" % (header, stamp))
     tz = text[offset + 10:offset + 17]
