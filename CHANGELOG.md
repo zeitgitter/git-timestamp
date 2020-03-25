@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `enable = false` in `git config` is no longer treated as a True value
 
 ## Changed
-
+- "Signature timestamp too far off now" more user-readable
 
 # 1.0.0 - 2019-09-23
 ## Added

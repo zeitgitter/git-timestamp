@@ -1,4 +1,5 @@
 .idea
 build
 dist
+deb_dist
 git_timestamp.egg-info
