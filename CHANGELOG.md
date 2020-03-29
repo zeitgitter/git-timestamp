@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## Fixed
 - `enable = false` in `git config` is no longer treated as a True value
+- Some versions of `pygit2.discover_repository()` raise `KeyError` when
+  no `git` repository is found; this is now also caught and handled
 
 ## Changed
 - "Signature timestamp too far off now" more user-readable

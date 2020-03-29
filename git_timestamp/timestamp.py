@@ -542,7 +542,12 @@ def timestamp_branch(repo, keyid, name, args):
 def main():
     global repo, gpg
     requests.__title__ = 'git-timestamp/%s %s' % (VERSION, requests.__title__)
-    path = git.discover_repository(os.getcwd())
+    try:
+        # Depending on the version of pygit2, `git.discover_repository()`
+        # returns `None` or raises `KeyError`
+        path = git.discover_repository(os.getcwd())
+    except KeyError:
+        path = None
     if path == None:
         sys.exit("Not a git repository")
     repo = git.Repository(path)
