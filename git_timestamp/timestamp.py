@@ -148,7 +148,8 @@ def get_args():
     parser.add('--server',
                default='https://gitta.zeitgitter.net',
                gitopt='timestamp.server',
-               help="Zeitgitter server to obtain timestamp from")
+               help="""Zeitgitter server to obtain timestamp from
+                   ('https://' is optional)""")
     parser.add('--append-branch-name',
                default=True,
                action=DefaultTrueIfPresent,
@@ -185,6 +186,8 @@ def get_args():
                help="""Which commit-ish to timestamp. Must be a branch name
                        for branch timestamps with `--append-branch-name`""")
     arg = parser.parse_args()
+    if ':' not in arg.server:
+        arg.server = 'https://' + arg.server
     if arg.enable == False:
         sys.exit("Timestamping explicitely disabled")
     if arg.require_enable and arg.enable != True:
