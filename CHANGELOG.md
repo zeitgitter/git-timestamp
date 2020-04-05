@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 # 1.0.0+ - 2019-09-23
 ## Added
+- Quick installation instructions
 - 'https://' is now optional for `--server`
 
 ## Fixed
