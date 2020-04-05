@@ -9,15 +9,15 @@ repositories, follow these instructions:
 ### Ubuntu 16.04, 18.04 or 19.10 using Python 2
 
 ```sh
-apt install python-pip python-pygit2
-pip install git-timestamp
+sudo apt install python-pip python-pygit2
+sudo pip install git-timestamp
 ```
 
 ### Ubuntu 16.04, 18.04 or 19.10 using Python 3
 
 ```sh
-apt install python3-pip python3-pygit2
-pip3 install git-timestamp
+sudo apt install python3-pip python3-pygit2
+sudo pip3 install git-timestamp
 ```
 
 ## Timestamping: Why?
