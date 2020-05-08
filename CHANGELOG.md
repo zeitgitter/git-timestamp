@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
+# 1.0.2+ - [Unreleased]
+## Added
+
+## Fixed
+
+## Changed
+- Include Ubuntu 20.04 in documentation
+
+
 # 1.0.2 - 2020-05-08
 ## Added
 

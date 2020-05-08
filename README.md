@@ -6,14 +6,14 @@ Before you can run `git timestamp` to create a branch timestamp (recommended)
 or `git timestamp --tag SomeTimestampedTag` (alternative) in any of your git
 repositories, follow these instructions:
 
-### Ubuntu 16.04, 18.04 or 19.10 using Python 2
+### Ubuntu 16.04, 18.04, 19.10, or 20.04 using Python 2
 
 ```sh
 sudo apt install python-pip python-pygit2
 sudo pip install git-timestamp
 ```
 
-### Ubuntu 16.04, 18.04 or 19.10 using Python 3
+### Ubuntu 16.04, 18.04, 19.10, or 20.04 using Python 3
 
 ```sh
 sudo apt install python3-pip python3-pygit2
