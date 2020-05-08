@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
+# 1.0.1+ - [Unreleased]
+## Added
+
+## Fixed
+
+## Changed
+- Development status updated to `stable`
+
+
 # 1.0.1 - 2020-05-08
 ## Added
 - Quick installation instructions
