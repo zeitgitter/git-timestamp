@@ -23,7 +23,7 @@ setuptools.setup(
     name="git-timestamp",
     version=extract_version('git_timestamp/timestamp.py'),
     author="Marcel Waldvogel",
-    author_email="marcel.waldvogel@uni-konstanz.de",
+    author_email="marcel.waldvogel@trifence.ch",
     description="Timestamping client for zeitgitter",
     long_description=long_description,
     long_description_content_type="text/markdown",

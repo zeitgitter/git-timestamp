@@ -5,13 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
-# 1.0.1+ - [Unreleased]
+# 1.0.2 - 2020-05-08
 ## Added
 
 ## Fixed
 
 ## Changed
+- This is only a status update, there are no code changes to the previous release:
 - Development status updated to `stable`
+- Maintainer address updated
 
 
 # 1.0.1 - 2020-05-08
