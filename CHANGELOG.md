@@ -5,7 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
-# 1.0.0+ - 2019-09-23
+# 1.0.1+ - [Unreleased]
+## Added
+
+## Fixed
+
+## Changed
+- Development status updated to `stable`
+
+
+# 1.0.1 - 2020-05-08
 ## Added
 - Quick installation instructions
 - 'https://' is now optional for `--server`
@@ -17,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## Changed
 - "Signature timestamp too far off now" more user-readable
+
 
 # 1.0.0 - 2019-09-23
 ## Added
