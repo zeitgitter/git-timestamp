@@ -218,7 +218,7 @@ def validate_key_and_import(text, args):
     info = gpg.scan_keys(f.name)
     os.unlink(f.name)
     if len(info) != 1 or info[0]['type'] != 'pub' or len(info[0]['uids']) == 0:
-        sys.exit("Invalid key returned")
+        sys.exit("Invalid key returned; maybe not a Zeitgitter server")
     res = gpg.import_keys(text)
     if res.count == 1 and not args.quiet:
         print("Imported new key %s: %s" %
