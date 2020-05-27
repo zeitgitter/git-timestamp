@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 # 1.0.2+ - [Unreleased]
 ## Added
 - Better explanation if not talking to a Zeitgitter server
+- Explain automatic timestamping in the README
 
 ## Fixed
 
