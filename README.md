@@ -123,6 +123,27 @@ optional arguments:
 single/rare timestamping, and `--branch` for reqular timestamping.
 
 
+## Automatic timestamping of every commit
+
+To automatically timestamp every commit, create an executable file
+`.git/hooks/post-commit` with the following contents:
+
+```sh
+#!/bin/sh
+git timestamp
+```
+
+Append parameters as you like.
+
+If you do not need parameters (i.e., everything matches the default or has been
+overridden with `git config`), and you have no other post-commit needs, run the
+following command in the root of your checked out repository:
+
+```sh
+ln -s `which git-timestamp` .git/hooks/post-commit
+```
+
+
 ## Inclusion in other packages
 
 Timestamping can be a useful add-on feature for many operations, including
