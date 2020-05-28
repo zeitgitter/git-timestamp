@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## Changed
 - Include Ubuntu 20.04 in documentation
+- Defaults to Python 3 now, as [Python 2 has been sunset as of
+  2020-01-01](https://www.python.org/doc/sunset-python-2/)
 
 
 # 1.0.2 - 2020-05-08
