@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## Added
 - Better explanation if not talking to a Zeitgitter server
 - Explain automatic timestamping in the README
+- Support server aliases. Initialized with all public Zeitgitter servers
 
 ## Fixed
 
