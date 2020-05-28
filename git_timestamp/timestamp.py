@@ -202,10 +202,10 @@ def get_args():
         sys.exit("Timestamping explicitely disabled")
     if arg.require_enable and arg.enable != True:
         sys.exit("Timestamping not explicitely enabled")
-    if args.server in args.server_aliases:
-        args.server = server_aliases[args.server]
-    if ':' not in args.server:
-        args.server = 'https://' + args.server
+    if arg.server in server_aliases:
+        arg.server = server_aliases[arg.server]
+    if ':' not in arg.server:
+        arg.server = 'https://' + arg.server
     if arg.tag is None and arg.branch is None:
         # Automatically derive branch name
         # Split URL on '.' or '/'
