@@ -117,6 +117,17 @@ class DefaultTrueIfPresent(argparse.Action):
     def convert_default(cls, value):
         return bool(distutils.util.strtobool(value))
 
+
+server_aliases = {
+    "gitta": "gitta.zeitgitter.net",
+    "diversity": "diversity.zeitgitter.net"
+}
+
+
+def expanded_aliases():
+    return ', '.join(map(lambda t: "%s → %s" % t, server_aliases.items()))
+
+
 def get_args():
     """Parse command line and git config parameters"""
     parser = GitArgumentParser(
@@ -148,8 +159,9 @@ def get_args():
     parser.add('--server',
                default='https://gitta.zeitgitter.net',
                gitopt='timestamp.server',
-               help="""Zeitgitter server to obtain timestamp from
-                   ('https://' is optional)""")
+               help="""Zeitgitter server to obtain timestamp from. 'https://'
+                   is optional. The following aliases are supported: """
+                   + expanded_aliases())
     parser.add('--append-branch-name',
                default=True,
                action=DefaultTrueIfPresent,
@@ -186,12 +198,14 @@ def get_args():
                help="""Which commit-ish to timestamp. Must be a branch name
                        for branch timestamps with `--append-branch-name`""")
     arg = parser.parse_args()
-    if ':' not in arg.server:
-        arg.server = 'https://' + arg.server
     if arg.enable == False:
         sys.exit("Timestamping explicitely disabled")
     if arg.require_enable and arg.enable != True:
         sys.exit("Timestamping not explicitely enabled")
+    if args.server in args.server_aliases:
+        args.server = server_aliases[args.server]
+    if ':' not in args.server:
+        args.server = 'https://' + args.server
     if arg.tag is None and arg.branch is None:
         # Automatically derive branch name
         # Split URL on '.' or '/'
