@@ -31,7 +31,7 @@ setuptools.setup(
     license='MIT',
     packages=setuptools.find_packages(),
     install_requires=['pygit2', 'python-gnupg', 'requests', 'setuptools'],
-    python_requires='>=2.7',
+    python_requires='>=3.4',
     entry_points={
         'console_scripts': [
             'git-timestamp=git_timestamp.timestamp:main',
