@@ -18,6 +18,17 @@ sudo pip3 install git-timestamp
 doing it can lead to strange error messages when running `pip3 install
 git-timestamp` in some configurations.)
 
+`pygit2` is a very brittle package with subtle (or not so subtle)
+dependencies on system packages. If you want to upgrade
+`git-timestamp` later, the following command is recommended:
+
+```sh
+sudo pip3 install -U git-timestamp `pip3 freeze | grep pygit2`
+```
+
+Freezing `pygit2` in this way can also be needed in other
+circumstances and for other packages relying on `pygit2`.
+
 ## Timestamping: Why?
 
 Being able to provide evidence that **you had some piece of information at a
