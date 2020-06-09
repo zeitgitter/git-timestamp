@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 # 1.0.2+ - [Unreleased]
 ## Added
 - Better explanation if not talking to a Zeitgitter server
+- Better explanation if `~/.gnupg` or its contents pose permission problems
 - Explain automatic timestamping in the README
 - Support server aliases. Initialized with all public Zeitgitter servers
 - Document freezeing of `pygit2`
