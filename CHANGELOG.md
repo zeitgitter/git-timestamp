@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Document freezeing of `pygit2`
 
 ## Fixed
+- `git timestamp` (i.e., with implicit `--branch` and `--append-branch-name`
+  options) with detached HEAD resulted in traceback; now it returns an error
 
 ## Changed
 - Include Ubuntu 20.04 in documentation

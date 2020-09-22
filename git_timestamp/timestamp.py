@@ -136,7 +136,7 @@ def get_args():
                     independent GIT timestampers.""",
         epilog="""`--tag` takes precedence over `--branch`.
             When in doubt, use `--tag` for single/rare timestamping,
-            and `--branch` for reqular timestamping.
+            and `--branch` for frequent timestamping.
             `bool` values can be specified as true/false/yes/no/0/1.
             Arguments with optional `bool` options default to true if
             the argument is present, false if absent.""")
@@ -155,7 +155,9 @@ def get_args():
                gitopt='timestamp.branch',
                help="""Create a timestamped commit in branch BRANCH,
                    with identical contents as the specified commit.
-                   Default name derived from servername plus `-timestamps`""")
+                   Default name derived from servername, appending
+                   `-timestamps`, and, possibly, by the effects of
+                   `--append-branch-name`.""")
     parser.add('--server',
                default='https://gitta.zeitgitter.net',
                gitopt='timestamp.server',
@@ -486,23 +488,37 @@ def valid_name(name):
 
 def append_branch_name(repo, commit_name, branch_name):
     """Appends current branch name if not `master`"""
+    explanation = "for (implicit) options `--branch and --append-branch-name`"
     if commit_name == 'HEAD':
         try:
             comref = repo.lookup_reference(commit_name)
-            comname = comref.target # Branch HEAD points to
+            comname = comref.target
         except git.InvalidSpecError:
-            sys.exit("Invalid HEAD")
-        if comname.startswith('refs/heads/'):
+            # 1. If HEAD or it's target is invalid, we end up here
+            sys.exit("Invalid HEAD " + explanation)
+        # Two more options remain:
+        # 2. If HEAD points to a branch, then we now have its name (a `str`
+        #    starting with 'refs/heads/') and can proceed;
+        # 3. if it is detached, it points to a commit (a `Oid`) and we fail;
+        # 4. there might be some other cases, which should fail as well.
+        # To be able to test for case 2, we convert `comname` to `str`.
+        if str(comname).startswith('refs/heads/'):
             comname = comname[len('refs/heads/'):]
         else:
-            sys.exit("HEAD must point to branch, not %s" % comname)
+            sys.exit(("HEAD must point to branch, not %s " + explanation)
+                    % comname)
     else:
+        # 5. Explicit and non-HEAD commit given; check for branch name only: proceed;
         try:
             comref = repo.lookup_reference('refs/heads/' + commit_name)
             comname = commit_name # Branch name itself
         except (KeyError, git.InvalidSpecError):
-            sys.exit("%s must be a branch name" % commit_name)
+            # 6. Explicit commit given, but it's neither HEAD nor tail^H^H^H^H
+            # a branch: fail
+            sys.exit(("%s must be a branch name " + explanation)
+                    % commit_name)
 
+    # Now that we know which branch to timestamp (to), construct it.
     if comname == 'master':
         return branch_name
     else:
@@ -510,9 +526,10 @@ def append_branch_name(repo, commit_name, branch_name):
         if valid_name(extended_name):
             return extended_name
         else:
-            sys.exit("Branch name %s is not valid for timestamping\n"
+            sys.exit(("Branch name %s is not valid for timestamping\n"
                     "(constructed from base timestamp branch %s and "
-                    "source branch %s)" % (extended_name, branch_name, comname))
+                    "source branch %s)\n" + explanation)
+                    % (extended_name, branch_name, comname))
 
 
 def timestamp_branch(repo, keyid, name, args):
