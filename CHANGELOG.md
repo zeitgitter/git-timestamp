@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
-# 1.0.2+ - [Unreleased]
+# 1.0.3 - 2020-09-22
 ## Added
 - Better explanation if not talking to a Zeitgitter server
 - Better explanation if `~/.gnupg` or its contents pose permission problems
