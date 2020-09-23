@@ -488,7 +488,7 @@ def valid_name(name):
 
 def append_branch_name(repo, commit_name, branch_name):
     """Appends current branch name if not `master`"""
-    explanation = "for (implicit) options `--branch and --append-branch-name`"
+    explanation = "for (implicit) options `--branch` and `--append-branch-name`"
     if commit_name == 'HEAD':
         try:
             comref = repo.lookup_reference(commit_name)
@@ -505,7 +505,7 @@ def append_branch_name(repo, commit_name, branch_name):
         if str(comname).startswith('refs/heads/'):
             comname = comname[len('refs/heads/'):]
         else:
-            sys.exit(("HEAD must point to branch, not %s " + explanation)
+            sys.exit(("HEAD must point to branch, not %s\n" + explanation)
                     % comname)
     else:
         # 5. Explicit and non-HEAD commit given; check for branch name only: proceed;
