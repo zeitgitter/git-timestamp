@@ -5,18 +5,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
-# 1.0.2+ - [Unreleased]
+# 1.0.3 - 2020-09-22
 ## Added
 - Better explanation if not talking to a Zeitgitter server
+- Better explanation if `~/.gnupg` or its contents pose permission problems
 - Explain automatic timestamping in the README
 - Support server aliases. Initialized with all public Zeitgitter servers
+- Document freezeing of `pygit2`
 
 ## Fixed
+- `git timestamp` (i.e., with implicit `--branch` and `--append-branch-name`
+  options) with detached HEAD resulted in traceback; now it returns an error
 
 ## Changed
 - Include Ubuntu 20.04 in documentation
 - Defaults to Python 3 now, as [Python 2 has been sunset as of
   2020-01-01](https://www.python.org/doc/sunset-python-2/)
+- Updated documentation to match the new/changed options and the dropping of
+  Python 2 support (Python 2 still works, but is not supported anymore)
 
 
 # 1.0.2 - 2020-05-08
