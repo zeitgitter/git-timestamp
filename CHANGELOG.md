@@ -5,6 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
+# 1.0.3+ - [Unreleased]
+## Added
+
+## Fixed
+
+## Changed
+- Do not record Zeitgitter key IDs in `~/.gitconfig` if `FORCE_GIT_REPO_CONFIG`
+  environment variable is set; use `~/.git/config` instead. This is useful for
+  some Docker setups such as `autoblockchainify`.
+
+
 # 1.0.3 - 2020-09-22
 ## Added
 - Better explanation if not talking to a Zeitgitter server

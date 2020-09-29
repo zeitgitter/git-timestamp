@@ -36,7 +36,7 @@ import gnupg  # Provided e.g. by `pip install python-gnupg` (try with `pip2`/`pi
 import pygit2 as git
 import requests
 
-VERSION = '1.0.3'
+VERSION = '1.0.3+'
 
 
 class GitArgumentParser(argparse.ArgumentParser):
@@ -313,7 +313,10 @@ def get_keyid(args):
                          timeout=30)
         quit_if_http_error(args.server, r)
         (keyid, name) = validate_key_and_import(r.text, args)
-        gcfg = get_global_config_if_possible()
+        if not os.getenv('FORCE_GIT_REPO_CONFIG'):
+            gcfg = get_global_config_if_possible()
+        else:
+            gcfg = repo.config
         gcfg['timestamper.%s.keyid' % keyname] = keyid
         gcfg['timestamper.%s.name' % keyname] = name
         return (keyid, name)
