@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## Added
 
 ## Fixed
+- Allow `--version` and `--help` even outside a git repository
 
 ## Changed
 - Do not record Zeitgitter key IDs in `~/.gitconfig` if `FORCE_GIT_REPO_CONFIG`
