@@ -50,7 +50,11 @@ class GitArgumentParser(argparse.ArgumentParser):
 
     def add_argument(self, *args, **kwargs):
         global repo
-        if 'gitopt' in kwargs:
+        if repo is None and 'gitopt' in kwargs:
+            # Called outside a repo (maybe for --help or --version):
+            # Ignore repo options
+            del kwargs['gitopt']
+        elif 'gitopt' in kwargs:
             if 'help' in kwargs:
                 kwargs['help'] += '. '
             else:
@@ -587,10 +591,14 @@ def main():
         path = git.discover_repository(os.getcwd())
     except KeyError:
         path = None
-    if path == None:
-        sys.exit("Not a git repository")
-    repo = git.Repository(path)
+    if path is not None:
+        repo = git.Repository(path)
+    else:
+        repo = None
     args = get_args()
+    # Only check after parsing the arguments, so --version and --help work
+    if repo is None:
+        sys.exit("Not a git repository")
 
     try:
         gpg = gnupg.GPG(gnupghome=args.gnupg_home)
