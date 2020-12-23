@@ -136,6 +136,7 @@ def expanded_aliases():
 def get_args():
     """Parse command line and git config parameters"""
     parser = GitArgumentParser(
+        auto_env_var_prefix='timestamp_',
         add_help=False,
         description="""Interface to Zeitgitter, the network of
                     independent GIT timestampers.""",
@@ -144,7 +145,10 @@ def get_args():
             and `--branch` for frequent timestamping.
             `bool` values can be specified as true/false/yes/no/0/1.
             Arguments with optional `bool` options default to true if
-            the argument is present, false if absent.""")
+            the argument is present, false if absent.
+            Environment variable `ZEITGITTER_FAKE_TIME` can be used for
+            repeatable tests against a local Zeitgitter server under test,
+            see there.""")
     parser.add('--help', '-h',
                action='help',
                help="""Show this help message and exit. When called as
