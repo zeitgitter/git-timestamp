@@ -136,6 +136,7 @@ def expanded_aliases():
 def get_args():
     """Parse command line and git config parameters"""
     parser = GitArgumentParser(
+        auto_env_var_prefix='timestamp_',
         add_help=False,
         description="""Interface to Zeitgitter, the network of
                     independent GIT timestampers.""",
