@@ -36,7 +36,7 @@ import gnupg  # Provided e.g. by `pip install python-gnupg` (try with `pip2`/`pi
 import pygit2 as git
 import requests
 
-VERSION = '1.0.3'
+VERSION = '1.0.4'
 
 
 class GitArgumentParser(argparse.ArgumentParser):
@@ -50,7 +50,11 @@ class GitArgumentParser(argparse.ArgumentParser):
 
     def add_argument(self, *args, **kwargs):
         global repo
-        if 'gitopt' in kwargs:
+        if repo is None and 'gitopt' in kwargs:
+            # Called outside a repo (maybe for --help or --version):
+            # Ignore repo options
+            del kwargs['gitopt']
+        elif 'gitopt' in kwargs:
             if 'help' in kwargs:
                 kwargs['help'] += '. '
             else:
@@ -313,7 +317,10 @@ def get_keyid(args):
                          timeout=30)
         quit_if_http_error(args.server, r)
         (keyid, name) = validate_key_and_import(r.text, args)
-        gcfg = get_global_config_if_possible()
+        if not os.getenv('FORCE_GIT_REPO_CONFIG'):
+            gcfg = get_global_config_if_possible()
+        else:
+            gcfg = repo.config
         gcfg['timestamper.%s.keyid' % keyname] = keyid
         gcfg['timestamper.%s.name' % keyname] = name
         return (keyid, name)
@@ -489,7 +496,7 @@ def valid_name(name):
 
 def append_branch_name(repo, commit_name, branch_name):
     """Appends current branch name if not `master`"""
-    explanation = "for (implicit) options `--branch and --append-branch-name`"
+    explanation = "for (implicit) options `--branch` and `--append-branch-name`"
     if commit_name == 'HEAD':
         try:
             comref = repo.lookup_reference(commit_name)
@@ -506,7 +513,7 @@ def append_branch_name(repo, commit_name, branch_name):
         if str(comname).startswith('refs/heads/'):
             comname = comname[len('refs/heads/'):]
         else:
-            sys.exit(("HEAD must point to branch, not %s " + explanation)
+            sys.exit(("HEAD must point to branch, not %s\n" + explanation)
                      % comname)
     else:
         # 5. Explicit and non-HEAD commit given; check for branch name only: proceed;
@@ -584,10 +591,14 @@ def main():
         path = git.discover_repository(os.getcwd())
     except KeyError:
         path = None
-    if path == None:
-        sys.exit("Not a git repository")
-    repo = git.Repository(path)
+    if path is not None:
+        repo = git.Repository(path)
+    else:
+        repo = None
     args = get_args()
+    # Only check after parsing the arguments, so --version and --help work
+    if repo is None:
+        sys.exit("Not a git repository")
 
     try:
         gpg = gnupg.GPG(gnupghome=args.gnupg_home)
