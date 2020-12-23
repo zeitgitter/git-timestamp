@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## Added
 - `make python-package` now builds a local Python package without attempting to
   upload to PyPI
+- Support for timestamping against multiple comma-separated servers in one go
+  (only for automatic branch name selection)
 
 ## Fixed
 
