@@ -36,7 +36,7 @@ import gnupg  # Provided e.g. by `pip install python-gnupg` (try with `pip2`/`pi
 import pygit2 as git
 import requests
 
-VERSION = '1.0.4'
+VERSION = '1.0.4+'
 
 
 class GitArgumentParser(argparse.ArgumentParser):
@@ -209,15 +209,6 @@ def get_args():
         sys.exit("Timestamping explicitely disabled")
     if arg.require_enable and arg.enable != True:
         sys.exit("Timestamping not explicitely enabled")
-    if arg.server in server_aliases:
-        arg.server = server_aliases[arg.server]
-    if ':' not in arg.server:
-        arg.server = 'https://' + arg.server
-    if arg.tag is None and arg.branch is None:
-        # Automatically derive branch name
-        # Split URL on '.' or '/'
-        fields = arg.server.replace('/', '.').split('.')
-        arg.branch = timestamp_branch_name(fields[1:])
     return arg
 
 
@@ -609,11 +600,36 @@ def main():
                  "    Possible remedy: `pip uninstall gnupg;"
                  " pip install python-gnupg`\n"
                  "    (try `pip2`/`pip3` if it does not work with `pip`)")
-    (keyid, name) = get_keyid(args)
-    if args.tag:
-        timestamp_tag(repo, keyid, name, args)
+    if args.tag is not None or args.branch is not None:
+        # Single tag or branch against one timestamping server
+        if ',' in args.server:
+            (server, rest) = args.server.split(',', 1)
+            args.server = server
+            print(f"WARNING: Cannot timestamp single tag/branch against"
+                    " multiple servers;\nonly timestamping against {server}")
+        if args.tag:
+            timestamp_tag(repo, keyid, name, args)
+        else:
+            timestamp_branch(repo, keyid, name, args)
     else:
-        timestamp_branch(repo, keyid, name, args)
+        # Automatic branch, with support for multiple timestamping servers
+        success = True
+        for server in args.server.split(','):
+            if server in server_aliases:
+                server = server_aliases[server]
+            if ':' not in server:
+                server = 'https://' + server
+            fields = server.replace('/', '.').split('.')
+            args.branch = timestamp_branch_name(fields[1:])
+            args.server = server
+            try:
+                (keyid, name) = get_keyid(args)
+                timestamp_branch(repo, keyid, name, args)
+            except SystemExit as e:
+                sys.stderr.write(e.code + '\n')
+                success = False
+        if not success:
+            sys.exit(1)
 
 
 if __name__ == "__main__":
