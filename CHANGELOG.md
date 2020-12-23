@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Support for timestamping against multiple comma-separated servers in one go
   (only for automatic branch name selection)
 - Document `ZEITGITTER_FAKE_TIME`.
+- Allow `TIMESTAMP_*` environment variables to set parameters. Parameter
+  priority is as follows:
+  1. (Highest) Parameters on the command line
+  2. Parameters from environment variables (`TIMESTAMP_*`)
+  3. Parameters stored in the `git` configuration files
+  4. (Lowest) Defaults provided in the program
 
 ## Fixed
 
