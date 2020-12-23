@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   upload to PyPI
 - Support for timestamping against multiple comma-separated servers in one go
   (only for automatic branch name selection)
+- Document `ZEITGITTER_FAKE_TIME`.
 
 ## Fixed
 
