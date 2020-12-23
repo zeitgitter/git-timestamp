@@ -21,7 +21,9 @@ test tests:	system-tests
 system-tests:
 	@d=`mktemp -d`; for i in ${TESTS}; do echo; echo "${TITLE}===== $$i $$d${NORM}"; $$i $$d || exit 1; done; echo "${TITLE}===== Cleanup${NORM}"; ${RM} -r $$d
 
-pypi:
+python-package:
 	${RM} -f dist/*
 	./setup.py sdist bdist_wheel
+
+pypi:	python-package
 	twine upload dist/*

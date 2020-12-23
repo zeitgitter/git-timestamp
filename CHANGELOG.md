@@ -5,6 +5,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
+# 1.0.4+ - [Unreleased]
+## Added
+- `make python-package` now builds a local Python package without attempting to
+  upload to PyPI
+
+## Fixed
+
+## Changed
+- Intermediate releases are now named `<VERSION>.postN`, where `N` is the number of
+  commits since the last tag (using `git describe`). Previously, all were named
+  `<VERSION>.post0`
+
+
 # 1.0.4 - 2020-12-02
 ## Added
 
