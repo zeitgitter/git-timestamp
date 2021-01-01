@@ -3,9 +3,9 @@
 # (keep hashbang line for `make install`)
 
 #
-# git timestamp — Independent GIT Timestamping client
+# git timestamp — Zeitgitter GIT Timestamping client
 #
-# Copyright (C) 2019, 2020 Marcel Waldvogel
+# Copyright (C) 2019-2021 Marcel Waldvogel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -23,7 +23,7 @@
 
 # This has not been modularized for ease of installation
 
-import argparse
+import configargparse
 import distutils.util
 import os
 import re
@@ -36,10 +36,10 @@ import gnupg  # Provided e.g. by `pip install python-gnupg` (try with `pip2`/`pi
 import pygit2 as git
 import requests
 
-VERSION = '1.0.5'
+VERSION = '1.0.5+'
 
 
-class GitArgumentParser(argparse.ArgumentParser):
+class GitArgumentParser(configargparse.ArgumentParser):
     """Insert git config options between command line and default.
 
     WARNING: There is no way to handle custom actions correctly by default, so
@@ -62,7 +62,7 @@ class GitArgumentParser(argparse.ArgumentParser):
             gitopt = kwargs['gitopt']
             try:
                 if 'action' in kwargs and issubclass(kwargs['action'],
-                                                     argparse.Action):
+                                                     configargparse.Action):
                     try:
                         val = kwargs['action'].convert_default(repo.config[gitopt])
                     except AttributeError:
@@ -107,7 +107,7 @@ def timestamp_branch_name(fields):
     return 'zeitgitter-timestamps'
 
 
-class DefaultTrueIfPresent(argparse.Action):
+class DefaultTrueIfPresent(configargparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         if values is None:
             values = True
@@ -115,7 +115,7 @@ class DefaultTrueIfPresent(argparse.Action):
             try:
                 values = self.convert_default(values)
             except ValueError:
-                raise argparse.ArgumentError(self, "Requires boolean value")
+                raise configargparse.ArgumentError(self, "Requires boolean value")
         setattr(namespace, self.dest, values)
 
     @classmethod

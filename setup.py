@@ -43,13 +43,15 @@ setuptools.setup(
     version=describe_or_extract_version('git_timestamp/timestamp.py'),
     author="Marcel Waldvogel",
     author_email="marcel.waldvogel@trifence.ch",
-    description="Timestamping client for zeitgitter",
+    description="GIT Timestamping client for Zeitgitter",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://gitlab.com/zeitgitter/git-timestamp",
+    url="https://zeitgitter.net",
     license='MIT',
     packages=setuptools.find_packages(),
-    install_requires=['pygit2', 'python-gnupg', 'requests', 'setuptools'],
+    install_requires=[
+        'pygit2', 'python-gnupg', 'requests', 'setuptools', 'configargparse'
+        ],
     python_requires='>=3.4',
     entry_points={
         'console_scripts': [
