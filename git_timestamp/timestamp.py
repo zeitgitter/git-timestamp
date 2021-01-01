@@ -611,6 +611,7 @@ def main():
             args.server = server
             print(f"WARNING: Cannot timestamp single tag/branch against"
                     " multiple servers;\nonly timestamping against {server}")
+        (keyid, name) = get_keyid(args)
         if args.tag:
             timestamp_tag(repo, keyid, name, args)
         else:
