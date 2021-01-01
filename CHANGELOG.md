@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## Fixed
 - Switching to `configargparse` because of `auto_env_var_prefix`
 - One test was using system-wide `git-timestamp` instead of local
+- Keyid was not always set when needed
 
 ## Changed
 
