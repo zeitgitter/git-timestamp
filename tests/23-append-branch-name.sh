@@ -67,7 +67,7 @@ git checkout -b servant
 echo $RANDOM > 23-e.txt
 git add 23-e.txt
 git commit -m "Random commit 23-$RANDOM"
-git timestamp master
+$h/git-timestamp.py master
 assert_branch_absent gitta-timestamps-master gitta-timestamps-servant
 
 
