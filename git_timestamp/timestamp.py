@@ -36,7 +36,7 @@ import gnupg  # Provided e.g. by `pip install python-gnupg` (try with `pip2`/`pi
 import pygit2 as git
 import requests
 
-VERSION = '1.0.4+'
+VERSION = '1.0.5'
 
 
 class GitArgumentParser(argparse.ArgumentParser):

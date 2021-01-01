@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
-# 1.0.4+ - [Unreleased]
+# 1.0.5 - 2021-01-01
 ## Added
 - `make python-package` now builds a local Python package without attempting to
   upload to PyPI
