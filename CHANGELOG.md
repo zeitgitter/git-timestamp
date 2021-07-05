@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 # 1.0.6+ - [Unreleased]
 ## Added
+- Support `main` *and* `master` (overridden by
+  `git config timestamp.defaultBranch` or `--default-branch`) as default
+  branch names. In addition to them, `git config init.defaultBranch` is also
+  considered a default branch. Default branches do not get their branch name
+  appended to the timestamp branch name.  
+  **Issuing timestamps for multiple default branches in your repository will
+  technically work, but timestamps of both branches will depend on each other,
+  which will most likely be a horror trip for the humans having to deal with
+  this.**  
+  So, if you have **both** `master` and `main` active in your repository, set
+  `git config timestamp.defaultBranch` **and** `git config init.defaultBranch`
+  to the same value.
 
 ## Fixed
 - Fix real `pylint` warnings, suppressed spurious ones
