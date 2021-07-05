@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
-# 1.0.6+ - [Unreleased]
+# 1.1.0 - 2021-07-05
 ## Added
 - Support `main` *and* `master` (overridden by
   `git config timestamp.defaultBranch` or `--default-branch`) as default
@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## Changed
 - Now depends on `deltat` package
+
 
 # 1.0.6 - 2021-01-01
 ## Added
