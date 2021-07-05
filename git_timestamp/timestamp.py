@@ -32,11 +32,12 @@ import tempfile
 import time
 import traceback
 
-import gnupg  # Provided e.g. by `pip install python-gnupg` (try with `pip2`/`pip3` if `pip` does not work)
+# Provided e.g. by `pip install python-gnupg` (try with `pip3` if `pip` does not work)
+import gnupg
 import pygit2 as git
 import requests
 
-VERSION = '1.0.6'
+VERSION = '1.0.6+'
 
 
 class GitArgumentParser(configargparse.ArgumentParser):
@@ -237,7 +238,8 @@ def validate_key_and_import(text, args):
         sys.exit("Invalid key returned\n"
                  "Maybe not a Zeitgitter server or ~/.gnupg permission problem")
     res = gpg.import_keys(text)
-    if res.count == 1 and not args.quiet:
+    count = res.count  # pylint: disable=maybe-no-member
+    if count == 1 and not args.quiet:
         print("Imported new key %s: %s" %
               (info[0]['keyid'], info[0]['uids'][0]))
     return (info[0]['keyid'], info[0]['uids'][0])
@@ -274,7 +276,9 @@ def get_global_config_if_possible():
             try:
                 sys.stderr.write("INFO: Creating global .gitconfig\n")
                 with open(os.path.join(
-                        git.option(git.GIT_OPT_GET_SEARCH_PATH, git.GIT_CONFIG_LEVEL_GLOBAL),
+                        git.option(  # pylint: disable=maybe-no-member
+                            git.GIT_OPT_GET_SEARCH_PATH,  # pylint: disable=maybe-no-member
+                            git.GIT_CONFIG_LEVEL_GLOBAL),  # pylint: disable=maybe-no-member
                         '.gitconfig'), 'a'):
                     pass
                 return git.Config.get_global_config()  # 3
@@ -439,7 +443,9 @@ def timestamp_tag(repo, keyid, name, args):
                           }, allow_redirects=False)
         quit_if_http_error(args.server, r)
         validate_tag(r.text, commit, keyid, name, args)
-        tagid = repo.write(git.GIT_OBJ_TAG, r.text)
+        tagid = repo.write(
+            git.GIT_OBJ_TAG,  # pylint: disable=maybe-no-member
+            r.text)
         repo.create_reference('refs/tags/%s' % args.tag, tagid)
     except requests.exceptions.ConnectionError as e:
         sys.exit("Cannot connect to server: %s" % e)
@@ -496,7 +502,7 @@ def append_branch_name(repo, commit_name, branch_name):
         try:
             comref = repo.lookup_reference(commit_name)
             comname = comref.target
-        except git.InvalidSpecError:
+        except git.InvalidSpecError:  # pylint: disable=maybe-no-member
             # 1. If HEAD or it's target is invalid, we end up here
             sys.exit("Invalid HEAD " + explanation)
         # Two more options remain:
@@ -515,7 +521,7 @@ def append_branch_name(repo, commit_name, branch_name):
         try:
             comref = repo.lookup_reference('refs/heads/' + commit_name)
             comname = commit_name  # Branch name itself
-        except (KeyError, git.InvalidSpecError):
+        except (KeyError, git.InvalidSpecError):  # pylint: disable=maybe-no-member
             # 6. Explicit commit given, but it's neither HEAD nor tail^H^H^H^H
             # a branch: fail
             sys.exit(("%s must be a branch name " + explanation)
@@ -571,8 +577,11 @@ def timestamp_branch(repo, keyid, name, args):
         r = requests.post(args.server, data=data, allow_redirects=False)
         quit_if_http_error(args.server, r)
         validate_branch(r.text, keyid, name, data, args)
-        commitid = repo.write(git.GIT_OBJ_COMMIT, r.text)
-        repo.create_reference('refs/heads/' + args.branch, commitid, force=True)
+        commitid = repo.write(
+            git.GIT_OBJ_COMMIT,  # pylint: disable=maybe-no-member
+            r.text)
+        repo.create_reference('refs/heads/' + args.branch,
+                              commitid, force=True)
     except requests.exceptions.ConnectionError as e:
         sys.exit("Cannot connect to server: %s" % e)
 
@@ -583,7 +592,8 @@ def main():
     try:
         # Depending on the version of pygit2, `git.discover_repository()`
         # returns `None` or raises `KeyError`
-        path = git.discover_repository(os.getcwd())
+        path = git.discover_repository(  # pylint: disable=maybe-no-member
+            os.getcwd())
     except KeyError:
         path = None
     if path is not None:
@@ -607,10 +617,10 @@ def main():
     if args.tag is not None or args.branch is not None:
         # Single tag or branch against one timestamping server
         if ',' in args.server:
-            (server, rest) = args.server.split(',', 1)
+            (server, _) = args.server.split(',', 1)
             args.server = server
             print(f"WARNING: Cannot timestamp single tag/branch against"
-                    " multiple servers;\nonly timestamping against {server}")
+                  " multiple servers;\nonly timestamping against {server}")
         (keyid, name) = get_keyid(args)
         if args.tag:
             timestamp_tag(repo, keyid, name, args)
