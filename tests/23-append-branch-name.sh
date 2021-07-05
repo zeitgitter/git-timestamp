@@ -6,7 +6,8 @@ shift
 cd "$d"
 export GNUPGHOME="$d/gnupg"
 mkdir -p -m 700 "$GNUPGHOME"
-git init
+git init --initial-branch main
+git config init.defaultBranch main
 
 assert_branch_present() {
 	for i in "$@"; do
@@ -25,28 +26,27 @@ assert_branch_absent() {
 	done
 }
 
-# Ensure there is a non-empty master branch
+# Ensure there is a non-empty default branch
 echo $RANDOM > 23-a.txt
 git add 23-a.txt
 git commit -m "Random change 23-$RANDOM"
-git checkout master
 
 # Ensure there is a non-empty gitta-timestamps branch
 $h/git-timestamp.py
 
-assert_branch_present gitta-timestamps master
+assert_branch_present gitta-timestamps main
 
-# Ensure there is a non-empty slave branch
-git checkout -b slave
+# Ensure there is a non-empty secondary branch
+git checkout -b secondary
 echo $RANDOM > 23-c.txt
 git add 23-c.txt
 git commit -m "Random change 23-$RANDOM"
 
-assert_branch_present slave
+assert_branch_present secondary
 
-# This should create gitta-timestamps-slave
+# This should create gitta-timestamps-secondary
 $h/git-timestamp.py
-assert_branch_present gitta-timestamps-slave
+assert_branch_present gitta-timestamps-secondary
 
 # Also timestamp to default timestamping branch
 before=`git log gitta-timestamps | wc -l`
@@ -57,23 +57,23 @@ if [ `expr $after - $before` -eq 0 ]; then
 	exit 1
 fi
 
-# Timestamp for explicit master
-git checkout master
+# Timestamp for explicit main
+git checkout main
 echo $RANDOM > 23-d.txt
 git add 23-d.txt
 git commit -m "Random commit 23-$RANDOM"
 
-git checkout -b servant
+git checkout -b ternary
 echo $RANDOM > 23-e.txt
 git add 23-e.txt
 git commit -m "Random commit 23-$RANDOM"
-$h/git-timestamp.py master
-assert_branch_absent gitta-timestamps-master gitta-timestamps-servant
+$h/git-timestamp.py main
+assert_branch_absent gitta-timestamps-main gitta-timestamps-ternary
 
 
 # And now for some failures:
 # Branch too long after appending only
-git checkout slave
+git checkout secondary
 $h/git-timestamp.py    --append-branch-name=no  --branch gitta-timestamps-123456789-12345789-12345789-12345789-12345789-12345789-12345789-12345789-123456
 if $h/git-timestamp.py --append-branch-name=yes --branch gitta-timestamps-123456789-12345789-12345789-12345789-12345789-12345789-12345789-12345789-123456; then
 	echo "Too long branch name should not have succeeded" >&2

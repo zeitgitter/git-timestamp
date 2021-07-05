@@ -6,7 +6,8 @@ shift
 cd "$d"
 export GNUPGHOME="$d/gnupg"
 mkdir -p -m 700 "$GNUPGHOME"
-git init
+git init --initial-branch main
+git config init.defaultBranch main
 
 echo $RANDOM > 20-a.txt
 git add 20-a.txt
@@ -19,7 +20,7 @@ git config timestamp.branch gitta-timestamps
 $h/git-timestamp.py
 
 # Check branch existence
-if ! git branch | grep -q gitta-timestamps; then
+if ! git branch | grep -q 'gitta-timestamps$'; then
 	echo "Branch gitta-timestamps does not exist" >&2
 	exit 1
 fi

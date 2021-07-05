@@ -49,6 +49,16 @@ class GitArgumentParser(configargparse.ArgumentParser):
     def __init__(self, *args, **kwargs):
         super(GitArgumentParser, self).__init__(*args, **kwargs)
 
+    def repo_config(self, key):
+        """`repo_config(key)` is similar to `repo.config[key]`, but `key` can
+        be a comma-separated list of keys. It returns the value of the first
+        which exists or raises `KeyError` if none is set.
+        """
+        for k in key.split(','):
+            if k in repo.config:
+                return repo.config[k]
+        raise KeyError("Key%s `%s` not in git config" % ('s' if ',' in key else "", key))
+
     def add_argument(self, *args, **kwargs):
         global repo
         if repo is None and 'gitopt' in kwargs:
@@ -65,14 +75,16 @@ class GitArgumentParser(configargparse.ArgumentParser):
                 if 'action' in kwargs and issubclass(kwargs['action'],
                                                      configargparse.Action):
                     try:
-                        val = kwargs['action'].convert_default(repo.config[gitopt])
+                        val = kwargs['action'].convert_default(
+                            self.repo_config(gitopt))
                     except AttributeError:
                         raise NotImplementedError("Custom action `%r' passed "
                                                   "to GitArgumentParser does not support "
                                                   "`convert_default()' method." % kwargs['action'])
                 else:
-                    val = repo.config[gitopt]
-                kwargs['help'] += "Defaults to '%s' from `git config %s`" % (val, gitopt)
+                    val = self.repo_config(gitopt)
+                kwargs['help'] += "Defaults to '%s' from `git config %s`" % (
+                    val, gitopt.replace(',', ' or '))
                 if 'default' in kwargs:
                     kwargs['help'] += "; fallback default: '%s'" % kwargs['default']
                 kwargs['default'] = val
@@ -116,7 +128,8 @@ class DefaultTrueIfPresent(configargparse.Action):
             try:
                 values = self.convert_default(values)
             except ValueError:
-                raise configargparse.ArgumentError(self, "Requires boolean value")
+                raise configargparse.ArgumentError(
+                    self, "Requires boolean value")
         setattr(namespace, self.dest, values)
 
     @classmethod
@@ -181,7 +194,15 @@ def get_args():
                gitopt='timestamp.append-branch-name',
                help="""Whether to append the branch name of the current branch
                    to the timestamp branch name, i.e., create per-branch
-                   timestamp branches. (`master` will never be appended.)""")
+                   timestamp branches. (Default branch name will never be
+                   appended.)""")
+    parser.add('--default-branch',
+                gitopt='timestamp.defaultBranch',
+                default="main,master",
+                help="""Comma-separated list of default branch names, i.e.
+                    those, where the branch name will not automatically be
+                    appended to. `git config init.defaultBranch`, if it exists,
+                    is always appended to this list.""")
     parser.add('--gnupg-home',
                gitopt='timestamp.gnupg-home',
                help="Where to store timestamper public keys")
@@ -210,6 +231,11 @@ def get_args():
                help="""Which commit-ish to timestamp. Must be a branch name
                        for branch timestamps with `--append-branch-name`""")
     arg = parser.parse_args()
+    arg.default_branch = arg.default_branch.split(',')
+    try:
+        arg.default_branch.append(repo.config['init.defaultBranch'])
+    except KeyError:
+        pass
     if arg.enable == False:
         sys.exit("Timestamping explicitely disabled")
     if arg.require_enable and arg.enable != True:
@@ -495,8 +521,8 @@ def valid_name(name):
             and '..' not in name and not '\n' in name)
 
 
-def append_branch_name(repo, commit_name, branch_name):
-    """Appends current branch name if not `master`"""
+def append_branch_name(repo, commit_name, branch_name, default_branches):
+    """Appends current branch name if not the default branch"""
     explanation = "for (implicit) options `--branch` and `--append-branch-name`"
     if commit_name == 'HEAD':
         try:
@@ -528,7 +554,7 @@ def append_branch_name(repo, commit_name, branch_name):
                      % commit_name)
 
     # Now that we know which branch to timestamp (to), construct it.
-    if comname == 'master':
+    if comname in default_branches:
         return branch_name
     else:
         extended_name = "%s-%s" % (branch_name, comname)
@@ -548,7 +574,7 @@ def timestamp_branch(repo, keyid, name, args):
         sys.exit("Branch name %s is not valid for timestamping" %
                  args.branch)
     if args.append_branch_name:
-        args.branch = append_branch_name(repo, args.commit, args.branch)
+        args.branch = append_branch_name(repo, args.commit, args.branch, args.default_branch)
     try:
         commit = repo.revparse_single(args.commit)
     except KeyError as e:
@@ -625,7 +651,7 @@ def main():
         if args.tag:
             timestamp_tag(repo, keyid, name, args)
         else:
-            timestamp_branch(repo, keyid, name, args)
+            timestamp_branch(repo, keyid, name, args, True)
     else:
         # Automatic branch, with support for multiple timestamping servers
         success = True

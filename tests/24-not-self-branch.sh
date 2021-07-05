@@ -6,7 +6,8 @@ shift
 cd "$d"
 export GNUPGHOME="$d/gnupg"
 mkdir -p -m 700 "$GNUPGHOME"
-git init
+git init --initial-branch main
+git config init.defaultBranch main
 
 echo $RANDOM > 24-a.txt
 git add 24-a.txt
