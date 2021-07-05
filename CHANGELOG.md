@@ -19,12 +19,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   So, if you have **both** `master` and `main` active in your repository, set
   `git config timestamp.defaultBranch` **and** `git config init.defaultBranch`
   to the same value.
+- `--interval` specifies the time interval to wait between contacting multiple
+  timestampers (comma-separated list passed to `--servers`) to ensure a
+  consitent order of timestamps, when timestamps are requested in the same
+  second and even in the presence of small time skews. (Maximum time skew
+  between timestamping client and server has been hardcoded to ±30s since
+  the first release to raise the red flag as early as possible.)
 
 ## Fixed
 - Fix real `pylint` warnings, suppressed spurious ones
 
 ## Changed
-
+- Now depends on `deltat` package
 
 # 1.0.6 - 2021-01-01
 ## Added
