@@ -36,6 +36,7 @@ import traceback
 import gnupg
 import pygit2 as git
 import requests
+import deltat
 
 VERSION = '1.0.6+'
 
@@ -184,9 +185,15 @@ def get_args():
     parser.add('--server',
                default='https://gitta.zeitgitter.net',
                gitopt='timestamp.server',
-               help="""Zeitgitter server to obtain timestamp from. 'https://'
+               help="""Comma-separated list of Zeitgitter servers to obtain timestamps from. 'https://'
                    is optional. The following aliases are supported: """
                     + expanded_aliases())
+    parser.add('--interval',
+               default='0s',
+               gitopt='timestamp.interval',
+               help="""Delay between timestamping against the different
+                   timestampers. For consistent ordering of timestamps,
+                   set this to at least <maximum clock skew>+1s.""")
     parser.add('--append-branch-name',
                default=True,
                action=DefaultTrueIfPresent,
@@ -231,6 +238,7 @@ def get_args():
                help="""Which commit-ish to timestamp. Must be a branch name
                        for branch timestamps with `--append-branch-name`""")
     arg = parser.parse_args()
+    arg.interval = deltat.parse_time(arg.interval)
     arg.default_branch = arg.default_branch.split(',')
     try:
         arg.default_branch.append(repo.config['init.defaultBranch'])
@@ -380,7 +388,8 @@ def validate_timestamp_zone_eol(header, text, offset):
                      "(off by %d seconds compared to this computer's time; check clock)"
                      % (header, time_str(istamp), istamp - sigtime))
     except ValueError:
-        sys.exit("Returned %s timestamp '%s' is not a number" % (header, stamp))
+        sys.exit("Returned %s timestamp '%s' is not a number" %
+                 (header, stamp))
     tz = text[offset + 10:offset + 17]
     if tz != ' +0000\n':
         sys.exit("Returned %s timezone is not GMT or not at end of line,\n"
@@ -566,8 +575,7 @@ def append_branch_name(repo, commit_name, branch_name, default_branches):
                       "source branch %s)\n" + explanation)
                      % (extended_name, branch_name, comname))
 
-
-def timestamp_branch(repo, keyid, name, args):
+def timestamp_branch(repo, keyid, name, args, first):
     """Obtain and add branch commit; create/update branch head"""
     # If the base name is already invalid, it cannot become valid by appending
     if not valid_name(args.branch):
@@ -594,11 +602,14 @@ def timestamp_branch(repo, keyid, name, args):
         try:
             if (repo[branch_head.target].parent_ids[0] == commit.id or
                     repo[branch_head.target].parent_ids[1] == commit.id):
-                sys.exit("Already timestamped commit %s to branch %s" % (commit.id.hex, args.branch))
+                sys.exit("Already timestamped commit %s to branch %s" %
+                         (commit.id.hex, args.branch))
         except IndexError:
             pass
     except KeyError:
         pass
+    if not first:
+        time.sleep(args.interval.total_seconds())
     try:
         r = requests.post(args.server, data=data, allow_redirects=False)
         quit_if_http_error(args.server, r)
@@ -655,6 +666,7 @@ def main():
     else:
         # Automatic branch, with support for multiple timestamping servers
         success = True
+        first = True
         for server in args.server.split(','):
             if server in server_aliases:
                 server = server_aliases[server]
@@ -665,7 +677,8 @@ def main():
             args.server = server
             try:
                 (keyid, name) = get_keyid(args)
-                timestamp_branch(repo, keyid, name, args)
+                timestamp_branch(repo, keyid, name, args, first)
+                first = False # Only on successful timestamp
             except SystemExit as e:
                 sys.stderr.write(e.code + '\n')
                 success = False
