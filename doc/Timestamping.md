@@ -21,6 +21,7 @@ Timestamping was used way before Blockchain was even conceived of:
   ([going back to Roman times](https://en.wikipedia.org/wiki/Notary_public#History)),
 - registered mail
   ([dating back to 1556](https://en.wikipedia.org/wiki/Registered_mail#History)),
+- [distilling the essence into an anagram](https://mathweb.ucsd.edu/~lni/math140/ODE.pdf),
 - commitment through clandestine newspaper ads,
 - [hash chains](https://en.wikipedia.org/wiki/Hash_chain) (latest 1981),
 - [distributed consensus](https://en.wikipedia.org/wiki/Byzantine_fault#Early_solutions)
@@ -36,7 +37,8 @@ Timestamping was used way before Blockchain was even conceived of:
 - `git` and other
   [DVCS](https://en.wikipedia.org/wiki/Distributed_version_control) with
   replicated repositories
-  ([since 2001](https://en.wikipedia.org/wiki/GNU_arch#History_and_maintainership))
+  ([since 2001](https://en.wikipedia.org/wiki/GNU_arch#History_and_maintainership)), or
+- [Publishing hashes of contents in social networks](https://www.heise.de/select/ct/archiv/2014/2/seite-170) and other public places.
 
 are ways of providing public and/or agreed-upon evidence that something has
 happened or was known at or before a particular time.
