@@ -140,7 +140,9 @@ class DefaultTrueIfPresent(configargparse.Action):
 
 server_aliases = {
     "gitta": "gitta.zeitgitter.net",
-    "diversity": "diversity.zeitgitter.net"
+    "diversity": "diversity.zeitgitter.net",
+    "proxmox": "zeitgitter.proxmox.by",
+    "alpein": "zeitgitter.alpeinsoft.by"
 }
 
 
