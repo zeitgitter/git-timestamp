@@ -244,7 +244,9 @@ def get_args():
     arg.default_branch = arg.default_branch.split(',')
     try:
         arg.default_branch.append(repo.config['init.defaultBranch'])
-    except KeyError:
+    except AttributeError: # No repo (test deferred for `--version` etc.)
+        pass
+    except KeyError: # No config entry
         pass
     if arg.enable == False:
         sys.exit("Timestamping explicitely disabled")

@@ -13,9 +13,16 @@ project adheres to [Semantic Versioning](https://semver.org/).
 
 ## Fixed
 
+- Running outside a repo now doesn't crash
+
 ## Changed
 
+- Quite some time ago, the default server was renamed to `gitta.zeitgitter.net`.
+  Just updating this for documentation purposes here.
+
 # 1.1.0 - 2021-07-05
+
+enotar
 
 ## Added
 
