@@ -38,7 +38,7 @@ import pygit2 as git
 import requests
 import deltat
 
-VERSION = '1.1.0'
+VERSION = '1.1.1'
 
 
 class GitArgumentParser(configargparse.ArgumentParser):
