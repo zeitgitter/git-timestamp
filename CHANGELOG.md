@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+# 1.2.0 - 2026-01-12
+
+## Added
+
+## Fixed
+
+- Support newer pygit2 versions (1.15+), which deprecated `GIT_OBJ_*` (now
+  `GIT_OBJECT_*`)
+
+## Changed
+
+- Require pygit2 >= 1.14
+- Removed support for Python 2.x
+
 # 1.1.1 - 2023-10-10
 
 ## Added

@@ -5,7 +5,7 @@
 #
 # git timestamp — Zeitgitter GIT Timestamping client
 #
-# Copyright (C) 2019-2021 Marcel Waldvogel
+# Copyright (C) 2019-2026 Marcel Waldvogel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -38,7 +38,7 @@ import pygit2 as git
 import requests
 import deltat
 
-VERSION = '1.1.1'
+VERSION = '1.2.0'
 
 
 class GitArgumentParser(configargparse.ArgumentParser):
@@ -483,7 +483,7 @@ def timestamp_tag(repo, keyid, name, args):
         quit_if_http_error(args.server, r)
         validate_tag(r.text, commit, keyid, name, args)
         tagid = repo.write(
-            git.GIT_OBJ_TAG,  # pylint: disable=maybe-no-member
+            git.GIT_OBJECT_TAG,
             r.text)
         repo.create_reference('refs/tags/%s' % args.tag, tagid)
     except requests.exceptions.ConnectionError as e:
@@ -619,7 +619,7 @@ def timestamp_branch(repo, keyid, name, args, first):
         quit_if_http_error(args.server, r)
         validate_branch(r.text, keyid, name, data, args)
         commitid = repo.write(
-            git.GIT_OBJ_COMMIT,  # pylint: disable=maybe-no-member
+            git.GIT_OBJECT_COMMIT,
             r.text)
         repo.create_reference('refs/heads/' + args.branch,
                               commitid, force=True)
