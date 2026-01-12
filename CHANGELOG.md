@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](https://semver.org/).
 
+# 1.2.2 - 2026-01-12
+
+## Added
+
+## Fixed
+
+- Support pygit2 >= 1.19.0 (deprecated `.hex`)
+
+## Changed
+
+- Require pygit2 >= 1.15
+
 # 1.2.0 - 2026-01-12
 
 ## Added

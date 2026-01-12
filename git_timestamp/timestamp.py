@@ -607,7 +607,7 @@ def timestamp_branch(repo, keyid, name, args, first):
             if (repo[branch_head.target].parent_ids[0] == commit.id or
                     repo[branch_head.target].parent_ids[1] == commit.id):
                 sys.exit("Already timestamped commit %s to branch %s" %
-                         (commit.id.hex, args.branch))
+                         (commit.id, args.branch))
         except IndexError:
             pass
     except KeyError:

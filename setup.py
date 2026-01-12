@@ -51,7 +51,7 @@ setuptools.setup(
     license='MIT',
     packages=setuptools.find_packages(),
     install_requires=[
-        'pygit2>=1.14', 'python-gnupg', 'requests', 'setuptools', 'configargparse', 'deltat>=1.1'
+        'pygit2>=1.15', 'python-gnupg', 'requests', 'setuptools', 'configargparse', 'deltat>=1.1'
     ],
     python_requires='>=3.4',
     entry_points={
