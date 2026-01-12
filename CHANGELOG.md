@@ -17,6 +17,10 @@ project adheres to [Semantic Versioning](https://semver.org/).
 
 - Require pygit2 >= 1.15
 
+# 1.2.1 - 2026-01-12
+
+Identical to v1.2.0 (version bump just due to tagging error)
+
 # 1.2.0 - 2026-01-12
 
 ## Added
